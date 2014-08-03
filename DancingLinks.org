@@ -5,21 +5,25 @@
 
 * Introduction
 
-  I originally thought of the "Dancing Links" technique as one that is
-  solely suited to solving exact cover problems.  I will probably keep
-  that bias for some time, as the main demonstration algorithm is DLX.
-  Indeed, even the wikipedia page for it showcases it in this way.
-  However, I now see that it is a method to maintain a large data
-  structure such that edits can be easily undone and new edits tried.
+  If you have never heard of it, [[http://www-cs-faculty.stanford.edu/~uno/papers/dancing-color.ps.gz][Dancing Links]] is a technique that
+  Knuth introduced to implement a recursive backtracking algorithm.
+  If you truly want a good treatment as to what the technique is, I
+  can not recommend going straight to the source heavily enough.
 
-  So, in order to see if I really understood what was going on, I
-  decided to try my hand at this.  Below I'll try my hand at a
-  standard recursive solution to the exact cover problem, and then
-  I'll try the DLX algorithm.
+  I originally thought of the "Dancing Links" technique as one that is
+  solely suited to solving "exact cover" problems.  This actually
+  caused me to not attempt implementing it for a time, as I confess it
+  intimidated me.  Also, I'm not entirely sure I have ever had to work
+  such a problem in my day jobs.
+
+  Regardless, I have been intrigued by the technique, if only for the
+  name, for quite a while.  This, then, is my attempt at implementing
+  the algorithm that was used to introduce the technique.  I'm hoping
+  to use the technique in another algorithm later.
 
 * N-Queens
 
-  So, first a brief exploration of the dancing links in solving a
+  First a brief exploration of the dancing links in solving a
   straight forward "exact cover" problem.  This will be, directly,
   the DLX algorithm that was used in introducing the technique.
 
@@ -35,7 +39,7 @@
   event, you simply take off pieces that you have placed and try
   a different placement.
 
-  It can be seen that this is depth first search across all possible
+  It can be seen that this is a depth first search across all possible
   piece placements.  Simply start with all possible positions, pick a
   starting point, remove all positions it eliminates, and repeat.
 
@@ -146,10 +150,17 @@
 
 ** Dancing Links
 
-   Now that we've looked at solving this with the standard technique
-   of recursion, how would this look with dancing links?  Not going to
-   lie, this is much more involved.  Luckily, it isn't that terribly
-   scary.
+   Now that we've looked at solving this with a naive recursive
+   solution, how would this look with dancing links?  Not going to
+   lie, this is more involved.  Luckily, it isn't that terribly scary.
+
+   In fact, the actual dancing links code is rather short and not too
+   terribly involved.  Because I did not bother to clean up the code
+   that generates the data for the $N$-queens problem, this section is
+   large.
+
+   We'll look at this in pieces, then.  If you want to see it all
+   tangled into a single file, peek over at [[dancingLinks.js]].
 
 *** Outline
 
@@ -179,11 +190,14 @@
 
 *** Search
 
-    We'll begin by looking at the search code.  This is very straight
-    forward.  First, check to see if there are any columns left
-    uncovered and return the current solution if so.  Otherwise, pick a
-    column and cover it.  Then, for each row in the current column,
+    We'll begin by looking at the search code.  This is fairly
+    straight forward.  First, check to see if there are any columns
+    left uncovered and return the current solution if not.  Otherwise,
+    pick a column, cover it, then for each row in the current column,
     cover all connected columns and continue the search.
+
+    One thing to note here is if we pick a column that has zeros rows
+    on it, we immediately backtrack up and try a different path.
 
     #+name: dlx_search
     #+begin_src js -n
@@ -315,7 +329,7 @@
     The only trick this required is that I do keep an array of all
     columns while making them so that I can find the ones that are not
     hooked into the main header list.  (After I did this, I took a
-    look directly at Knuth's code to see how he does it.  Kind of sad
+    look directly at Knuth's [[http://www-cs-faculty.stanford.edu/~uno/programs/dance.w][code]] to see how he does it.  Kind of sad
     to see how much easier this is to do in C.  I can't say I would
     have done it the easy way, though.  I do not think of pointer
     tricks quickly.)
@@ -340,37 +354,37 @@
             var t = ((i & 1) ? n - 1 - i : n + i) >> 1;
             var cur = {
                 name: 'R' + t,
-                right: headers.right,
-                left: headers,
+                right: headers,
+                left: headers.left,
                 size: 0,
                 down: null,
                 up: null,
             };
             cols.push(cur);
-            headers.right.left = cur;
-            headers.right = cur;
+            headers.left.right = cur;
+            headers.left = cur;
             cur.up = cur;
             cur.down = cur;
 
             cur = {
                 name: 'F' + t,
-                right: headers.right,
-                left: headers,
+                right: headers,
+                left: headers.left,
                 size: 0,
                 down: null,
                 up: null,
             };
             cols.push(cur);
-            headers.right.left = cur;
-            headers.right = cur;
+            headers.left.right = cur;
+            headers.left = cur;
             cur.up = cur;
             cur.down = cur;
         }
         for (i = 0; i < 2 * n; i++) {
                 var cur = {
                     name: 'A' + i,
-                    right: headers,
-                    left: headers.left,
+                    right: null,
+                    left: null,
                     size: 0,
                     up: null,
                     down: null
@@ -384,8 +398,8 @@
         for (i = 0; i < 2 * n; i++) {
                 var cur = {
                 name: 'B' + i,
-                    right: headers,
-                    left: headers.left,
+                    right: null,
+                    left: null,
                     size: 0,
                     up: null,
                     down: null

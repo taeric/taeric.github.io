@@ -21,37 +21,37 @@ function solveWithDancingLinks(n, showSteps) {
             var t = ((i & 1) ? n - 1 - i : n + i) >> 1;
             var cur = {
                 name: 'R' + t,
-                right: headers.right,
-                left: headers,
+                right: headers,
+                left: headers.left,
                 size: 0,
                 down: null,
                 up: null,
             };
             cols.push(cur);
-            headers.right.left = cur;
-            headers.right = cur;
+            headers.left.right = cur;
+            headers.left = cur;
             cur.up = cur;
             cur.down = cur;
     
             cur = {
                 name: 'F' + t,
-                right: headers.right,
-                left: headers,
+                right: headers,
+                left: headers.left,
                 size: 0,
                 down: null,
                 up: null,
             };
             cols.push(cur);
-            headers.right.left = cur;
-            headers.right = cur;
+            headers.left.right = cur;
+            headers.left = cur;
             cur.up = cur;
             cur.down = cur;
         }
         for (i = 0; i < 2 * n; i++) {
                 var cur = {
                     name: 'A' + i,
-                    right: headers,
-                    left: headers.left,
+                    right: null,
+                    left: null,
                     size: 0,
                     up: null,
                     down: null
@@ -65,8 +65,8 @@ function solveWithDancingLinks(n, showSteps) {
         for (i = 0; i < 2 * n; i++) {
                 var cur = {
                 name: 'B' + i,
-                    right: headers,
-                    left: headers.left,
+                    right: null,
+                    left: null,
                     size: 0,
                     up: null,
                     down: null
