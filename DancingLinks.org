@@ -582,7 +582,7 @@
     instead of the 31 previously.
 
     To see the specific scenario that helps, notice from configuration
-    4 to 5, there *is* a place a queen could be placed, but the system
+    6 to 7, there *is* a place a queen could be placed, but the system
     does not bother trying, as the third rank is already impossible to
     place.
 
