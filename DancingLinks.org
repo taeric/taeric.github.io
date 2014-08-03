@@ -578,7 +578,7 @@
     backtrack.
 
     This shows in the marked decrease in number of board
-    configurations tried.  For DLX, this is a nice 16 positions
+    configurations tried.  For DLX, this is a nice 12 positions
     instead of the 31 previously.
 
     To see the specific scenario that helps, notice from configuration
