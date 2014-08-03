@@ -1,6 +1,7 @@
 #+title: Why Dancing Links?
 #+OPTIONS: num:nil
-#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="style2.css" />
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="chessboards.css" />
 
 * Introduction
 
@@ -778,8 +779,36 @@
          });
          clearHighlight(board, 'attacked');
      }
+   #+end_src
 
 
+   Additionally, I used the following css.
+
+   #+begin_src css :tangle chessboards.css
+     div.visualization {
+       text-align: center;
+     }
+
+     table.chessboard {
+       margin: auto;
+       margin-bottom: 1em;
+     }
+     table.chessboard td {
+       width: 1em;
+       height: 1em;
+       font-size: 1em;
+       line-height: 1em;
+       border: solid thin black;
+     }
+     .highlight {
+       background-color: #FAA;
+     }
+     .attacked {
+       background-color: #F66;
+     }
+     .solution {
+       background-color: grey;
+     }
 
    #+end_src
 

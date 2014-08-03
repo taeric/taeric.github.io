@@ -36,30 +36,3 @@ div.outline-text-2, div.outline-text-3, div.outline-text-4 {
 #table-of-contents {
   display: none;
 }
-
-
-
-div.visualization {
-  text-align: center;
-}
-
-table.chessboard {
-  margin: auto;
-  margin-bottom: 1em;
-}
-table.chessboard td {
-  width: 1em;
-  height: 1em;
-  font-size: 1em;
-  line-height: 1em;
-  border: solid thin black;
-}
-.highlight {
-  background-color: #FAA;
-}
-.attacked {
-  background-color: #F66;
-}
-.solution {
-  background-color: grey;
-}
