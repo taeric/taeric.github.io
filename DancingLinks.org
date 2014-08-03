@@ -1,0 +1,794 @@
+#+title: Why Dancing Links?
+#+OPTIONS: num:nil
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="style2.css" />
+
+* Introduction
+
+  I originally thought of the "Dancing Links" technique as one that is
+  solely suited to solving exact cover problems.  I will probably keep
+  that bias for some time, as the main demonstration algorithm is DLX.
+  Indeed, even the wikipedia page for it showcases it in this way.
+  However, I now see that it is a method to maintain a large data
+  structure such that edits can be easily undone and new edits tried.
+
+  So, in order to see if I really understood what was going on, I
+  decided to try my hand at this.  Below I'll try my hand at a
+  standard recursive solution to the exact cover problem, and then
+  I'll try the DLX algorithm.
+
+* N-Queens
+
+  So, first a brief exploration of the dancing links in solving a
+  straight forward "exact cover" problem.  This will be, directly,
+  the DLX algorithm that was used in introducing the technique.
+
+  For those that do not know, the "$N$-Queens" problem is one of how
+  to place $N$ queens that are not attacking each other on an $N
+  \times N$ chessboard.  Simply stated, we want to pick a solution
+  where we have a queen in every row, column, diagonal, and reverse
+  diagonal.
+
+  The basic algorithm for solving this is to place one piece, then see
+  if you can place another piece on the spaces remaining.  Continue
+  until you place $N$ pieces or can not place another.  In either
+  event, you simply take off pieces that you have placed and try
+  a different placement.
+
+  It can be seen that this is depth first search across all possible
+  piece placements.  Simply start with all possible positions, pick a
+  starting point, remove all positions it eliminates, and repeat.
+
+** Basic Recursion
+
+   A ridiculously naive solution follows.  My strategy is simply to go
+   as stated above.  Start by enumerating all positions on the board.
+   Pick one, add it to our list of "moves taken," remove all positions
+   it eliminates, and call ourselves starting over.  When we return
+   from the recursive call, try the next position in our list.
+
+   This method is short enough that I will just put the whole thing
+   here.  I will also add that that is a benefit for this approach.
+   The DLX version turns out to be a lot more code.
+
+   #+name: basic_algorithm
+   #+begin_src js -n :tangle naiveRecursion.js :comments link
+     function solveRecursively(n, showSteps) {
+         var r = n, c = n, allPositions,
+             steps = [];
+
+         function initializePositions() {
+             var i, j;
+             allPositions = [];
+             for (i = 0; i < r; i++) {
+                 for (j = 0; j < c; j++) {
+                     allPositions.push({
+                         r: i,
+                         f: j,
+                         a: i + j,
+                         b: n - 1 - j + i,
+                         //To get our placements the same as the DLX one...
+                         toString: function() {
+                             return "R"+this.r+" F"+this.f+" A"+this.a+" B"+this.b;
+                         }
+                     });
+                 }
+             }
+         }
+
+         function placePiece(availablePositions, position) {
+             return availablePositions.
+                 filter(function(v) {
+                     return v.r !== position.r &&
+                         v.f !== position.f &&
+                         v.a !== position.a &&
+                         v.b !== position.b;
+                 });
+         }
+
+         function testSolution(availablePositions, candidate) {
+             if (showSteps)
+                 steps.push(candidate);
+
+             if (availablePositions.length) {
+                 var childSolutions = [];
+                 for (var p = 0; p < Math.min(n, availablePositions.length); p++) {
+                     var position = availablePositions[0],
+                         remainingPositions = placePiece(availablePositions,
+                                                         position),
+                         recurseResults = testSolution(remainingPositions,
+                                                       candidate.concat(position));
+
+                         availablePositions = availablePositions.slice(1);
+                         childSolutions = childSolutions.concat(recurseResults);
+                 }
+                 return childSolutions;
+             } else if (candidate.length === n) {
+                 return [ candidate ];
+             }
+             return [];
+         }
+
+         initializePositions();
+         var solutions = testSolution(allPositions, []);
+         if (showSteps)
+             return steps;
+         return solutions;
+     }
+
+   #+end_src
+
+   Quickly running this, we see that it has the expected results for
+   various small values.  I did not try for much larger values as I
+   don't exactly have high hopes for speed there.  Just running for 10
+   nodes already takes a bit of time.  (Well, a second or so.  Feels
+   like forever.  Bumping up to 11 starts taking tens of seconds.)
+
+   #+begin_src js :noweb yes :exports results
+     <<basic_algorithm>>
+
+     return [[3, solveRecursively(3).length],
+             [4, solveRecursively(4).length],
+             [5, solveRecursively(5).length],
+             [6, solveRecursively(6).length],
+             [7, solveRecursively(7).length],
+             [8, solveRecursively(8).length]];
+   #+end_src
+
+   #+RESULTS:
+   | 3 |  0 |
+   | 4 |  2 |
+   | 5 | 10 |
+   | 6 |  4 |
+   | 7 | 40 |
+   | 8 | 92 |
+
+
+** Dancing Links
+
+   Now that we've looked at solving this with the standard technique
+   of recursion, how would this look with dancing links?  Not going to
+   lie, this is much more involved.  Luckily, it isn't that terribly
+   scary.
+
+*** Outline
+
+    The basic outline is to create a method that will take in the
+    number of queens we want to solve, and then create the necessary
+    structures to make it happen.
+
+    #+name: dlx_algorithm
+    #+begin_src js -n :tangle dancingLinks.js :noweb tangle :comments noweb
+      function solveWithDancingLinks(n, showSteps) {
+          var headers, solutions = [], O = [];
+
+          <<dlx_initialize_headers>>
+
+          <<dlx_search>>
+
+          <<dlx_cover_uncover>>
+
+          <<dlx_utilities>>
+
+
+          initializeHeaders();
+          search(0);
+          return solutions;
+      }
+    #+end_src
+
+*** Search
+
+    We'll begin by looking at the search code.  This is very straight
+    forward.  First, check to see if there are any columns left
+    uncovered and return the current solution if so.  Otherwise, pick a
+    column and cover it.  Then, for each row in the current column,
+    cover all connected columns and continue the search.
+
+    #+name: dlx_search
+    #+begin_src js -n
+      function search(k) {
+          var c, r;
+          if (showSteps || headers.right === headers) {
+              solutions.push(copySolution());
+              if (headers.right == headers)
+                  return;
+          }
+          c = smallestColumn();
+          cover(c);
+          r = c.down;
+          while (r !== c) {
+              O.push(printRow(r));
+              r = r.right;
+              while (r.col !== c) {
+                  cover(r.col);
+                  r = r.right;
+              }
+              search(k + 1);
+              r = r.left;
+              while (r.col !== c) {
+                  uncover(r.col);
+                  r = r.left;
+              }
+              r = r.down;
+              O.pop();
+          }
+          uncover(c);
+      }
+    #+end_src
+
+*** Covering and Uncovering Columns
+
+    This is actually the heart of the "dancing" in the dancing links
+    technique.  Not much to offer on them other than that they have to
+    run in reverse order from each other for our purposes.  Both
+    methods are included here.
+
+    #+name: dlx_cover_uncover
+    #+begin_src js -n
+      function cover(c) {
+          var r = c.down;
+          c.right.left = c.left;
+          c.left.right = c.right;
+          while (r !== c) {
+              r = r.right;
+              while (r.col !== c) {
+                  r.up.down = r.down;
+                  r.down.up = r.up;
+                  r.col.size--;
+                  r = r.right;
+              }
+              r = r.down;
+          }
+      }
+
+      function uncover(c) {
+          var r = c.up;
+          c.right.left = c;
+          c.left.right = c;
+          while (r !== c) {
+              r = r.left;
+              while (r.col !== c) {
+                  r.up.down = r;
+                  r.down.up = r;
+                  r.col.size++;
+                  r = r.left;
+              }
+              r = r.up;
+          }
+      }
+    #+end_src
+
+*** Utility Methods
+
+    The rest of the methods we need are fairly self explanatory.
+
+    #+name: dlx_utilities
+    #+begin_src js -n
+      function smallestColumn() {
+          var h, c, s = Number.MAX_VALUE;
+          h = headers.right;
+          while (h !== headers) {
+              if (h.size < s) {
+                  c = h;
+                  s = c.size;
+              }
+              h = h.right;
+          }
+          return c;
+      }
+      function printRow(r) {
+          var s = r.col.name + ' ', e = r;
+          r = r.right;
+          while (r !== e) {
+              s += r.col.name + ' ';
+              r = r.right;
+          }
+          return s;
+      }
+      function copySolution() {
+          var solution = [].concat(O);
+          return solution;
+      }
+
+    #+end_src
+
+*** Generate Headers
+
+    And now, the only part of this code that is actually specific to
+    the queens problem, generating the rows and columns of our data
+    structure.
+
+    The basic idea is to generate a primary column for each rank and
+    file, then secondary columns for each diagonal.  Primary columns
+    are doubly linked to the 'root' column, whereas secondary ones are
+    not.  Knuth points out that you can get further speed increases by
+    creating the headers in "pipe organ" order.  I confess I had to
+    just use his method for generating said order, as I did not know
+    it.
+
+    This does make a very interesting example where it is not just the
+    data structure that matters, but how you initialize it.  Using the
+    "pipe organ" order can cut the running time by half, compared to
+    the straight forward ordering.
+
+    The only trick this required is that I do keep an array of all
+    columns while making them so that I can find the ones that are not
+    hooked into the main header list.  (After I did this, I took a
+    look directly at Knuth's code to see how he does it.  Kind of sad
+    to see how much easier this is to do in C.  I can't say I would
+    have done it the easy way, though.  I do not think of pointer
+    tricks quickly.)
+
+    #+name: dlx_initialize_headers
+    #+begin_src js -n
+    function initializeHeaders() {
+        var i, j, k, rows=[];
+        cols = [];
+
+        headers = {
+            name: 'root',
+            right: null,
+            left: null,
+            up: null,
+            down: null
+        };
+        headers.right = headers;
+        headers.left = headers;
+
+        for (i = 0; i < n; i++) {
+            var t = ((i & 1) ? n - 1 - i : n + i) >> 1;
+            var cur = {
+                name: 'R' + t,
+                right: headers.right,
+                left: headers,
+                size: 0,
+                down: null,
+                up: null,
+            };
+            cols.push(cur);
+            headers.right.left = cur;
+            headers.right = cur;
+            cur.up = cur;
+            cur.down = cur;
+
+            cur = {
+                name: 'F' + t,
+                right: headers.right,
+                left: headers,
+                size: 0,
+                down: null,
+                up: null,
+            };
+            cols.push(cur);
+            headers.right.left = cur;
+            headers.right = cur;
+            cur.up = cur;
+            cur.down = cur;
+        }
+        for (i = 0; i < 2 * n; i++) {
+                var cur = {
+                    name: 'A' + i,
+                    right: headers,
+                    left: headers.left,
+                    size: 0,
+                    up: null,
+                    down: null
+                };
+                cols.push(cur);
+                cur.left = cur;
+                cur.right = cur;
+                cur.up = cur;
+                cur.down = cur;
+        }
+        for (i = 0; i < 2 * n; i++) {
+                var cur = {
+                name: 'B' + i,
+                    right: headers,
+                    left: headers.left,
+                    size: 0,
+                    up: null,
+                    down: null
+                };
+                cols.push(cur);
+                cur.left = cur;
+                cur.right = cur;
+                cur.up = cur;
+                cur.down = cur;
+        }
+
+        for (i = 0; i < n; i++) {
+            for (j = 0; j < n; j++) {
+                var a, b, c, d;
+                a = {
+                    up: null,
+                    down: null,
+                    left: null,
+                    right: null,
+                    col: null
+                };
+                b = {
+                    up: null,
+                    down: null,
+                    left: null,
+                    right: null,
+                    col: null
+                };
+                c = {
+                    up: null,
+                    down: null,
+                    left: null,
+                    right: null,
+                    col: null
+                };
+                d = {
+                    up: null,
+                    down: null,
+                    left: null,
+                    right: null,
+                    col: null
+                };
+                a.left = d;
+                a.right = b;
+                b.left = a;
+                b.right = c;
+                c.left = b;
+                c.right = d;
+                d.left = c;
+                d.right = a;
+
+                var colIdx = 0;
+                var aCol = cols[colIdx++];
+                while (aCol.name !== 'R' + i)
+                    aCol = cols[colIdx++];
+                aCol.size++;
+                a.col = aCol;
+                a.down = aCol;
+                a.up = aCol.up;
+                a.down.up = a;
+                a.up.down = a;
+
+                colIdx = 0;
+                var bCol = cols[colIdx++];
+                while (bCol.name !== 'F' + j) {
+                    bCol = cols[colIdx++];
+                }
+                bCol.size++;
+                b.col = bCol;
+                b.down = bCol;
+                b.up = bCol.up;
+                b.down.up = b;
+                b.up.down = b;
+
+                colIdx = 0;
+                var cCol = cols[colIdx++];
+                while (cCol.name !== 'A' + (j + i))
+                    cCol = cols[colIdx++];
+                cCol.size++;
+                c.col = cCol;
+                c.down = cCol;
+                c.up = cCol.up;
+                c.down.up = c;
+                c.up.down = c;
+
+                colIdx = 0;
+                var dCol = cols[colIdx++];
+                while (dCol.name !== 'B' + (n - 1 - j + i))
+                    dCol = cols[colIdx++];
+                dCol.size++;
+                d.col = dCol;
+                d.down = dCol;
+                d.up = dCol.up;
+                d.up.down = d;
+                d.down.up = d;
+            }
+        }
+        headers = headers.right;
+        while (headers.down) {
+            if (headers.size === 0) {
+                headers.left.right = headers.right;
+                headers.right.left = headers.left;
+            }
+            headers = headers.right;
+        }
+    }
+    #+end_src
+
+*** Running for small values
+
+    And finally, we run for some quick examples to see what we can
+    see.  Amusingly, a bug(?) in org-mode is the only reason I'm not
+    exporting more for this run.  This algorithm will produce the
+    results for $N$ up to 13 in just a few seconds (on my machine, of
+    course).
+
+    #+begin_src js :noweb yes :exports results
+      <<dlx_algorithm>>
+
+      return [[3, solveWithDancingLinks(3).length],
+              [4, solveWithDancingLinks(4).length],
+              [5, solveWithDancingLinks(5).length],
+              [6, solveWithDancingLinks(6).length],
+              [7, solveWithDancingLinks(7).length],
+              [8, solveWithDancingLinks(8).length]];
+    #+end_src
+
+    #+RESULTS:
+    | { | SD: | 3 | } | (4 2) | (5 10) | (6 4) | (7 40) | (8 92) |
+
+
+** Visualized
+
+   I had originally thought to run some fairly sophisticated
+   visualizations of these two algorithms.  Truth to tell, I just
+   can't think of any amazing visualization that is that enlightening.
+
+   However, running the visualization of my DLX algorithm where I just
+   see what board positions it tries did help me spot a bug in my
+   code.  So, I'll include what I did.  If you want to just play with
+   some larger visualizations, simply run:
+
+   #+begin_src js
+     document.body.appendChild(makeVisualization(N, solveWithDancingLinks));
+   #+end_src
+
+   To see the boards that the recursive solution inspects, use
+   "solveRecursively."
+
+*** Recursive solution
+
+    First thing I was curious on was if I could get a good grasp on
+    the speed difference at a lower value of $N$.  Sure enough, there
+    is enough to look at.  We'll begin by looking at the recursive
+    solution.
+
+    The basic problem is this algorithm hits a lot of tree states
+    where it is not possible to fully cover.  In particular, notice
+    that from position 2 to position 3, it *is* possible to place
+    another queen, however, it is *not* possible to place a queen on
+    the last file.  So, the algorithm should be able to backtrack
+    early.  Instead, it places the queen.
+
+    Otherwise, this algorithm inspects the pieces in a very straight
+    forward left to right, top to bottom method of placing pieces.
+
+   #+begin_html
+   <div id="recursiveVisualizations"></div>
+   #+end_html
+
+*** Dancing Links solution
+
+    Contrast the previous behavior with the dancing links technique.
+    Here, the ordering heuristic of Knuth's means that as soon as a
+    rank or a file is impossible to place, the algorithm will
+    backtrack.
+
+    This shows in the marked decrease in number of board
+    configurations tried.  For DLX, this is a nice 16 positions
+    instead of the 31 previously.
+
+    To see the specific scenario that helps, notice from configuration
+    4 to 5, there *is* a place a queen could be placed, but the system
+    does not bother trying, as the third rank is already impossible to
+    place.
+
+   #+begin_html
+   <div id="dlxVisualizations"></div>
+   #+end_html
+
+
+* Conclusion
+
+  After all of that, what is the reason to use the "dancing links"
+  technique?  Mainly for speed.  It seems to be a classic case study
+  in using a fair bit more memory for the main data in order to more
+  easily backtrack on modifications to it.
+
+  It should be possible to use something akin to the same ordering
+  heuristic in the naive recursive solution that the dancing links
+  version uses.  However, the linked nature of the nodes in the DLX
+  algorithm makes it straight forward to find what position of the
+  board to try next.  There is plenty of following links, but there is
+  relatively little "searching" to find whichc piece to modify.
+
+  Also, please note that the point of the technique is to show how
+  modifying a datastructure can sometimes easily be undone.  All in
+  all it is more difficult to build up the main data structure, but
+  manipulating it is very fast.
+
+  Finally, I am considering using this technique elsewhere.  There are
+  a few oddities to it that will likely stonewall this effort.
+  Mainly, I am definitely more comfortable with "immutable" data
+  structures.  At least the simple ones.
+
+* Addendum
+
+  I should also put a big plug in to the literate programming ideas,
+  again.  To note, this document is not just excerpts of the code, but
+  rather the full source code for everything I did.  It can be tangled
+  into the different files.
+
+  I'm torn on really recommending this style for full projects.  I
+  think it sadly lends itself better to pieces where one person does
+  it all.  However, even working in a team it is not uncommon for a
+  few people to develop sections on their own.  Perhaps it could work
+  better in a team than I am giving it credit.
+
+  I will say that reading Knuth's code directly is both easier and
+  more of a learning experience than was originally anticipated.
+  There is definitely a mythos that surrounds his work that convinces
+  many to think they can't read it.  I will not claim the heavier math
+  is easy.  Nor will I claim all of the exercises are.  I will say
+  that it is easier than it is typically portrayed.  Especially just
+  the programming sections.
+
+* Appendix
+
+** Board Highlighting
+
+   The code I'm using for the board highlighting is here.  I really
+   just needed a few things.  Probably could have just pulled in a
+   library, I'll use the excuse of doing most of this while on a
+   train.  (Which, sadly is not true.  I certainly *started* this
+   while on the train.)
+
+   #+begin_src js :tangle chessBoards.js :comments link
+     function element(name, children) {
+         var el = document.createElement(name);
+         if (children) {
+             Array.from(children).forEach(function(child) {
+                 if (typeof child === "string") {
+                     el.appendChild(document.createTextNode(child));
+                 } else {
+                     el.appendChild(child);
+                 }
+             });
+         }
+         return el;
+     }
+     function div()   { return element("div", arguments);   }
+     function table() { return element("table", arguments); }
+     function tbody() { return element("tbody", arguments); }
+     function tr()    { return element("tr", arguments);    }
+     function td()    { return element("td", arguments);    }
+     function span()  { return element("span", arguments);  }
+     function withAttribute(element, attr, value) {
+         element.setAttribute(attr, value);
+         return element;
+     }
+     function withClassname(element, cls) {
+         return withAttribute(element, "class", cls);
+     }
+     function withMouseMoveListener(element, listener) {
+         element.onmouseover = listener;
+         return element;
+     }
+     function slider() {
+         return withAttribute(
+             withAttribute(element("input"), "type", "range"),
+             "min", "0");
+     }
+
+
+     function makeVisualization(n, method) {
+         var board = makeBoard(n),
+             input = slider(),
+             curState = span(),
+             states = method(n, true);
+
+         input.setAttribute("max", states.length - 1);
+         curState.innerHTML = "0 / " + (states.length - 1);
+         input.value = 0;
+         input.oninput = function () {
+             curState.innerHTML = input.value + " / " + (states.length - 1);
+             clearQueens(board);
+             states[input.value].forEach(function (s) {
+                 placeQueen(board, "."+s.toString().trim().replace(/ /g, '.'));
+             });
+         }
+
+         return withClassname(div(curState, board, input), "visualization");
+     }
+
+     function makeBoard(n) {
+         var r = n, c = n;
+         var rows = tbody();
+         for (var i = 0; i < r; i++) {
+             var row = tr();
+             rows.appendChild(row);
+             for (var j = 0; j < c; j++) {
+                 var cell = td();
+                 var cls = "";
+                 cls += " R"+i;
+                 cls += " F"+j;
+                 cls += " A"+ (i + j);
+                 cls += " B"+ (n - 1 - j + i);
+                 cell.setAttribute("class", cls.trim());
+                 row.appendChild(cell);
+             }
+         }
+         return withMouseMoveListener(withClassname(table(rows),
+                                                    "chessboard"),
+                                      hoverListener);
+     }
+
+     function clearHighlight(board, cls) {
+         Array
+             .from(board.querySelectorAll('.'+cls))
+             .forEach(function(v) {
+                 v.setAttribute("class",
+                                v.getAttribute("class")
+                                .replace(new RegExp(cls, 'g'), "").trim());
+
+             });
+
+     }
+
+     function getAttackingClasses(cls) {
+         if (! cls)
+             return null;
+
+         cls = cls.replace(/.*(R.*B\d+).*/, "$1");
+         cls = cls.replace(/((R|F|A|B)\d+)/g, ".$1");
+         cls = cls.replace(/ /g, ",");
+         return cls
+     }
+
+     function highlight(parent, cls, highlightCls) {
+         if (! highlightCls)
+             highlightCls = "highlight";
+
+         Array.from(parent.querySelectorAll(cls))
+             .forEach(function(v) {
+                 var curCls = v.getAttribute("class");
+                 if (!curCls.contains(highlightCls)) {
+                     v.setAttribute("class",
+                                    curCls + " " + highlightCls);
+                 }
+             });
+
+     }
+
+     function hoverListener(e) {
+         if (e.target.tagName === 'TD' &&
+             e.target
+             .parentElement
+             .parentElement
+             .parentElement.getAttribute("class") === "chessboard") {
+             var rows = e.target.parentElement.parentElement;
+             clearHighlight(rows, 'highlight');
+             var toggleCls = getAttackingClasses(e.target.getAttribute("class"));
+             if (toggleCls) {
+                 highlight(rows, toggleCls);
+             }
+         }
+     }
+
+     function placeQueen(board, posSelector) {
+         var position = board.querySelector(posSelector);
+         //Yes, this is the unicode for the queen symbol...
+         position.appendChild(document.createTextNode("\u2655"));
+         var highlightCls = getAttackingClasses(position.getAttribute("class"));
+         highlight(board, highlightCls, 'attacked');
+     }
+
+     function clearQueens(board) {
+         Array.from(board.querySelectorAll("td")).forEach(function(td) {
+             if (td.firstChild)
+                 td.removeChild(td.firstChild);
+         });
+         clearHighlight(board, 'attacked');
+     }
+
+
+
+   #+end_src
+
+   #+begin_html
+<script type="text/javascript" src="naiveRecursion.js"></script>
+<script type="text/javascript" src="dancingLinks.js"></script>
+<script type="text/javascript" src="chessBoards.js"></script>
+     <script>
+      document.getElementById("recursiveVisualizations").appendChild(makeVisualization(4, solveRecursively));
+      document.getElementById("dlxVisualizations").appendChild(makeVisualization(4, solveWithDancingLinks));
+     </script>
+   #+end_html
