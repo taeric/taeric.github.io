@@ -1,4 +1,4 @@
-#+title: Why Dancing Links?
+#+title: Dancing Links in Javascript
 #+OPTIONS: num:nil
 #+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
 #+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="chessboards.css" />
