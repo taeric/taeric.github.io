@@ -22,3 +22,11 @@ table.chessboard td {
 .solution {
   background-color: grey;
 }
+input[type='range'] {
+  -webkit-appearance: none;
+  border-radius: 5px;
+  box-shadow: inset 0 0 5px #333;
+  background-color: #999;
+  height: 10px;
+  vertical-align: middle;
+}

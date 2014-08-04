@@ -1,14 +1,15 @@
 // [[file:DancingLinks.org::*Board%20Highlighting][Board\ Highlighting:1]]
 function element(name, children) {
-    var el = document.createElement(name);
+    var el = document.createElement(name), i;
     if (children) {
-        Array.from(children).forEach(function(child) {
+        for(i = 0; i < children.length; i++) {
+            var child = children[i];
             if (typeof child === "string") {
                 el.appendChild(document.createTextNode(child));
             } else {
                 el.appendChild(child);
             }
-        });
+        };
     }
     return el;
 }
@@ -79,14 +80,14 @@ function makeBoard(n) {
 }
 
 function clearHighlight(board, cls) {
-    Array
-        .from(board.querySelectorAll('.'+cls))
-        .forEach(function(v) {
-            v.setAttribute("class",
-                           v.getAttribute("class")
-                           .replace(new RegExp(cls, 'g'), "").trim());
+    var i, cells = board.querySelectorAll('.'+cls);
+    for (i = 0; i < cells.length; i++) {
+        var cell = cells[i];
+        cell.setAttribute("class",
+                          cell.getAttribute("class")
+                          .replace(new RegExp(cls, 'g'), "").trim());
 
-        });
+    };
 
 }
 
@@ -103,16 +104,15 @@ function getAttackingClasses(cls) {
 function highlight(parent, cls, highlightCls) {
     if (! highlightCls)
         highlightCls = "highlight";
-
-    Array.from(parent.querySelectorAll(cls))
-        .forEach(function(v) {
-            var curCls = v.getAttribute("class");
-            if (!curCls.contains(highlightCls)) {
-                v.setAttribute("class",
-                               curCls + " " + highlightCls);
-            }
-        });
-
+    var i, cells = parent.querySelectorAll(cls);
+    for (i = 0; i < cells.length; i++) {
+        var cell = cells[i],
+            curCls = cell.getAttribute("class");
+        if (curCls.indexOf(highlightCls) === -1) {
+            cell.setAttribute("class",
+                              curCls + " " + highlightCls);
+        }
+    }
 }
 
 function hoverListener(e) {
@@ -139,10 +139,12 @@ function placeQueen(board, posSelector) {
 }
 
 function clearQueens(board) {
-    Array.from(board.querySelectorAll("td")).forEach(function(td) {
+    var i, cells = board.querySelectorAll("td");
+    for (i = 0; i < cells.length; i++) {
+        var td = cells[i];
         if (td.firstChild)
             td.removeChild(td.firstChild);
-    });
+    };
     clearHighlight(board, 'attacked');
 }
 // Board\ Highlighting:1 ends here

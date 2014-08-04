@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Why Dancing Links?</title>
-<!-- 2014-08-03 Sun 10:23 -->
+<!-- 2014-08-04 Mon 07:11 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Josh" />
@@ -250,9 +250,9 @@ to use the technique in another algorithm later.
 <h2 id="sec-2">N-Queens</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-First a brief exploration of the dancing links in solving a
-straight forward "exact cover" problem.  This will be, directly,
-the DLX algorithm that was used in introducing the technique.
+I'll be exploring dancing links in solving a straight forward "exact
+cover" problem.  This will be, directly, the DLX algorithm that was
+used in introducing the technique.
 </p>
 
 <p>
@@ -1043,15 +1043,16 @@ while on the train.)
 <div class="org-src-container">
 
 <pre class="src src-js"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">element</span>(<span style="color: #DFAF8F;">name</span>, <span style="color: #DFAF8F;">children</span>) {
-    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">el</span> = document.createElement(name);
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">el</span> = document.createElement(name), <span style="color: #DFAF8F;">i</span>;
     <span style="color: #F0DFAF; font-weight: bold;">if</span> (children) {
-        Array.from(children).forEach(<span style="color: #F0DFAF; font-weight: bold;">function</span>(<span style="color: #DFAF8F;">child</span>) {
+        <span style="color: #F0DFAF; font-weight: bold;">for</span>(i = 0; i &lt; children.length; i++) {
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">child</span> = children[i];
             <span style="color: #F0DFAF; font-weight: bold;">if</span> (<span style="color: #F0DFAF; font-weight: bold;">typeof</span> child === <span style="color: #CC9393;">"string"</span>) {
                 el.appendChild(document.createTextNode(child));
             } <span style="color: #F0DFAF; font-weight: bold;">else</span> {
                 el.appendChild(child);
             }
-        });
+        };
     }
     <span style="color: #F0DFAF; font-weight: bold;">return</span> el;
 }
@@ -1122,14 +1123,14 @@ while on the train.)
 }
 
 <span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">clearHighlight</span>(<span style="color: #DFAF8F;">board</span>, <span style="color: #DFAF8F;">cls</span>) {
-    Array
-        .from(board.querySelectorAll(<span style="color: #CC9393;">'.'</span>+cls))
-        .forEach(<span style="color: #F0DFAF; font-weight: bold;">function</span>(<span style="color: #DFAF8F;">v</span>) {
-            v.setAttribute(<span style="color: #CC9393;">"class"</span>,
-                           v.getAttribute(<span style="color: #CC9393;">"class"</span>)
-                           .replace(<span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">RegExp</span>(cls, <span style="color: #CC9393;">'g'</span>), <span style="color: #CC9393;">""</span>).trim());
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">i</span>, <span style="color: #DFAF8F;">cells</span> = board.querySelectorAll(<span style="color: #CC9393;">'.'</span>+cls);
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; cells.length; i++) {
+        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cell</span> = cells[i];
+        cell.setAttribute(<span style="color: #CC9393;">"class"</span>,
+                          cell.getAttribute(<span style="color: #CC9393;">"class"</span>)
+                          .replace(<span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">RegExp</span>(cls, <span style="color: #CC9393;">'g'</span>), <span style="color: #CC9393;">""</span>).trim());
 
-        });
+    };
 
 }
 
@@ -1146,16 +1147,15 @@ while on the train.)
 <span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">highlight</span>(<span style="color: #DFAF8F;">parent</span>, <span style="color: #DFAF8F;">cls</span>, <span style="color: #DFAF8F;">highlightCls</span>) {
     <span style="color: #F0DFAF; font-weight: bold;">if</span> (! highlightCls)
         highlightCls = <span style="color: #CC9393;">"highlight"</span>;
-
-    Array.from(parent.querySelectorAll(cls))
-        .forEach(<span style="color: #F0DFAF; font-weight: bold;">function</span>(<span style="color: #DFAF8F;">v</span>) {
-            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">curCls</span> = v.getAttribute(<span style="color: #CC9393;">"class"</span>);
-            <span style="color: #F0DFAF; font-weight: bold;">if</span> (!curCls.contains(highlightCls)) {
-                v.setAttribute(<span style="color: #CC9393;">"class"</span>,
-                               curCls + <span style="color: #CC9393;">" "</span> + highlightCls);
-            }
-        });
-
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">i</span>, <span style="color: #DFAF8F;">cells</span> = parent.querySelectorAll(cls);
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; cells.length; i++) {
+        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cell</span> = cells[i],
+            curCls = cell.getAttribute(<span style="color: #CC9393;">"class"</span>);
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (curCls.indexOf(highlightCls) === -1) {
+            cell.setAttribute(<span style="color: #CC9393;">"class"</span>,
+                              curCls + <span style="color: #CC9393;">" "</span> + highlightCls);
+        }
+    }
 }
 
 <span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">hoverListener</span>(<span style="color: #DFAF8F;">e</span>) {
@@ -1182,10 +1182,12 @@ while on the train.)
 }
 
 <span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">clearQueens</span>(<span style="color: #DFAF8F;">board</span>) {
-    Array.from(board.querySelectorAll(<span style="color: #CC9393;">"td"</span>)).forEach(<span style="color: #F0DFAF; font-weight: bold;">function</span>(<span style="color: #DFAF8F;">td</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">i</span>, <span style="color: #DFAF8F;">cells</span> = board.querySelectorAll(<span style="color: #CC9393;">"td"</span>);
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; cells.length; i++) {
+        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">td</span> = cells[i];
         <span style="color: #F0DFAF; font-weight: bold;">if</span> (td.firstChild)
             td.removeChild(td.firstChild);
-    });
+    };
     clearHighlight(board, <span style="color: #CC9393;">'attacked'</span>);
 }
 </pre>
@@ -1222,6 +1224,13 @@ Additionally, I used the following css.
 <span style="color: #93E0E3;">.solution </span>{
   <span style="color: #DFAF8F;">background-color</span>: <span style="color: #000000; background-color: #808080;">grey</span>;
 }
+<span style="color: #93E0E3;">input[type=</span><span style="color: #93E0E3;">'range'</span><span style="color: #93E0E3;">] </span>{
+  <span style="color: #DFAF8F;">border-radius</span>: 5px;
+  <span style="color: #DFAF8F;">box-shadow</span>: inset 0 0 5px <span style="color: #ffffff; background-color: #333;">#333</span>;
+  <span style="color: #DFAF8F;">background-color</span>: <span style="color: #000000; background-color: #999;">#999</span>;
+  <span style="color: #DFAF8F;">height</span>: 10px;
+  <span style="color: #DFAF8F;">vertical-align</span>: middle;
+}
 </pre>
 </div>
 
@@ -1238,7 +1247,7 @@ Additionally, I used the following css.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh</p>
-<p class="date">Created: 2014-08-03 Sun 10:23</p>
+<p class="date">Created: 2014-08-04 Mon 07:11</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.4.50.7 (<a href="http://orgmode.org">Org</a> mode 8.3beta)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
