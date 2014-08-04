@@ -5,10 +5,11 @@
 
 * Introduction
 
-  If you have never heard of it, [[http://www-cs-faculty.stanford.edu/~uno/papers/dancing-color.ps.gz][Dancing Links]] is a technique that
-  Knuth introduced to implement a recursive backtracking algorithm.
-  If you truly want a good treatment as to what the technique is, I
-  can not recommend going straight to the source heavily enough.
+  If you have never heard of it, [[http://www-cs-faculty.stanford.edu/~uno/papers/dancing-color.ps.gz][Dancing Links]] is one of the
+  techniques that Knuth describes to implement a recursive
+  backtracking algorithm.  If you truly want a good treatment as to
+  what the technique is, I can not recommend going straight to the
+  source heavily enough.
 
   I originally thought of the "Dancing Links" technique as one that is
   solely suited to solving "exact cover" problems.  This actually
