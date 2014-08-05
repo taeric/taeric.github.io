@@ -1,0 +1,6 @@
+#+TITLE: Josh Berry's Blog
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
+
+* Random stuff.
+
+   - [[./DancingLinks.org][DancingLinks]]: In which I butcher an otherwise elegant technique.
