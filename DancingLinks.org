@@ -132,7 +132,7 @@
    #+begin_src js :noweb yes :exports results
      <<basic_algorithm>>
 
-     return [['$N$', 'Number of Solutions'],
+     return [['$N$', 'Solutions'],
              [1, solveRecursively(1).length],
              [2, solveRecursively(2).length],
              [3, solveRecursively(3).length],
@@ -518,15 +518,15 @@
 *** Running for small values
 
     And finally, we run for some quick examples to see what we can
-    see.  Amusingly, a bug(?) in org-mode is the only reason I'm not
-    exporting more for this run.  This algorithm will produce the
-    results for $N$ up to 13 in just a few seconds (on my machine, of
-    course).
+    see.  I'm willing to show quite a few more results for this case,
+    as they go *much* faster than the recursive solution I created.
 
     #+begin_src js :noweb yes :exports results
       <<dlx_algorithm>>
 
-      return [['$N$', 'Number of Solutions'],
+      return [['$N$', 'Solutions'],
+              [1, solveWithDancingLinks(1).length],
+              [2, solveWithDancingLinks(2).length],
               [3, solveWithDancingLinks(3).length],
               [4, solveWithDancingLinks(4).length],
               [5, solveWithDancingLinks(5).length],
@@ -542,6 +542,8 @@
 
     #+RESULTS:
     | $N$ | Number of Solutions |
+    |   1 |                   1 |
+    |   2 |                   0 |
     |   3 |                   0 |
     |   4 |                   2 |
     |   5 |                  10 |
