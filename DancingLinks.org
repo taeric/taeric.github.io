@@ -132,7 +132,10 @@
    #+begin_src js :noweb yes :exports results
      <<basic_algorithm>>
 
-     return [[3, solveRecursively(3).length],
+     return [['$N$', 'Number of Solutions'],
+             [1, solveRecursively(1).length],
+             [2, solveRecursively(2).length],
+             [3, solveRecursively(3).length],
              [4, solveRecursively(4).length],
              [5, solveRecursively(5).length],
              [6, solveRecursively(6).length],
@@ -141,12 +144,15 @@
    #+end_src
 
    #+RESULTS:
-   | 3 |  0 |
-   | 4 |  2 |
-   | 5 | 10 |
-   | 6 |  4 |
-   | 7 | 40 |
-   | 8 | 92 |
+   | $N$ | Number of Solutions |
+   |   1 |                   1 |
+   |   2 |                   0 |
+   |   3 |                   0 |
+   |   4 |                   2 |
+   |   5 |                  10 |
+   |   6 |                   4 |
+   |   7 |                  40 |
+   |   8 |                  92 |
 
 
 ** Dancing Links
@@ -520,21 +526,33 @@
     #+begin_src js :noweb yes :exports results
       <<dlx_algorithm>>
 
-      return [[3, solveWithDancingLinks(3).length],
+      return [['$N$', 'Number of Solutions'],
+              [3, solveWithDancingLinks(3).length],
               [4, solveWithDancingLinks(4).length],
               [5, solveWithDancingLinks(5).length],
               [6, solveWithDancingLinks(6).length],
               [7, solveWithDancingLinks(7).length],
-              [8, solveWithDancingLinks(8).length]];
+              [8, solveWithDancingLinks(8).length],
+              [9, solveWithDancingLinks(9).length],
+              [10, solveWithDancingLinks(10).length],
+              [11, solveWithDancingLinks(11).length],
+              [12, solveWithDancingLinks(12).length],
+              [13, solveWithDancingLinks(13).length]];
     #+end_src
 
     #+RESULTS:
-    | 3 |  0 |
-    | 4 |  2 |
-    | 5 | 10 |
-    | 6 |  4 |
-    | 7 | 40 |
-    | 8 | 92 |
+    | $N$ | Number of Solutions |
+    |   3 |                   0 |
+    |   4 |                   2 |
+    |   5 |                  10 |
+    |   6 |                   4 |
+    |   7 |                  40 |
+    |   8 |                  92 |
+    |   9 |                 352 |
+    |  10 |                 724 |
+    |  11 |                2680 |
+    |  12 |               14200 |
+    |  13 |               73712 |
 
 
 ** Visualized
