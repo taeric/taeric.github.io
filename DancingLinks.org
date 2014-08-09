@@ -57,7 +57,7 @@
    The DLX version turns out to be a lot more code.
 
    #+name: basic_algorithm
-   #+begin_src js -n :tangle naiveRecursion.js :comments link
+   #+begin_src js  :tangle naiveRecursion.js :comments link
      function solveRecursively(n, showSteps) {
          var r = n, c = n, allPositions,
              steps = [];
@@ -176,7 +176,7 @@
     structures to make it happen.
 
     #+name: dlx_algorithm
-    #+begin_src js -n :tangle dancingLinks.js :noweb tangle :comments noweb
+    #+begin_src js  :tangle dancingLinks.js :noweb tangle :comments noweb
       function solveWithDancingLinks(n, showSteps) {
           var headers, solutions = [], O = [];
 
@@ -207,7 +207,7 @@
     on it, we immediately backtrack up and try a different path.
 
     #+name: dlx_search
-    #+begin_src js -n
+    #+begin_src js
       function search(k) {
           var c, r;
           if (showSteps || headers.right === headers) {
@@ -246,7 +246,7 @@
     methods are included here.
 
     #+name: dlx_cover_uncover
-    #+begin_src js -n
+    #+begin_src js
       function cover(c) {
           var r = c.down;
           c.right.left = c.left;
@@ -285,7 +285,7 @@
     The rest of the methods we need are fairly self explanatory.
 
     #+name: dlx_utilities
-    #+begin_src js -n
+    #+begin_src js
       function smallestColumn() {
           var h, c, s = Number.MAX_VALUE;
           h = headers.right;
@@ -342,7 +342,7 @@
     tricks quickly.)
 
     #+name: dlx_initialize_headers
-    #+begin_src js -n
+    #+begin_src js
     function initializeHeaders() {
         var i, j, k, rows=[];
         cols = [];

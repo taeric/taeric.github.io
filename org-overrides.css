@@ -27,11 +27,14 @@ div.outline-text-2, div.outline-text-3, div.outline-text-4 {
   padding: 1em;
   padding-top: 0;
 }
-.src {
-  width: 80ex;
+.org-src-container {
+  width: 40em;
   margin: auto;
-  background-color: #222;
+}
+.org-src-container .src {
   color: #EEE;
+  background-color: #222;
+  overflow: auto;
 }
 #table-of-contents {
   display: none;

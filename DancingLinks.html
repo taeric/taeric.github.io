@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Dancing Links in Javascript</title>
-<!-- 2014-08-04 Mon 23:28 -->
+<!-- 2014-08-08 Fri 21:28 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Josh" />
@@ -298,68 +298,68 @@ The DLX version turns out to be a lot more code.
 
 <div class="org-src-container">
 
-<pre class="src src-js" id="basic_algorithm"><span class="linenr"> 1: </span><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">solveRecursively</span>(<span style="color: #DFAF8F;">n</span>, <span style="color: #DFAF8F;">showSteps</span>) {
-<span class="linenr"> 2: </span>    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">r</span> = n, <span style="color: #DFAF8F;">c</span> = n, <span style="color: #DFAF8F;">allPositions</span>,
-<span class="linenr"> 3: </span>        steps = [];
-<span class="linenr"> 4: </span>
-<span class="linenr"> 5: </span>    <span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">initializePositions</span>() {
-<span class="linenr"> 6: </span>        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">i</span>, <span style="color: #DFAF8F;">j</span>;
-<span class="linenr"> 7: </span>        allPositions = [];
-<span class="linenr"> 8: </span>        <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; r; i++) {
-<span class="linenr"> 9: </span>            <span style="color: #F0DFAF; font-weight: bold;">for</span> (j = 0; j &lt; c; j++) {
-<span class="linenr">10: </span>                allPositions.push({
-<span class="linenr">11: </span>                    r: i,
-<span class="linenr">12: </span>                    f: j,
-<span class="linenr">13: </span>                    a: i + j,
-<span class="linenr">14: </span>                    b: n - 1 - j + i,
-<span class="linenr">15: </span>                    <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">To get our placements the same as the DLX one...</span>
-<span class="linenr">16: </span>                    <span style="color: #93E0E3;">toString</span>: <span style="color: #F0DFAF; font-weight: bold;">function</span>() {
-<span class="linenr">17: </span>                        <span style="color: #F0DFAF; font-weight: bold;">return</span> <span style="color: #CC9393;">"R"</span>+<span style="color: #BFEBBF;">this</span>.r+<span style="color: #CC9393;">" F"</span>+<span style="color: #BFEBBF;">this</span>.f+<span style="color: #CC9393;">" A"</span>+<span style="color: #BFEBBF;">this</span>.a+<span style="color: #CC9393;">" B"</span>+<span style="color: #BFEBBF;">this</span>.b;
-<span class="linenr">18: </span>                    }
-<span class="linenr">19: </span>                });
-<span class="linenr">20: </span>            }
-<span class="linenr">21: </span>        }
-<span class="linenr">22: </span>    }
-<span class="linenr">23: </span>
-<span class="linenr">24: </span>    <span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">placePiece</span>(<span style="color: #DFAF8F;">availablePositions</span>, <span style="color: #DFAF8F;">position</span>) {
-<span class="linenr">25: </span>        <span style="color: #F0DFAF; font-weight: bold;">return</span> availablePositions.
-<span class="linenr">26: </span>            filter(<span style="color: #F0DFAF; font-weight: bold;">function</span>(<span style="color: #DFAF8F;">v</span>) {
-<span class="linenr">27: </span>                <span style="color: #F0DFAF; font-weight: bold;">return</span> v.r !== position.r &amp;&amp;
-<span class="linenr">28: </span>                    v.f !== position.f &amp;&amp;
-<span class="linenr">29: </span>                    v.a !== position.a &amp;&amp;
-<span class="linenr">30: </span>                    v.b !== position.b;
-<span class="linenr">31: </span>            });
-<span class="linenr">32: </span>    }
-<span class="linenr">33: </span>
-<span class="linenr">34: </span>    <span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">testSolution</span>(<span style="color: #DFAF8F;">availablePositions</span>, <span style="color: #DFAF8F;">candidate</span>) {
-<span class="linenr">35: </span>        <span style="color: #F0DFAF; font-weight: bold;">if</span> (showSteps)
-<span class="linenr">36: </span>            steps.push(candidate);
-<span class="linenr">37: </span>
-<span class="linenr">38: </span>        <span style="color: #F0DFAF; font-weight: bold;">if</span> (availablePositions.length) {
-<span class="linenr">39: </span>            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">childSolutions</span> = [];
-<span class="linenr">40: </span>            <span style="color: #F0DFAF; font-weight: bold;">for</span> (<span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">p</span> = 0; p &lt; Math.min(n, availablePositions.length); p++) {
-<span class="linenr">41: </span>                <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">position</span> = availablePositions[0],
-<span class="linenr">42: </span>                    remainingPositions = placePiece(availablePositions,
-<span class="linenr">43: </span>                                                    position),
-<span class="linenr">44: </span>                    recurseResults = testSolution(remainingPositions,
-<span class="linenr">45: </span>                                                  candidate.concat(position));
-<span class="linenr">46: </span>
-<span class="linenr">47: </span>                    availablePositions = availablePositions.slice(1);
-<span class="linenr">48: </span>                    childSolutions = childSolutions.concat(recurseResults);
-<span class="linenr">49: </span>            }
-<span class="linenr">50: </span>            <span style="color: #F0DFAF; font-weight: bold;">return</span> childSolutions;
-<span class="linenr">51: </span>        } <span style="color: #F0DFAF; font-weight: bold;">else</span> <span style="color: #F0DFAF; font-weight: bold;">if</span> (candidate.length === n) {
-<span class="linenr">52: </span>            <span style="color: #F0DFAF; font-weight: bold;">return</span> [ candidate ];
-<span class="linenr">53: </span>        }
-<span class="linenr">54: </span>        <span style="color: #F0DFAF; font-weight: bold;">return</span> [];
-<span class="linenr">55: </span>    }
-<span class="linenr">56: </span>
-<span class="linenr">57: </span>    initializePositions();
-<span class="linenr">58: </span>    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">solutions</span> = testSolution(allPositions, []);
-<span class="linenr">59: </span>    <span style="color: #F0DFAF; font-weight: bold;">if</span> (showSteps)
-<span class="linenr">60: </span>        <span style="color: #F0DFAF; font-weight: bold;">return</span> steps;
-<span class="linenr">61: </span>    <span style="color: #F0DFAF; font-weight: bold;">return</span> solutions;
-<span class="linenr">62: </span>}
+<pre class="src src-js" id="basic_algorithm"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">solveRecursively</span>(<span style="color: #DFAF8F;">n</span>, <span style="color: #DFAF8F;">showSteps</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">r</span> = n, <span style="color: #DFAF8F;">c</span> = n, <span style="color: #DFAF8F;">allPositions</span>,
+        steps = [];
+
+    <span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">initializePositions</span>() {
+        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">i</span>, <span style="color: #DFAF8F;">j</span>;
+        allPositions = [];
+        <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; r; i++) {
+            <span style="color: #F0DFAF; font-weight: bold;">for</span> (j = 0; j &lt; c; j++) {
+                allPositions.push({
+                    r: i,
+                    f: j,
+                    a: i + j,
+                    b: n - 1 - j + i,
+                    <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">To get our placements the same as the DLX one...</span>
+                    <span style="color: #93E0E3;">toString</span>: <span style="color: #F0DFAF; font-weight: bold;">function</span>() {
+                        <span style="color: #F0DFAF; font-weight: bold;">return</span> <span style="color: #CC9393;">"R"</span>+<span style="color: #BFEBBF;">this</span>.r+<span style="color: #CC9393;">" F"</span>+<span style="color: #BFEBBF;">this</span>.f+<span style="color: #CC9393;">" A"</span>+<span style="color: #BFEBBF;">this</span>.a+<span style="color: #CC9393;">" B"</span>+<span style="color: #BFEBBF;">this</span>.b;
+                    }
+                });
+            }
+        }
+    }
+
+    <span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">placePiece</span>(<span style="color: #DFAF8F;">availablePositions</span>, <span style="color: #DFAF8F;">position</span>) {
+        <span style="color: #F0DFAF; font-weight: bold;">return</span> availablePositions.
+            filter(<span style="color: #F0DFAF; font-weight: bold;">function</span>(<span style="color: #DFAF8F;">v</span>) {
+                <span style="color: #F0DFAF; font-weight: bold;">return</span> v.r !== position.r &amp;&amp;
+                    v.f !== position.f &amp;&amp;
+                    v.a !== position.a &amp;&amp;
+                    v.b !== position.b;
+            });
+    }
+
+    <span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">testSolution</span>(<span style="color: #DFAF8F;">availablePositions</span>, <span style="color: #DFAF8F;">candidate</span>) {
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (showSteps)
+            steps.push(candidate);
+
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (availablePositions.length) {
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">childSolutions</span> = [];
+            <span style="color: #F0DFAF; font-weight: bold;">for</span> (<span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">p</span> = 0; p &lt; Math.min(n, availablePositions.length); p++) {
+                <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">position</span> = availablePositions[0],
+                    remainingPositions = placePiece(availablePositions,
+                                                    position),
+                    recurseResults = testSolution(remainingPositions,
+                                                  candidate.concat(position));
+
+                    availablePositions = availablePositions.slice(1);
+                    childSolutions = childSolutions.concat(recurseResults);
+            }
+            <span style="color: #F0DFAF; font-weight: bold;">return</span> childSolutions;
+        } <span style="color: #F0DFAF; font-weight: bold;">else</span> <span style="color: #F0DFAF; font-weight: bold;">if</span> (candidate.length === n) {
+            <span style="color: #F0DFAF; font-weight: bold;">return</span> [ candidate ];
+        }
+        <span style="color: #F0DFAF; font-weight: bold;">return</span> [];
+    }
+
+    initializePositions();
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">solutions</span> = testSolution(allPositions, []);
+    <span style="color: #F0DFAF; font-weight: bold;">if</span> (showSteps)
+        <span style="color: #F0DFAF; font-weight: bold;">return</span> steps;
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> solutions;
+}
 </pre>
 </div>
 
@@ -463,22 +463,22 @@ structures to make it happen.
 
 <div class="org-src-container">
 
-<pre class="src src-js" id="dlx_algorithm"><span class="linenr"> 1: </span><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">solveWithDancingLinks</span>(<span style="color: #DFAF8F;">n</span>, <span style="color: #DFAF8F;">showSteps</span>) {
-<span class="linenr"> 2: </span>    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">headers</span>, <span style="color: #DFAF8F;">solutions</span> = [], <span style="color: #DFAF8F;">O</span> = [];
-<span class="linenr"> 3: </span>
-<span class="linenr"> 4: </span>    &lt;&lt;dlx_initialize_headers&gt;&gt;
-<span class="linenr"> 5: </span>
-<span class="linenr"> 6: </span>    &lt;&lt;dlx_search&gt;&gt;
-<span class="linenr"> 7: </span>
-<span class="linenr"> 8: </span>    &lt;&lt;dlx_cover_uncover&gt;&gt;
-<span class="linenr"> 9: </span>
-<span class="linenr">10: </span>    &lt;&lt;dlx_utilities&gt;&gt;
-<span class="linenr">11: </span>
-<span class="linenr">12: </span>
-<span class="linenr">13: </span>    initializeHeaders();
-<span class="linenr">14: </span>    search(0);
-<span class="linenr">15: </span>    <span style="color: #F0DFAF; font-weight: bold;">return</span> solutions;
-<span class="linenr">16: </span>}
+<pre class="src src-js" id="dlx_algorithm"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">solveWithDancingLinks</span>(<span style="color: #DFAF8F;">n</span>, <span style="color: #DFAF8F;">showSteps</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">headers</span>, <span style="color: #DFAF8F;">solutions</span> = [], <span style="color: #DFAF8F;">O</span> = [];
+
+    &lt;&lt;dlx_initialize_headers&gt;&gt;
+
+    &lt;&lt;dlx_search&gt;&gt;
+
+    &lt;&lt;dlx_cover_uncover&gt;&gt;
+
+    &lt;&lt;dlx_utilities&gt;&gt;
+
+
+    initializeHeaders();
+    search(0);
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> solutions;
+}
 </pre>
 </div>
 </div>
@@ -502,34 +502,34 @@ on it, we immediately backtrack up and try a different path.
 
 <div class="org-src-container">
 
-<pre class="src src-js" id="dlx_search"><span class="linenr"> 1: </span><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">search</span>(<span style="color: #DFAF8F;">k</span>) {
-<span class="linenr"> 2: </span>    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">c</span>, <span style="color: #DFAF8F;">r</span>;
-<span class="linenr"> 3: </span>    <span style="color: #F0DFAF; font-weight: bold;">if</span> (showSteps || headers.right === headers) {
-<span class="linenr"> 4: </span>        solutions.push(copySolution());
-<span class="linenr"> 5: </span>        <span style="color: #F0DFAF; font-weight: bold;">if</span> (headers.right == headers)
-<span class="linenr"> 6: </span>            <span style="color: #F0DFAF; font-weight: bold;">return</span>;
-<span class="linenr"> 7: </span>    }
-<span class="linenr"> 8: </span>    c = smallestColumn();
-<span class="linenr"> 9: </span>    cover(c);
-<span class="linenr">10: </span>    r = c.down;
-<span class="linenr">11: </span>    <span style="color: #F0DFAF; font-weight: bold;">while</span> (r !== c) {
-<span class="linenr">12: </span>        O.push(printRow(r));
-<span class="linenr">13: </span>        r = r.right;
-<span class="linenr">14: </span>        <span style="color: #F0DFAF; font-weight: bold;">while</span> (r.col !== c) {
-<span class="linenr">15: </span>            cover(r.col);
-<span class="linenr">16: </span>            r = r.right;
-<span class="linenr">17: </span>        }
-<span class="linenr">18: </span>        search(k + 1);
-<span class="linenr">19: </span>        r = r.left;
-<span class="linenr">20: </span>        <span style="color: #F0DFAF; font-weight: bold;">while</span> (r.col !== c) {
-<span class="linenr">21: </span>            uncover(r.col);
-<span class="linenr">22: </span>            r = r.left;
-<span class="linenr">23: </span>        }
-<span class="linenr">24: </span>        r = r.down;
-<span class="linenr">25: </span>        O.pop();
-<span class="linenr">26: </span>    }
-<span class="linenr">27: </span>    uncover(c);
-<span class="linenr">28: </span>}
+<pre class="src src-js" id="dlx_search"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">search</span>(<span style="color: #DFAF8F;">k</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">c</span>, <span style="color: #DFAF8F;">r</span>;
+    <span style="color: #F0DFAF; font-weight: bold;">if</span> (showSteps || headers.right === headers) {
+        solutions.push(copySolution());
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (headers.right == headers)
+            <span style="color: #F0DFAF; font-weight: bold;">return</span>;
+    }
+    c = smallestColumn();
+    cover(c);
+    r = c.down;
+    <span style="color: #F0DFAF; font-weight: bold;">while</span> (r !== c) {
+        O.push(printRow(r));
+        r = r.right;
+        <span style="color: #F0DFAF; font-weight: bold;">while</span> (r.col !== c) {
+            cover(r.col);
+            r = r.right;
+        }
+        search(k + 1);
+        r = r.left;
+        <span style="color: #F0DFAF; font-weight: bold;">while</span> (r.col !== c) {
+            uncover(r.col);
+            r = r.left;
+        }
+        r = r.down;
+        O.pop();
+    }
+    uncover(c);
+}
 </pre>
 </div>
 </div>
@@ -547,37 +547,37 @@ methods are included here.
 
 <div class="org-src-container">
 
-<pre class="src src-js" id="dlx_cover_uncover"><span class="linenr"> 1: </span><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">cover</span>(<span style="color: #DFAF8F;">c</span>) {
-<span class="linenr"> 2: </span>    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">r</span> = c.down;
-<span class="linenr"> 3: </span>    c.right.left = c.left;
-<span class="linenr"> 4: </span>    c.left.right = c.right;
-<span class="linenr"> 5: </span>    <span style="color: #F0DFAF; font-weight: bold;">while</span> (r !== c) {
-<span class="linenr"> 6: </span>        r = r.right;
-<span class="linenr"> 7: </span>        <span style="color: #F0DFAF; font-weight: bold;">while</span> (r.col !== c) {
-<span class="linenr"> 8: </span>            r.up.down = r.down;
-<span class="linenr"> 9: </span>            r.down.up = r.up;
-<span class="linenr">10: </span>            r.col.size--;
-<span class="linenr">11: </span>            r = r.right;
-<span class="linenr">12: </span>        }
-<span class="linenr">13: </span>        r = r.down;
-<span class="linenr">14: </span>    }
-<span class="linenr">15: </span>}
-<span class="linenr">16: </span>
-<span class="linenr">17: </span><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">uncover</span>(<span style="color: #DFAF8F;">c</span>) {
-<span class="linenr">18: </span>    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">r</span> = c.up;
-<span class="linenr">19: </span>    c.right.left = c;
-<span class="linenr">20: </span>    c.left.right = c;
-<span class="linenr">21: </span>    <span style="color: #F0DFAF; font-weight: bold;">while</span> (r !== c) {
-<span class="linenr">22: </span>        r = r.left;
-<span class="linenr">23: </span>        <span style="color: #F0DFAF; font-weight: bold;">while</span> (r.col !== c) {
-<span class="linenr">24: </span>            r.up.down = r;
-<span class="linenr">25: </span>            r.down.up = r;
-<span class="linenr">26: </span>            r.col.size++;
-<span class="linenr">27: </span>            r = r.left;
-<span class="linenr">28: </span>        }
-<span class="linenr">29: </span>        r = r.up;
-<span class="linenr">30: </span>    }
-<span class="linenr">31: </span>}
+<pre class="src src-js" id="dlx_cover_uncover"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">cover</span>(<span style="color: #DFAF8F;">c</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">r</span> = c.down;
+    c.right.left = c.left;
+    c.left.right = c.right;
+    <span style="color: #F0DFAF; font-weight: bold;">while</span> (r !== c) {
+        r = r.right;
+        <span style="color: #F0DFAF; font-weight: bold;">while</span> (r.col !== c) {
+            r.up.down = r.down;
+            r.down.up = r.up;
+            r.col.size--;
+            r = r.right;
+        }
+        r = r.down;
+    }
+}
+
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">uncover</span>(<span style="color: #DFAF8F;">c</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">r</span> = c.up;
+    c.right.left = c;
+    c.left.right = c;
+    <span style="color: #F0DFAF; font-weight: bold;">while</span> (r !== c) {
+        r = r.left;
+        <span style="color: #F0DFAF; font-weight: bold;">while</span> (r.col !== c) {
+            r.up.down = r;
+            r.down.up = r;
+            r.col.size++;
+            r = r.left;
+        }
+        r = r.up;
+    }
+}
 </pre>
 </div>
 </div>
@@ -592,31 +592,31 @@ The rest of the methods we need are fairly self explanatory.
 
 <div class="org-src-container">
 
-<pre class="src src-js" id="dlx_utilities"><span class="linenr"> 1: </span><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">smallestColumn</span>() {
-<span class="linenr"> 2: </span>    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">h</span>, <span style="color: #DFAF8F;">c</span>, <span style="color: #DFAF8F;">s</span> = Number.MAX_VALUE;
-<span class="linenr"> 3: </span>    h = headers.right;
-<span class="linenr"> 4: </span>    <span style="color: #F0DFAF; font-weight: bold;">while</span> (h !== headers) {
-<span class="linenr"> 5: </span>        <span style="color: #F0DFAF; font-weight: bold;">if</span> (h.size &lt; s) {
-<span class="linenr"> 6: </span>            c = h;
-<span class="linenr"> 7: </span>            s = c.size;
-<span class="linenr"> 8: </span>        }
-<span class="linenr"> 9: </span>        h = h.right;
-<span class="linenr">10: </span>    }
-<span class="linenr">11: </span>    <span style="color: #F0DFAF; font-weight: bold;">return</span> c;
-<span class="linenr">12: </span>}
-<span class="linenr">13: </span><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">printRow</span>(<span style="color: #DFAF8F;">r</span>) {
-<span class="linenr">14: </span>    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">s</span> = r.col.name + <span style="color: #CC9393;">' '</span>, <span style="color: #DFAF8F;">e</span> = r;
-<span class="linenr">15: </span>    r = r.right;
-<span class="linenr">16: </span>    <span style="color: #F0DFAF; font-weight: bold;">while</span> (r !== e) {
-<span class="linenr">17: </span>        s += r.col.name + <span style="color: #CC9393;">' '</span>;
-<span class="linenr">18: </span>        r = r.right;
-<span class="linenr">19: </span>    }
-<span class="linenr">20: </span>    <span style="color: #F0DFAF; font-weight: bold;">return</span> s;
-<span class="linenr">21: </span>}
-<span class="linenr">22: </span><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">copySolution</span>() {
-<span class="linenr">23: </span>    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">solution</span> = [].concat(O);
-<span class="linenr">24: </span>    <span style="color: #F0DFAF; font-weight: bold;">return</span> solution;
-<span class="linenr">25: </span>}
+<pre class="src src-js" id="dlx_utilities"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">smallestColumn</span>() {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">h</span>, <span style="color: #DFAF8F;">c</span>, <span style="color: #DFAF8F;">s</span> = Number.MAX_VALUE;
+    h = headers.right;
+    <span style="color: #F0DFAF; font-weight: bold;">while</span> (h !== headers) {
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (h.size &lt; s) {
+            c = h;
+            s = c.size;
+        }
+        h = h.right;
+    }
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> c;
+}
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">printRow</span>(<span style="color: #DFAF8F;">r</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">s</span> = r.col.name + <span style="color: #CC9393;">' '</span>, <span style="color: #DFAF8F;">e</span> = r;
+    r = r.right;
+    <span style="color: #F0DFAF; font-weight: bold;">while</span> (r !== e) {
+        s += r.col.name + <span style="color: #CC9393;">' '</span>;
+        r = r.right;
+    }
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> s;
+}
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">copySolution</span>() {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">solution</span> = [].concat(O);
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> solution;
+}
 </pre>
 </div>
 </div>
@@ -660,176 +660,176 @@ tricks quickly.)
 
 <div class="org-src-container">
 
-<pre class="src src-js" id="dlx_initialize_headers"><span class="linenr">  1: </span><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">initializeHeaders</span>() {
-<span class="linenr">  2: </span>    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">i</span>, <span style="color: #DFAF8F;">j</span>, <span style="color: #DFAF8F;">k</span>, <span style="color: #DFAF8F;">rows</span>=[];
-<span class="linenr">  3: </span>    cols = [];
-<span class="linenr">  4: </span>
-<span class="linenr">  5: </span>    headers = {
-<span class="linenr">  6: </span>        name: <span style="color: #CC9393;">'root'</span>,
-<span class="linenr">  7: </span>        right: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr">  8: </span>        left: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr">  9: </span>        up: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 10: </span>        down: <span style="color: #BFEBBF;">null</span>
-<span class="linenr"> 11: </span>    };
-<span class="linenr"> 12: </span>    headers.right = headers;
-<span class="linenr"> 13: </span>    headers.left = headers;
-<span class="linenr"> 14: </span>
-<span class="linenr"> 15: </span>    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; n; i++) {
-<span class="linenr"> 16: </span>        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">t</span> = ((i &amp; 1) ? n - 1 - i : n + i) &gt;&gt; 1;
-<span class="linenr"> 17: </span>        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cur</span> = {
-<span class="linenr"> 18: </span>            name: <span style="color: #CC9393;">'R'</span> + t,
-<span class="linenr"> 19: </span>            right: headers,
-<span class="linenr"> 20: </span>            left: headers.left,
-<span class="linenr"> 21: </span>            size: 0,
-<span class="linenr"> 22: </span>            down: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 23: </span>            up: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 24: </span>        };
-<span class="linenr"> 25: </span>        cols.push(cur);
-<span class="linenr"> 26: </span>        headers.left.right = cur;
-<span class="linenr"> 27: </span>        headers.left = cur;
-<span class="linenr"> 28: </span>        cur.up = cur;
-<span class="linenr"> 29: </span>        cur.down = cur;
-<span class="linenr"> 30: </span>
-<span class="linenr"> 31: </span>        cur = {
-<span class="linenr"> 32: </span>            name: <span style="color: #CC9393;">'F'</span> + t,
-<span class="linenr"> 33: </span>            right: headers,
-<span class="linenr"> 34: </span>            left: headers.left,
-<span class="linenr"> 35: </span>            size: 0,
-<span class="linenr"> 36: </span>            down: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 37: </span>            up: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 38: </span>        };
-<span class="linenr"> 39: </span>        cols.push(cur);
-<span class="linenr"> 40: </span>        headers.left.right = cur;
-<span class="linenr"> 41: </span>        headers.left = cur;
-<span class="linenr"> 42: </span>        cur.up = cur;
-<span class="linenr"> 43: </span>        cur.down = cur;
-<span class="linenr"> 44: </span>    }
-<span class="linenr"> 45: </span>    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; 2 * n; i++) {
-<span class="linenr"> 46: </span>            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cur</span> = {
-<span class="linenr"> 47: </span>                name: <span style="color: #CC9393;">'A'</span> + i,
-<span class="linenr"> 48: </span>                right: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 49: </span>                left: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 50: </span>                size: 0,
-<span class="linenr"> 51: </span>                up: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 52: </span>                down: <span style="color: #BFEBBF;">null</span>
-<span class="linenr"> 53: </span>            };
-<span class="linenr"> 54: </span>            cols.push(cur);
-<span class="linenr"> 55: </span>            cur.left = cur;
-<span class="linenr"> 56: </span>            cur.right = cur;
-<span class="linenr"> 57: </span>            cur.up = cur;
-<span class="linenr"> 58: </span>            cur.down = cur;
-<span class="linenr"> 59: </span>    }
-<span class="linenr"> 60: </span>    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; 2 * n; i++) {
-<span class="linenr"> 61: </span>            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cur</span> = {
-<span class="linenr"> 62: </span>            name: <span style="color: #CC9393;">'B'</span> + i,
-<span class="linenr"> 63: </span>                right: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 64: </span>                left: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 65: </span>                size: 0,
-<span class="linenr"> 66: </span>                up: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 67: </span>                down: <span style="color: #BFEBBF;">null</span>
-<span class="linenr"> 68: </span>            };
-<span class="linenr"> 69: </span>            cols.push(cur);
-<span class="linenr"> 70: </span>            cur.left = cur;
-<span class="linenr"> 71: </span>            cur.right = cur;
-<span class="linenr"> 72: </span>            cur.up = cur;
-<span class="linenr"> 73: </span>            cur.down = cur;
-<span class="linenr"> 74: </span>    }
-<span class="linenr"> 75: </span>
-<span class="linenr"> 76: </span>    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; n; i++) {
-<span class="linenr"> 77: </span>        <span style="color: #F0DFAF; font-weight: bold;">for</span> (j = 0; j &lt; n; j++) {
-<span class="linenr"> 78: </span>            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">a</span>, <span style="color: #DFAF8F;">b</span>, <span style="color: #DFAF8F;">c</span>, <span style="color: #DFAF8F;">d</span>;
-<span class="linenr"> 79: </span>            a = {
-<span class="linenr"> 80: </span>                up: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 81: </span>                down: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 82: </span>                left: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 83: </span>                right: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 84: </span>                col: <span style="color: #BFEBBF;">null</span>
-<span class="linenr"> 85: </span>            };
-<span class="linenr"> 86: </span>            b = {
-<span class="linenr"> 87: </span>                up: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 88: </span>                down: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 89: </span>                left: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 90: </span>                right: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 91: </span>                col: <span style="color: #BFEBBF;">null</span>
-<span class="linenr"> 92: </span>            };
-<span class="linenr"> 93: </span>            c = {
-<span class="linenr"> 94: </span>                up: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 95: </span>                down: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 96: </span>                left: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 97: </span>                right: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr"> 98: </span>                col: <span style="color: #BFEBBF;">null</span>
-<span class="linenr"> 99: </span>            };
-<span class="linenr">100: </span>            d = {
-<span class="linenr">101: </span>                up: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr">102: </span>                down: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr">103: </span>                left: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr">104: </span>                right: <span style="color: #BFEBBF;">null</span>,
-<span class="linenr">105: </span>                col: <span style="color: #BFEBBF;">null</span>
-<span class="linenr">106: </span>            };
-<span class="linenr">107: </span>            a.left = d;
-<span class="linenr">108: </span>            a.right = b;
-<span class="linenr">109: </span>            b.left = a;
-<span class="linenr">110: </span>            b.right = c;
-<span class="linenr">111: </span>            c.left = b;
-<span class="linenr">112: </span>            c.right = d;
-<span class="linenr">113: </span>            d.left = c;
-<span class="linenr">114: </span>            d.right = a;
-<span class="linenr">115: </span>
-<span class="linenr">116: </span>            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">colIdx</span> = 0;
-<span class="linenr">117: </span>            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">aCol</span> = cols[colIdx++];
-<span class="linenr">118: </span>            <span style="color: #F0DFAF; font-weight: bold;">while</span> (aCol.name !== <span style="color: #CC9393;">'R'</span> + i)
-<span class="linenr">119: </span>                aCol = cols[colIdx++];
-<span class="linenr">120: </span>            aCol.size++;
-<span class="linenr">121: </span>            a.col = aCol;
-<span class="linenr">122: </span>            a.down = aCol;
-<span class="linenr">123: </span>            a.up = aCol.up;
-<span class="linenr">124: </span>            a.down.up = a;
-<span class="linenr">125: </span>            a.up.down = a;
-<span class="linenr">126: </span>
-<span class="linenr">127: </span>            colIdx = 0;
-<span class="linenr">128: </span>            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">bCol</span> = cols[colIdx++];
-<span class="linenr">129: </span>            <span style="color: #F0DFAF; font-weight: bold;">while</span> (bCol.name !== <span style="color: #CC9393;">'F'</span> + j) {
-<span class="linenr">130: </span>                bCol = cols[colIdx++];
-<span class="linenr">131: </span>            }
-<span class="linenr">132: </span>            bCol.size++;
-<span class="linenr">133: </span>            b.col = bCol;
-<span class="linenr">134: </span>            b.down = bCol;
-<span class="linenr">135: </span>            b.up = bCol.up;
-<span class="linenr">136: </span>            b.down.up = b;
-<span class="linenr">137: </span>            b.up.down = b;
-<span class="linenr">138: </span>
-<span class="linenr">139: </span>            colIdx = 0;
-<span class="linenr">140: </span>            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cCol</span> = cols[colIdx++];
-<span class="linenr">141: </span>            <span style="color: #F0DFAF; font-weight: bold;">while</span> (cCol.name !== <span style="color: #CC9393;">'A'</span> + (j + i))
-<span class="linenr">142: </span>                cCol = cols[colIdx++];
-<span class="linenr">143: </span>            cCol.size++;
-<span class="linenr">144: </span>            c.col = cCol;
-<span class="linenr">145: </span>            c.down = cCol;
-<span class="linenr">146: </span>            c.up = cCol.up;
-<span class="linenr">147: </span>            c.down.up = c;
-<span class="linenr">148: </span>            c.up.down = c;
-<span class="linenr">149: </span>
-<span class="linenr">150: </span>            colIdx = 0;
-<span class="linenr">151: </span>            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">dCol</span> = cols[colIdx++];
-<span class="linenr">152: </span>            <span style="color: #F0DFAF; font-weight: bold;">while</span> (dCol.name !== <span style="color: #CC9393;">'B'</span> + (n - 1 - j + i))
-<span class="linenr">153: </span>                dCol = cols[colIdx++];
-<span class="linenr">154: </span>            dCol.size++;
-<span class="linenr">155: </span>            d.col = dCol;
-<span class="linenr">156: </span>            d.down = dCol;
-<span class="linenr">157: </span>            d.up = dCol.up;
-<span class="linenr">158: </span>            d.up.down = d;
-<span class="linenr">159: </span>            d.down.up = d;
-<span class="linenr">160: </span>        }
-<span class="linenr">161: </span>    }
-<span class="linenr">162: </span>    headers = headers.right;
-<span class="linenr">163: </span>    <span style="color: #F0DFAF; font-weight: bold;">while</span> (headers.down) {
-<span class="linenr">164: </span>        <span style="color: #F0DFAF; font-weight: bold;">if</span> (headers.size === 0) {
-<span class="linenr">165: </span>            headers.left.right = headers.right;
-<span class="linenr">166: </span>            headers.right.left = headers.left;
-<span class="linenr">167: </span>        }
-<span class="linenr">168: </span>        headers = headers.right;
-<span class="linenr">169: </span>    }
-<span class="linenr">170: </span>}
+<pre class="src src-js" id="dlx_initialize_headers"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">initializeHeaders</span>() {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">i</span>, <span style="color: #DFAF8F;">j</span>, <span style="color: #DFAF8F;">k</span>, <span style="color: #DFAF8F;">rows</span>=[];
+    cols = [];
+
+    headers = {
+        name: <span style="color: #CC9393;">'root'</span>,
+        right: <span style="color: #BFEBBF;">null</span>,
+        left: <span style="color: #BFEBBF;">null</span>,
+        up: <span style="color: #BFEBBF;">null</span>,
+        down: <span style="color: #BFEBBF;">null</span>
+    };
+    headers.right = headers;
+    headers.left = headers;
+
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; n; i++) {
+        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">t</span> = ((i &amp; 1) ? n - 1 - i : n + i) &gt;&gt; 1;
+        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cur</span> = {
+            name: <span style="color: #CC9393;">'R'</span> + t,
+            right: headers,
+            left: headers.left,
+            size: 0,
+            down: <span style="color: #BFEBBF;">null</span>,
+            up: <span style="color: #BFEBBF;">null</span>,
+        };
+        cols.push(cur);
+        headers.left.right = cur;
+        headers.left = cur;
+        cur.up = cur;
+        cur.down = cur;
+
+        cur = {
+            name: <span style="color: #CC9393;">'F'</span> + t,
+            right: headers,
+            left: headers.left,
+            size: 0,
+            down: <span style="color: #BFEBBF;">null</span>,
+            up: <span style="color: #BFEBBF;">null</span>,
+        };
+        cols.push(cur);
+        headers.left.right = cur;
+        headers.left = cur;
+        cur.up = cur;
+        cur.down = cur;
+    }
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; 2 * n; i++) {
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cur</span> = {
+                name: <span style="color: #CC9393;">'A'</span> + i,
+                right: <span style="color: #BFEBBF;">null</span>,
+                left: <span style="color: #BFEBBF;">null</span>,
+                size: 0,
+                up: <span style="color: #BFEBBF;">null</span>,
+                down: <span style="color: #BFEBBF;">null</span>
+            };
+            cols.push(cur);
+            cur.left = cur;
+            cur.right = cur;
+            cur.up = cur;
+            cur.down = cur;
+    }
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; 2 * n; i++) {
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cur</span> = {
+            name: <span style="color: #CC9393;">'B'</span> + i,
+                right: <span style="color: #BFEBBF;">null</span>,
+                left: <span style="color: #BFEBBF;">null</span>,
+                size: 0,
+                up: <span style="color: #BFEBBF;">null</span>,
+                down: <span style="color: #BFEBBF;">null</span>
+            };
+            cols.push(cur);
+            cur.left = cur;
+            cur.right = cur;
+            cur.up = cur;
+            cur.down = cur;
+    }
+
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; n; i++) {
+        <span style="color: #F0DFAF; font-weight: bold;">for</span> (j = 0; j &lt; n; j++) {
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">a</span>, <span style="color: #DFAF8F;">b</span>, <span style="color: #DFAF8F;">c</span>, <span style="color: #DFAF8F;">d</span>;
+            a = {
+                up: <span style="color: #BFEBBF;">null</span>,
+                down: <span style="color: #BFEBBF;">null</span>,
+                left: <span style="color: #BFEBBF;">null</span>,
+                right: <span style="color: #BFEBBF;">null</span>,
+                col: <span style="color: #BFEBBF;">null</span>
+            };
+            b = {
+                up: <span style="color: #BFEBBF;">null</span>,
+                down: <span style="color: #BFEBBF;">null</span>,
+                left: <span style="color: #BFEBBF;">null</span>,
+                right: <span style="color: #BFEBBF;">null</span>,
+                col: <span style="color: #BFEBBF;">null</span>
+            };
+            c = {
+                up: <span style="color: #BFEBBF;">null</span>,
+                down: <span style="color: #BFEBBF;">null</span>,
+                left: <span style="color: #BFEBBF;">null</span>,
+                right: <span style="color: #BFEBBF;">null</span>,
+                col: <span style="color: #BFEBBF;">null</span>
+            };
+            d = {
+                up: <span style="color: #BFEBBF;">null</span>,
+                down: <span style="color: #BFEBBF;">null</span>,
+                left: <span style="color: #BFEBBF;">null</span>,
+                right: <span style="color: #BFEBBF;">null</span>,
+                col: <span style="color: #BFEBBF;">null</span>
+            };
+            a.left = d;
+            a.right = b;
+            b.left = a;
+            b.right = c;
+            c.left = b;
+            c.right = d;
+            d.left = c;
+            d.right = a;
+
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">colIdx</span> = 0;
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">aCol</span> = cols[colIdx++];
+            <span style="color: #F0DFAF; font-weight: bold;">while</span> (aCol.name !== <span style="color: #CC9393;">'R'</span> + i)
+                aCol = cols[colIdx++];
+            aCol.size++;
+            a.col = aCol;
+            a.down = aCol;
+            a.up = aCol.up;
+            a.down.up = a;
+            a.up.down = a;
+
+            colIdx = 0;
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">bCol</span> = cols[colIdx++];
+            <span style="color: #F0DFAF; font-weight: bold;">while</span> (bCol.name !== <span style="color: #CC9393;">'F'</span> + j) {
+                bCol = cols[colIdx++];
+            }
+            bCol.size++;
+            b.col = bCol;
+            b.down = bCol;
+            b.up = bCol.up;
+            b.down.up = b;
+            b.up.down = b;
+
+            colIdx = 0;
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cCol</span> = cols[colIdx++];
+            <span style="color: #F0DFAF; font-weight: bold;">while</span> (cCol.name !== <span style="color: #CC9393;">'A'</span> + (j + i))
+                cCol = cols[colIdx++];
+            cCol.size++;
+            c.col = cCol;
+            c.down = cCol;
+            c.up = cCol.up;
+            c.down.up = c;
+            c.up.down = c;
+
+            colIdx = 0;
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">dCol</span> = cols[colIdx++];
+            <span style="color: #F0DFAF; font-weight: bold;">while</span> (dCol.name !== <span style="color: #CC9393;">'B'</span> + (n - 1 - j + i))
+                dCol = cols[colIdx++];
+            dCol.size++;
+            d.col = dCol;
+            d.down = dCol;
+            d.up = dCol.up;
+            d.up.down = d;
+            d.down.up = d;
+        }
+    }
+    headers = headers.right;
+    <span style="color: #F0DFAF; font-weight: bold;">while</span> (headers.down) {
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (headers.size === 0) {
+            headers.left.right = headers.right;
+            headers.right.left = headers.left;
+        }
+        headers = headers.right;
+    }
+}
 </pre>
 </div>
 </div>
@@ -1302,8 +1302,8 @@ Additionally, I used the following css.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh</p>
-<p class="date">Created: 2014-08-04 Mon 23:28</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.4.50.7 (<a href="http://orgmode.org">Org</a> mode 8.3beta)</p>
+<p class="date">Created: 2014-08-08 Fri 21:28</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.4.50.8 (<a href="http://orgmode.org">Org</a> mode 8.3beta)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

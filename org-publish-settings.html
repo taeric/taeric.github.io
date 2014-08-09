@@ -3,8 +3,8 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<title>Josh Berry's Blog</title>
-<!-- 2014-08-08 Fri 21:14 -->
+<title>My Site Configuration</title>
+<!-- 2014-08-08 Fri 21:32 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Josh" />
@@ -88,7 +88,6 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   /*]]>*/-->
 </style>
-<link rel="stylesheet" type="text/css" href="org-overrides.css" />
 <script type="text/javascript">
 /*
 @licstart  The following is the entire license notice for the
@@ -138,29 +137,147 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="content">
-<h1 class="title">Josh Berry's Blog</h1>
+<h1 class="title">My Site Configuration</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">1. Random stuff.</a></li>
+<li><a href="#sec-1">1. What is this?</a></li>
+<li><a href="#sec-2">2. Org Settings</a></li>
+<li><a href="#sec-3">3. Styling</a>
+<ul>
+<li><a href="#sec-3-1">3.1. CSS Overrides</a></li>
+<li><a href="#sec-3-2">3.2. <span class="todo nilTODO">TODO</span> Headers/Footers/etc</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 
 <div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1"><span class="section-number-2">1</span> Random stuff.</h2>
+<h2 id="sec-1"><span class="section-number-2">1</span> What is this?</h2>
 <div class="outline-text-2" id="text-1">
-<ul class="org-ul">
-<li><a href="./DancingLinks.html">DancingLinks</a>: In which I butcher an otherwise elegant technique.
-</li>
-</ul>
+<p>
+If you are reading this, I can only assume that is because you are
+me, and you are trying to change something about this site.  As
+such, hopefully most of this is all straight forward and still
+relevant.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Org Settings</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+For this website, we are not doing anything too fancy.  Just giving
+it a name
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(setq org-publish-project-alist
+      '((<span style="color: #CC9393;">"site"</span>
+         <span style="color: #DCDCCC; font-weight: bold;">:base-directory</span> <span style="color: #CC9393;">"."</span>
+         <span style="color: #DCDCCC; font-weight: bold;">:publishing-directory</span> <span style="color: #CC9393;">"."</span>
+         <span style="color: #DCDCCC; font-weight: bold;">:base-extension</span> <span style="color: #CC9393;">"org"</span>
+         <span style="color: #DCDCCC; font-weight: bold;">:publishing-function</span> org-html-publish-to-html)))
+</pre>
+</div>
+
+
+<p>
+With that set, you can simply call <a href="(org-publish-current-project)">(org-publish-current-project)</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Styling</h2>
+<div class="outline-text-2" id="text-3">
+</div><div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> CSS Overrides</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Luckily, I don't actually have to do that much to get the site
+looking decently.  Actually, about the only thing I do is to limit
+the width to be about 50em.  I came to that number through some
+basic trial and error for what I thought looked decent.
+</p>
+
+<p>
+I also play with some of the alignments and hide the table of
+contents.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-css"><span style="color: #93E0E3;">html </span>{
+  <span style="color: #DFAF8F;">background</span>: <span style="color: #ffffff; background-color: #020;">#020</span>;
+}
+<span style="color: #93E0E3;">body </span>{
+  <span style="color: #DFAF8F;">width</span>: 50em;
+  <span style="color: #DFAF8F;">padding-left</span>: 3em;
+  <span style="color: #DFAF8F;">padding-right</span>: 3em;
+  <span style="color: #DFAF8F;">margin</span>: auto;
+  <span style="color: #DFAF8F;">border</span>: solid thin <span style="color: #ffffff; background-color: #000000;">black</span>;
+  <span style="color: #DFAF8F;">background-color</span>: <span style="color: #000000; background-color: #DDD;">#DDD</span>;
+}
+
+<span style="color: #93E0E3;">h1.title </span>{
+  <span style="color: #DFAF8F;">text-align</span>: left;
+  <span style="color: #DFAF8F;">padding</span>: 1ex;
+}
+
+<span style="color: #93E0E3;">h1, h2, h3, h4 </span>{
+  <span style="color: #DFAF8F;">margin-bottom</span>: 1ex;
+}
+
+<span style="color: #93E0E3;">p </span>{
+  <span style="color: #DFAF8F;">margin-top</span>: 0;
+}
+
+<span style="color: #93E0E3;">div.outline-text-2, div.outline-text-3, div.outline-text-4 </span>{
+  <span style="color: #DFAF8F;">padding</span>: 1em;
+  <span style="color: #DFAF8F;">padding-top</span>: 0;
+}
+<span style="color: #93E0E3;">.org-src-container </span>{
+  <span style="color: #DFAF8F;">width</span>: 40em;
+  <span style="color: #DFAF8F;">margin</span>: auto;
+}
+<span style="color: #93E0E3;">.org-src-container .src </span>{
+  <span style="color: #DFAF8F;">color</span>: <span style="color: #000000; background-color: #EEE;">#EEE</span>;
+  <span style="color: #DFAF8F;">background-color</span>: <span style="color: #ffffff; background-color: #222;">#222</span>;
+  <span style="color: #DFAF8F;">overflow</span>: auto;
+}
+<span style="color: #93E0E3;">#table-of-contents </span>{
+  <span style="color: #DFAF8F;">display</span>: none;
+}
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> <span class="todo TODO">TODO</span> Headers/Footers/etc</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+I would like to get it so that headers and footers are all styled
+in a pleasant way.  Right now, I'm not even sure how to do that
+with org publishing, to be honest.
+</p>
+
+<p>
+I also am not sure I will be sticking with this stuff.  I hope I
+do&#x2026; but I don't know if I will.
+</p>
+</div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh</p>
-<p class="date">Created: 2014-08-08 Fri 21:14</p>
+<p class="date">Created: 2014-08-08 Fri 21:32</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.4.50.8 (<a href="http://orgmode.org">Org</a> mode 8.3beta)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
