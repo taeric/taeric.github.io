@@ -616,31 +616,39 @@
    And, we have the following css that was used.
 
    #+BEGIN_SRC css :tangle sudokuBoards.css
-   .sudokuBoard {
+     .sudokuBoard {
        margin: auto;
        background-color: #FFF;
-   }
-   .sudokuBoard td {
+     }
+     .sudokuBoard td {
        width: 20px;
        height: 20px;
        border: solid thin black;
        text-align: center;
        line-height: 20px;
        font-size: 18px;
-   }
-   .sudokuBoard td.c3, .sudokuBoard td.c6 {
+     }
+     .sudokuBoard td.c3, .sudokuBoard td.c6 {
        border-left: 3px solid black;
-   }
-   .sudokuBoard td.r3, .sudokuBoard td.r6 {
+     }
+     .sudokuBoard td.r3, .sudokuBoard td.r6 {
        border-top: 3px solid black;
-   }
+     }
 
-   pre.example {
+     pre.example {
        width: 60px;
        background-color: #EEE;
-   }
+     }
 
-   td.solution {
+     td.solution {
        background-color: #EEE;
-   }
+     }
+     input[type='range'] {
+       -webkit-appearance: none;
+       border-radius: 5px;
+       box-shadow: inset 0 0 5px #333;
+       background-color: #999;
+       height: 10px;
+       vertical-align: middle;
+     }
    #+END_SRC
