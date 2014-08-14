@@ -4,3 +4,4 @@
 * Random stuff.
 
    - [[./DancingLinks.org][DancingLinks]]: In which I butcher an otherwise elegant technique.
+   - [[file:Sudoku.org][Sudoku]]: In which I use dancing links to solve Sudoku.
