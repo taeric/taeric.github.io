@@ -1,0 +1,646 @@
+#+TITLE: Solving Sudoku with Dancing Links
+#+OPTIONS: num:nil
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="sudokuBoards.css" />
+
+* Introduction
+
+  In trying to implement Knuth's Dancing Links technique against the
+  $N$-Queens problem, I also found that he used the DLX algorithm to
+  solve Sudoku puzzles for a [[http://spivey.oriel.ox.ac.uk/mike/comp2005/results.html][programming contest]] in 2005.
+
+* Sudoku
+
+  #+begin_html
+    <div id="figure1" style="float:right; margin-left: 1em;">
+.2.......
+...6....3
+.74.8....
+.....3..2
+.8..4..1.
+6..5.....
+....1.78.
+5....9...
+.......4.
+    </div>
+  #+end_html
+  Basics of the game can be found on any number of web pages.  Simply
+  stated, you have a $9 \times 9$ grid of numbers broken into $3$
+  groups of $3 \times 3$ grids.  In each row, column, and group each
+  of the numbers $1$ through $9$ can only appear once.
+
+  For display, this is often shown as a basic table such as this one
+  to the right.  Again, for a full description of the various parts of
+  the game, just seek the internet.
+
+  I will note that I have chosen to use the string representation of
+  boards from the 2005 contest.  Such that the board above is
+  represented as the following string.
+
+  #+begin_example
+.2.......
+...6....3
+.74.8....
+.....3..2
+.8..4..1.
+6..5.....
+....1.78.
+5....9...
+.......4.
+  #+end_example
+
+* As an exact cover problem.
+
+  In order to use the DLX algorithm, we must recast this problem to be
+  one of selecting all rows of a matrix where there is a single $1$
+  per column.  To achieve this, we will make a new matrix where each
+  column represents a number being placed in any of the $9 \times 9$
+  positions, then each of the possible numbers per rows, column, and
+  group.  This brings us to $9 \times 9 + 9 \times 9 + 9 \times 9 + 9
+  \times 9 = 324$ columns of the matrix.
+
+  What, then, are the rows?  They are simply a $1$ in each of the
+  columns that specify a) which position of the board the number is
+  in, b) what column and number are used, c) what row and number are
+  used, and d) what group and number are used.  Note that for b, c,
+  and d, we will have the same "number" per column.  That is, if it is
+  covering $C_{x3}$, it will also be covering $R_{x3}$ and $G_{x3}$.
+  It will *not* necessarily be covering $P_{x3}$.
+
+  Regardless, this gives us a maximum of $positions \times digits = (9
+  \times 9) \times 9 = 729$ rows.  In reality, when we are solving a
+  particular puzzle, we will have much fewer rows.  We will also have
+  fewer columns, though not by as large of a factor.
+
+* DLX Sudoku Solver
+
+  Now then, we need to briefly make a sudoku solver that can output
+  solutions we can then display.  I confess I should have done the
+  $N$-Queens solution in a more generic fashion such that I could just
+  reference the dancing links algorithm.  Indeed, Knuth's
+  implementation of DLX is available such that you can simply pipe it
+  the columns to cover, then all of the rows.
+
+  Unfortunately, I did not do that.  So, we'll be doing all of that
+  again here.  (I may clean this up some day such that I am doing that.)
+
+** Outline
+
+   The basic outline of our Sudoku solver is here.
+
+   #+name: dlx_sudoku_solver
+   #+BEGIN_SRC js :tangle dlxSudokuSolver.js :comments noweb :noweb tangle
+     function dlxSudokuSolver(strings, showSteps) {
+         var headers, solutions = [], O = [];
+
+             <<dlx_search>>
+
+             <<dlx_cover_uncover>>
+
+             <<dlx_utilities>>
+
+             <<dlx_initialize_headers>>
+
+
+         initializeHeaders();
+         search(0);
+         return solutions;
+     }
+   #+END_SRC
+
+** DLX core
+
+   The search, covering/uncovering, and utilities code is basically
+   unmodified from the code used in my [[file:DancingLinks.org][$N$-Queens]] exploration.  See
+   there for more of an explanation.  I could abstract out the DLX
+   portion to its own javascript function.  For now, though, this is
+   just a copy paste of the previous version I used.
+
+   #+name: dlx_search
+   #+begin_src js
+     function search(k) {
+         var c, r;
+         if (headers.right === headers) {
+             solutions.push(copySolution());
+             return;
+         }
+         if (showSteps) {
+             solutions.push(copySolution());
+         }
+         c = smallestColumn();
+         cover(c);
+         r = c.down;
+         while (r !== c) {
+             O.push(printRow(r));
+             r = r.right;
+             while (r.col !== c) {
+                 cover(r.col);
+                 r = r.right;
+             }
+             search(k + 1);
+             r = r.left;
+             while (r.col !== c) {
+                 uncover(r.col);
+                 r = r.left;
+             }
+             r = r.down;
+             O.pop();
+         }
+         uncover(c);
+     }
+   #+end_src
+
+   #+name: dlx_cover_uncover
+   #+begin_src js
+     function cover(c) {
+         var r = c.down;
+         c.right.left = c.left;
+         c.left.right = c.right;
+         while (r !== c) {
+             r = r.right;
+             while (r.col !== c) {
+                 r.up.down = r.down;
+                 r.down.up = r.up;
+                 r.col.size--;
+                 r = r.right;
+             }
+             r = r.down;
+         }
+     }
+
+     function uncover(c) {
+         var r = c.up;
+         c.right.left = c;
+         c.left.right = c;
+         while (r !== c) {
+             r = r.left;
+             while (r.col !== c) {
+                 r.up.down = r;
+                 r.down.up = r;
+                 r.col.size++;
+                 r = r.left;
+             }
+             r = r.up;
+         }
+     }
+   #+end_src
+
+   #+name: dlx_utilities
+   #+begin_src js
+     function smallestColumn() {
+         var h, c, s = Number.MAX_VALUE;
+         h = headers.right;
+         while (h !== headers) {
+             if (h.size < s) {
+                 c = h;
+                 s = c.size;
+             }
+             h = h.right;
+         }
+         return c;
+     }
+     function printRow(r) {
+         var s = r.col.name + ' ', e = r;
+         r = r.right;
+         while (r !== e) {
+             s += r.col.name + ' ';
+             r = r.right;
+         }
+         return s;
+     }
+     function copySolution() {
+         var solution = [].concat(O);
+         return solution;
+     }
+
+   #+end_src
+
+
+** Making the columns for Sudoku
+
+   Our logic for generating the columns and rows to represent the
+   sudoku board is actually a bit larger than the code to do the
+   actual search.  Amusingly, having looked at Knuth's code, I do
+   think things would be simpler if I focused on making the code such
+   that this was only responsible for naming the headers and rows.
+   Regardless, I had already written this when that was evident.
+
+
+*** Outline
+
+    Our method, then will have the following outline.
+
+    #+NAME: dlx_initialize_headers
+    #+BEGIN_SRC js :noweb tangle :comments noweb
+      function initializeHeaders() {
+              <<variables_needed_for_headers>>
+
+              <<methods_to_create_headers_and_cells>>
+
+              <<initialize_data>>
+
+              <<read_in_data>>
+
+              <<generate_headers>>
+
+              <<generate_rows>>
+      }
+    #+END_SRC
+
+*** Needed variables
+
+    Where are required variables are relatively straight forward.  For
+    book keeping, we keep a tally of each digit seen in a
+    row/col/group, and each overall position that has seen a value.
+    We will also need up to three basic index variables.
+
+    #+NAME: variables_needed_for_headers
+    #+BEGIN_SRC js
+      var rows = [],
+          cols = [],
+          grps = [],
+          positions = [],
+          rawHeaders = [],
+          rawRows = [],
+          i, j, k;
+    #+END_SRC
+
+*** Methods to create headers and cells.
+
+    Since we don't have structs in javascript, I just use a couple of
+    methods to make what we need for headers and cells.
+
+    #+NAME: methods_to_create_headers_and_cells
+    #+BEGIN_SRC js
+      function header(name) {
+          var h = {
+              name: name,
+              up: null,
+              down: null,
+              left: null,
+              right: null,
+              size: 0
+          };
+          h.up = h;
+          h.down = h;
+          return h;
+      }
+      function cell(colName) {
+          var newCell = {
+              up: null,
+              down: null,
+              left: null,
+              right: null,
+              col: null
+          },
+              col = rawHeaders[0];
+
+          while (col.name !== colName)
+              col = col.right;
+
+          col.size++;
+          newCell.down = col;
+          newCell.up = col.up;
+          newCell.down.up = newCell;
+          newCell.up.down = newCell;
+          newCell.col = col;
+          return newCell;
+      }
+    #+END_SRC
+
+*** Initialize Data
+
+    To determine which rows and columns need covering, we will first
+    mark off which rows and columns have data.  I'll begin by making
+    basic boolean arrays for each digit of each row/col/group and each
+    position.
+
+    #+NAME: initialize_data
+    #+BEGIN_SRC js
+      for (i = 0; i < 9; i++) {
+          rows[i] = [];
+          cols[i] = [];
+          grps[i] = [];
+          positions[i] = [];
+          for (j = 0; j < 9; j++) {
+              rows[i][j] = 0;
+              cols[i][j] = 0;
+              grps[i][j] = 0;
+              positions[i][j] = 0;
+          }
+      }
+
+    #+END_SRC
+
+*** Read in board data.
+
+    The only real trick going on here is that I reduce curValue by
+    one.  This is as much from laziness on my part as it is anything
+    else.  For some reason, having the zero element of each array be
+    worthless bothered me at first.  I changed my mind later, but this
+    was already working.
+
+    #+NAME: read_in_data
+    #+BEGIN_SRC js
+      for (i = 0; i < 9; i++) {
+          for (j = 0; j < 9; j++) {
+              var curValue = strings[i].charAt(j);
+              if (curValue && curValue !== '.') {
+                  curValue--;
+                  var g = Math.floor(i/3)*3 + Math.floor(j/3);
+                  if (rows[i][curValue]) throw "Duplicate values in row";
+                  if (cols[j][curValue]) throw "Duplicate values in col";
+                  if (grps[g][curValue]) throw "Duplicate values in group.";
+                  rows[i][curValue] = 1;
+                  cols[j][curValue] = 1;
+                  grps[g][curValue] = 1;
+                  positions[i][j] = 1;
+              }
+          }
+      }
+
+    #+END_SRC
+
+*** Generate Headers
+
+    I do this in two passes, as it was cumbersome to do it in one.
+
+    #+NAME: generate_headers
+    #+BEGIN_SRC js
+      rawHeaders.push(header("root"));
+      for (i = 0; i < 9; i++) {
+          for (j = 0; j < 9; j++) {
+              if (!positions[i][j]) {
+                  rawHeaders.push(header("p"+i.toString()+j.toString()));
+              }
+          }
+      }
+      for (i = 0; i < 9; i++) {
+          for (k = 0; k < 9; k++) {
+              if (!rows[i][k])
+                  rawHeaders.push(header("r"+i.toString()+k.toString()));
+              if (!cols[i][k])
+                  rawHeaders.push(header("c"+i.toString()+k.toString()));
+              if (!grps[i][k])
+                  rawHeaders.push(header("g"+i.toString()+k.toString()));
+          }
+      }
+
+      //Now, link them up.
+      for (i = 1; i < rawHeaders.length; i++) {
+          var h = rawHeaders[i];
+          h.left = rawHeaders[i-1];
+          rawHeaders[i - 1].right = h;
+      }
+      rawHeaders[0].left = rawHeaders[rawHeaders.length - 1];
+      rawHeaders[rawHeaders.length - 1].right = rawHeaders[0];
+      headers = rawHeaders[0];
+    #+END_SRC
+
+*** Generate Rows
+
+    Similarly to the headers, I first generate all of the row cells,
+    and then I link them up to their left/right values.  Is a little
+    trickier here, but nothing terribly fancy.
+
+    #+NAME: generate_rows
+    #+BEGIN_SRC js
+      for (i = 0; i < 9; i++) {
+          var x = Math.floor(i/3) * 3;
+          for (j = 0; j < 9; j++) {
+              if (!positions[i][j]) {
+                  var g = x + Math.floor(j/3);
+                  for (k = 0; k < 9; k++) {
+                      if (!rows[i][k] && !cols[j][k] && !grps[g][k]) {
+                          rawRows.push(cell("p"+i.toString()+j.toString()));
+                          rawRows.push(cell("r"+i.toString()+k.toString()));
+                          rawRows.push(cell("c"+j.toString()+k.toString()));
+                          rawRows.push(cell("g"+g.toString()+k.toString()));
+                      }
+                  }
+              }
+          }
+      }
+
+      //Now, link up the rows.  (Cheating, and simply linking up all groups of 4.)
+      for (i = 0; i < rawRows.length; i+=4) {
+          var a = rawRows[i],
+              b = rawRows[i+1],
+              c = rawRows[i+2],
+              d = rawRows[i+3];
+          a.right = b;
+          b.right = c;
+          c.right = d;
+          d.right = a;
+          a.left = d;
+          b.left = a;
+          c.left = b;
+          d.left = c;
+      }
+    #+END_SRC
+
+* Seeing it work
+
+  And, below is a quick view of the states that the algorithm looks at
+  for the configuration originally given.  If you want to see it
+  actually get the solution, from 927 to 978 is the final run.  After
+  that, it is the algorithm simply looking for any more solutions.
+
+  Also, I should probably add something to the algorithm to stop after
+  finding $N$ solutions, as otherwise it takes bloody forever on some
+  initial configurations.
+
+  #+begin_html
+    <div id="figure2" style="text-align: center;">
+.2.......
+...6....3
+.74.8....
+.....3..2
+.8..4..1.
+6..5.....
+....1.78.
+5....9...
+.......4.
+    </div>
+  #+end_html
+
+* Appendix
+
+** Javascript used to make boards
+
+   Nothing too fancy here.  Could have pulled in a library, of course,
+   though that felt slightly overkill for my purposes.
+
+   #+BEGIN_SRC js :tangle sudokuBoards.js
+     function element(name, children) {
+         var el = document.createElement(name), i;
+         if (children) {
+             for(i = 0; i < children.length; i++) {
+                 var child = children[i];
+                 if (typeof child === "string") {
+                     el.appendChild(document.createTextNode(child));
+                 } else {
+                     el.appendChild(child);
+                 }
+             };
+         }
+         return el;
+     }
+     function div()   { return element("div", arguments);   }
+     function table() { return element("table", arguments); }
+     function tbody() { return element("tbody", arguments); }
+     function tr()    { return element("tr", arguments);    }
+     function td()    { return element("td", arguments);    }
+     function span()  { return element("span", arguments);  }
+     function withAttribute(element, attr, value) {
+         element.setAttribute(attr, value);
+         return element;
+     }
+     function withClassname(element, cls) {
+         return withAttribute(element, "class", cls);
+     }
+     function withMouseMoveListener(element, listener) {
+         element.onmouseover = listener;
+         return element;
+     }
+     function slider() {
+         return withAttribute(
+             withAttribute(element("input"), "type", "range"),
+             "min", "0");
+     }
+
+
+     function makeSudokuBoard() {
+         var i, j, board = tbody();
+         for (i = 0; i < 9; i++) {
+             var row = tr();
+             for (j = 0; j < 9; j++) {
+                 var cell = withClassname(td(), "r" + i + " c" + j + " g" + (Math.floor(i/3)*3 + Math.floor(j/3)));
+                 row.appendChild(cell);
+             }
+             board.appendChild(row);
+         }
+         return withClassname(table(board), "sudokuBoard");
+     }
+
+     function clearBoard(board) {
+         var i, cells = board.querySelectorAll("td");
+         for (i = 0; i < cells.length; i++) {
+             var cell = cells[i];
+             cell.innerHTML = "";
+         }
+
+     }
+
+     function setBoardFromString(board, strings, additionalStyle) {
+         var i, j;
+         for (i = 0; i < 9; i++) {
+             for (j = 0; j < 9; j++) {
+                 var curValue = strings[i].charAt(j);
+                 if (curValue && curValue !== '.') {
+                     var cell = board.querySelector("td.r"+i+".c"+j);
+                     cell.innerHTML = "";
+                     cell.appendChild(document.createTextNode(curValue));
+
+                     if (cell.className.indexOf(additionalStyle) === -1)
+                         cell.className += " " + additionalStyle;
+                 }
+             }
+         }
+     }
+
+     function parseAndReplaceWithBoard(divId, solve) {
+         var divEl = document.getElementById(divId),
+             data = divEl.innerHTML.trim(),
+             board = makeSudokuBoard(),
+             solutions,
+             sliderEl = slider(),
+             progressHeaderEl = div();
+
+         divEl.innerHTML = "";
+         setBoardFromString(board, data.split("\n"), "given");
+
+         if (solve) {
+             solutions = dlxSudokuSolver(data.split("\n"), true);
+             sliderEl.setAttribute("max", solutions.length-1);
+             sliderEl.setAttribute("value", 0);
+             divEl.appendChild(progressHeaderEl);
+             divEl.appendChild(board);
+             divEl.appendChild(sliderEl);
+             progressHeaderEl.innerHTML = sliderEl.value+" / "+(solutions.length - 1);
+             sliderEl.oninput = function() {
+                 progressHeaderEl.innerHTML = sliderEl.value+" / "+(solutions.length-1);
+                 clearCells(board, "solution");
+                 setBoardFromString(board, toSudokuStrings(solutions[sliderEl.value]), "solution");
+             }
+         } else {
+             divEl.appendChild(board);
+         }
+     }
+
+     function clearCells(board, style) {
+         var cells = board.querySelectorAll("." + style),
+             i;
+         for (i = 0; i < cells.length; i++) {
+             cells[i].innerHTML = "";
+         }
+     }
+     function toSudokuStrings(solution) {
+         var positions = [], i, j, k, d;
+         for (i = 0; i < 9; i++) {
+             positions[i] = ['.', '.', '.','.', '.', '.','.', '.', '.'];
+         }
+
+         for (i = 0; i < solution.length; i++) {
+             var position = /p(\d)(\d)/.exec(solution[i]);
+             d = parseInt(/r\d(\d)/.exec(solution[i])[1]) + 1;
+             j = position[1];
+             k = position[2];
+             positions[j][k] = d;
+         }
+         return positions.map(function(v) {return v.join("");});;
+     }
+   #+END_SRC
+
+   #+begin_html
+     <script type="text/javascript" src="sudokuBoards.js"></script>
+     <script type="text/javascript" src="dlxSudokuSolver.js"></script>
+     <script>
+          parseAndReplaceWithBoard("figure1");
+          parseAndReplaceWithBoard("figure2", true);
+     </script>
+   #+end_html
+
+** Styles used.
+
+   And, we have the following css that was used.
+
+   #+BEGIN_SRC css :tangle sudokuBoards.css
+   .sudokuBoard {
+       margin: auto;
+       background-color: #FFF;
+   }
+   .sudokuBoard td {
+       width: 20px;
+       height: 20px;
+       border: solid thin black;
+       text-align: center;
+       line-height: 20px;
+       font-size: 18px;
+   }
+   .sudokuBoard td.c3, .sudokuBoard td.c6 {
+       border-left: 3px solid black;
+   }
+   .sudokuBoard td.r3, .sudokuBoard td.r6 {
+       border-top: 3px solid black;
+   }
+
+   pre.example {
+       width: 60px;
+       background-color: #EEE;
+   }
+
+   td.solution {
+       background-color: #EEE;
+   }
+   #+END_SRC

@@ -1,0 +1,27 @@
+.sudokuBoard {
+    margin: auto;
+    background-color: #FFF;
+}
+.sudokuBoard td {
+    width: 20px;
+    height: 20px;
+    border: solid thin black;
+    text-align: center;
+    line-height: 20px;
+    font-size: 18px;
+}
+.sudokuBoard td.c3, .sudokuBoard td.c6 {
+    border-left: 3px solid black;
+}
+.sudokuBoard td.r3, .sudokuBoard td.r6 {
+    border-top: 3px solid black;
+}
+
+pre.example {
+    width: 60px;
+    background-color: #EEE;
+}
+
+td.solution {
+    background-color: #EEE;
+}
