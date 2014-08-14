@@ -450,6 +450,10 @@
   finding $N$ solutions, as otherwise it takes bloody forever on some
   initial configurations.
 
+  Finally, I definitely need to add something showing why it decides
+  to backtrack.  I can not tell from position 27 to 28 exactly where
+  there were no choices available.  :(
+
   #+begin_html
     <div id="figure2" style="text-align: center;">
 .2.......

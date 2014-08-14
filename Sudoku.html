@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Solving Sudoku with Dancing Links</title>
-<!-- 2014-08-13 Wed 22:16 -->
+<!-- 2014-08-13 Wed 22:30 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Josh" />
@@ -755,6 +755,12 @@ finding \(N\) solutions, as otherwise it takes bloody forever on some
 initial configurations.
 </p>
 
+<p>
+Finally, I definitely need to add something showing why it decides
+to backtrack.  I can not tell from position 27 to 28 exactly where
+there were no choices available.  :(
+</p>
+
     <div id="figure2" style="text-align: center;">
 .2.......
 ...6....3
@@ -974,7 +980,7 @@ And, we have the following css that was used.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh</p>
-<p class="date">Created: 2014-08-13 Wed 22:16</p>
+<p class="date">Created: 2014-08-13 Wed 22:30</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.4.50.8 (<a href="http://orgmode.org">Org</a> mode 8.3beta)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
