@@ -1,0 +1,56 @@
+#+title: Searching Delimited Log Files (alternatively, sed is black magic)
+#+OPTIONS: num:nil
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
+
+* The problem
+
+  Ever find yourself looking through log files that look like this:
+
+  #+begin_example
+    -----------
+    Just a regular log entry
+    -----------
+    Another log entry, now
+    spanning multiple lines
+    -----------
+    And all seperated by a series
+    of dashes.  Though, really, it
+    could be any sort of seperator.
+    -----------
+    Also, we don't necessarily end
+    with an entry seperator.
+  #+end_example
+
+  Ever wanted to grep for the entry that contains a given piece of
+  text, but wanted to see the full entry?  That is, if you wanted to
+  find the entry that had the word "necessarily," but wanted to see
+  the full entry:
+
+  #+begin_example
+    -----------
+    Also, we don't necessarily end
+    with an entry seperator.
+  #+end_example
+
+  Odds are there are plenty of tools that do this of which I am not
+  familiar.  Hopefully someone can find a way to let me know about
+  them.
+
+  In the meantime, however, here is a bit of sed black magic that can
+  accomplish the goal.  I should say that this does have a major
+  benefit, in that sed is installed everywhere.
+
+* Black Magic
+
+  Our goal is fairly simple, we want to invoke sed such that it does
+  not print out the entire file.  We want to hold all lines that are
+  not seperators.  And then, at a seperator or the end of the file, we
+  want to check all of the lines that we have held for our search
+  pattern, print if found, otherwise delete and continue.
+
+  #+begin_src sh
+    sed -n -e "/^----/!H; /^----/ b test; $ b test; d; : test { x; /necessarily/p }"
+  #+end_src
+
+  Simply pass the file or the contents of the file to sed however you
+  want and out come your results.
