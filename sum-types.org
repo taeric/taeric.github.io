@@ -1,0 +1,122 @@
+#+title: Exhaustive Sum Types in Java with a Visitor
+#+OPTIONS: num:nil
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
+
+* What?
+
+  Simply stated, I have heard it said that java could not provide
+  exhaustive coverage of sum types because it lacks pattern matching.
+  I will not try and claim that it is as pleasant as a language that
+  does, however, I also get somewhat annoyed by the idea that this can
+  not be dealt with
+
+* A Sum type.
+
+  I'm not going to provide too much in the way of explanation on what
+  sum types are.  In large part because I would probably make a
+  mistake in explaining this.
+
+  However, by now, I am sure everyone has seen an example of the
+  Optional type that everyone knows and loves.  Right?
+
+* Using a Visitor.  Also, please don't really do this.
+
+  If we are willing to go through some extra hurdles in providing a
+  visitor next to our Option type, we can provide a way where you can
+  exhaustively list the possible sum types in static code and get the
+  compiler to help.
+
+  #+begin_src java
+    public abstract class Option<A> {
+        public <B> B MATCH(Visitor<A, B> visitor) {
+            return this.acceptVisitor(visitor);
+        }
+
+        abstract <B> B acceptVisitor(Visitor<A, B> visitor);
+
+        public static <A> Option<A> some(A value) {
+            return new Some<A>(value);
+        }
+
+        public static <A> Option<A> none() {
+            return new None<A>();
+        }
+
+        private static final class Some<A> extends Option<A> {
+            private final A value;
+            private Some(A value) {
+                this.value = value;
+            }
+            <B> B acceptVisitor(Visitor<A, B> visitor) {
+                return visitor.SOME(this.value);
+            }
+        }
+
+        private static final class None<A> extends Option<A> {
+            <B> B acceptVisitor(Visitor<A, B> visitor) {
+                return visitor.NONE();
+            }
+        }
+
+        public static abstract class Visitor<A, B> {
+            public abstract B SOME(A value);
+            public abstract B NONE();
+        }
+    }
+  #+end_src
+
+  Now, one can write code such as the following, where all places
+  where you would "match" in Scala or similar languages to make sure
+  you cover all types of the sum value are covered by the visitor methods.
+
+  #+begin_src java
+    public class OptionExample {
+        public static void main(String args[]) {
+            Option<String> example;
+
+            example = Option.some("Hello World");
+
+            Integer result = example.MATCH(new Option.Visitor<String, Integer>() {
+                    public Integer SOME(String value) {
+                        return value.length();
+                    }
+                    public Integer NONE() {
+                        return 0;
+                    }
+                });
+
+            System.out.println("We saw " + result + " characters.");
+
+            example = Option.none();
+
+            result = example.MATCH(new Option.Visitor<String, Integer>() {
+                    public Integer SOME(String value) {
+                        return value.length();
+                    }
+                    public Integer NONE() {
+                        return 0;
+                    }
+                });
+
+            System.out.println("We saw " + result + " characters.");
+
+        }
+    }
+  #+end_src
+
+  Now, I will make no claims that this is as pleasant as languages
+  that offer this as a first class citizen.  Nor will I claim that
+  this replaces pattern matching, as that is actually much more than
+  this.
+
+  However, I do claim that if all you want is exhaustive treatment of
+  the values in a sum type, than the visitor pattern will serve you
+  for this.
+
+  I will not claim that it will serve you well, as dealing with this
+  code in a debugger is just plain annoying.  That moment when you
+  realize you stepped over instead of in?  Yeah, I hate that.
+
+  I will further note that it is odd that I can not declare a private
+  abstract method in Java.  Something that this example would have
+  quite clearly supported.
