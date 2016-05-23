@@ -599,9 +599,9 @@
 *** Dancing Links solution
 
     Contrast the previous behavior with the dancing links technique.
-    Here, the ordering heuristic of Knuth's means that as soon as a
-    rank or a file is impossible to place, the algorithm will
-    backtrack.
+    Here, the ordering heuristic of Knuth's accounts for starting on
+    the third row, but the natural DLX behavior is as soon as a rank
+    or a file is impossible to place, the algorithm will backtrack.
 
     This shows in the marked decrease in number of board
     configurations tried.  For DLX, this is a nice 12 positions
