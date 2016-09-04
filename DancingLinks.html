@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Dancing Links in Javascript</title>
-<!-- 2016-05-22 Sun 20:45 -->
+<!-- 2016-09-04 Sun 16:23 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Josh Berry" />
@@ -300,64 +300,64 @@ The DLX version turns out to be a lot more code.
 
 <pre class="src src-js" id="basic_algorithm">function solveRecursively(n, showSteps) {
     var r = n, c = n, allPositions,
-        steps = [];
+	steps = [];
 
     function initializePositions() {
-        var i, j;
-        allPositions = [];
-        for (i = 0; i &lt; r; i++) {
-            for (j = 0; j &lt; c; j++) {
-                allPositions.push({
-                    r: i,
-                    f: j,
-                    a: i + j,
-                    b: n - 1 - j + i,
-                    //To get our placements the same as the DLX one...
-                    toString: function() {
-                        return "R"+this.r+" F"+this.f+" A"+this.a+" B"+this.b;
-                    }
-                });
-            }
-        }
+	var i, j;
+	allPositions = [];
+	for (i = 0; i &lt; r; i++) {
+	    for (j = 0; j &lt; c; j++) {
+		allPositions.push({
+		    r: i,
+		    f: j,
+		    a: i + j,
+		    b: n - 1 - j + i,
+		    //To get our placements the same as the DLX one...
+		    toString: function() {
+			return "R"+this.r+" F"+this.f+" A"+this.a+" B"+this.b;
+		    }
+		});
+	    }
+	}
     }
 
     function placePiece(availablePositions, position) {
-        return availablePositions.
-            filter(function(v) {
-                return v.r !== position.r &amp;&amp;
-                    v.f !== position.f &amp;&amp;
-                    v.a !== position.a &amp;&amp;
-                    v.b !== position.b;
-            });
+	return availablePositions.
+	    filter(function(v) {
+		return v.r !== position.r &amp;&amp;
+		    v.f !== position.f &amp;&amp;
+		    v.a !== position.a &amp;&amp;
+		    v.b !== position.b;
+	    });
     }
 
     function testSolution(availablePositions, candidate) {
-        if (showSteps)
-            steps.push(candidate);
+	if (showSteps)
+	    steps.push(candidate);
 
-        if (availablePositions.length) {
-            var childSolutions = [];
-            for (var p = 0; p &lt; Math.min(n, availablePositions.length); p++) {
-                var position = availablePositions[0],
-                    remainingPositions = placePiece(availablePositions,
-                                                    position),
-                    recurseResults = testSolution(remainingPositions,
-                                                  candidate.concat(position));
+	if (availablePositions.length) {
+	    var childSolutions = [];
+	    for (var p = 0; p &lt; Math.min(n, availablePositions.length); p++) {
+		var position = availablePositions[0],
+		    remainingPositions = placePiece(availablePositions,
+						    position),
+		    recurseResults = testSolution(remainingPositions,
+						  candidate.concat(position));
 
-                    availablePositions = availablePositions.slice(1);
-                    childSolutions = childSolutions.concat(recurseResults);
-            }
-            return childSolutions;
-        } else if (candidate.length === n) {
-            return [ candidate ];
-        }
-        return [];
+		    availablePositions = availablePositions.slice(1);
+		    childSolutions = childSolutions.concat(recurseResults);
+	    }
+	    return childSolutions;
+	} else if (candidate.length === n) {
+	    return [ candidate ];
+	}
+	return [];
     }
 
     initializePositions();
     var solutions = testSolution(allPositions, []);
     if (showSteps)
-        return steps;
+	return steps;
     return solutions;
 }
 </pre>
@@ -382,7 +382,7 @@ like forever.  Bumping up to 11 starts taking tens of seconds.)
 <tbody>
 <tr>
 <td class="right">\(N\)</td>
-<td class="right">Number of Solutions</td>
+<td class="right">Solutions</td>
 </tr>
 
 <tr>
@@ -505,28 +505,28 @@ on it, we immediately backtrack up and try a different path.
 <pre class="src src-js" id="dlx_search">function search(k) {
     var c, r;
     if (showSteps || headers.right === headers) {
-        solutions.push(copySolution());
-        if (headers.right == headers)
-            return;
+	solutions.push(copySolution());
+	if (headers.right == headers)
+	    return;
     }
     c = smallestColumn();
     cover(c);
     r = c.down;
     while (r !== c) {
-        O.push(printRow(r));
-        r = r.right;
-        while (r.col !== c) {
-            cover(r.col);
-            r = r.right;
-        }
-        search(k + 1);
-        r = r.left;
-        while (r.col !== c) {
-            uncover(r.col);
-            r = r.left;
-        }
-        r = r.down;
-        O.pop();
+	O.push(printRow(r));
+	r = r.right;
+	while (r.col !== c) {
+	    cover(r.col);
+	    r = r.right;
+	}
+	search(k + 1);
+	r = r.left;
+	while (r.col !== c) {
+	    uncover(r.col);
+	    r = r.left;
+	}
+	r = r.down;
+	O.pop();
     }
     uncover(c);
 }
@@ -552,14 +552,14 @@ methods are included here.
     c.right.left = c.left;
     c.left.right = c.right;
     while (r !== c) {
-        r = r.right;
-        while (r.col !== c) {
-            r.up.down = r.down;
-            r.down.up = r.up;
-            r.col.size--;
-            r = r.right;
-        }
-        r = r.down;
+	r = r.right;
+	while (r.col !== c) {
+	    r.up.down = r.down;
+	    r.down.up = r.up;
+	    r.col.size--;
+	    r = r.right;
+	}
+	r = r.down;
     }
 }
 
@@ -568,14 +568,14 @@ function uncover(c) {
     c.right.left = c;
     c.left.right = c;
     while (r !== c) {
-        r = r.left;
-        while (r.col !== c) {
-            r.up.down = r;
-            r.down.up = r;
-            r.col.size++;
-            r = r.left;
-        }
-        r = r.up;
+	r = r.left;
+	while (r.col !== c) {
+	    r.up.down = r;
+	    r.down.up = r;
+	    r.col.size++;
+	    r = r.left;
+	}
+	r = r.up;
     }
 }
 </pre>
@@ -596,11 +596,11 @@ The rest of the methods we need are fairly self explanatory.
     var h, c, s = Number.MAX_VALUE;
     h = headers.right;
     while (h !== headers) {
-        if (h.size &lt; s) {
-            c = h;
-            s = c.size;
-        }
-        h = h.right;
+	if (h.size &lt; s) {
+	    c = h;
+	    s = c.size;
+	}
+	h = h.right;
     }
     return c;
 }
@@ -608,8 +608,8 @@ function printRow(r) {
     var s = r.col.name + ' ', e = r;
     r = r.right;
     while (r !== e) {
-        s += r.col.name + ' ';
-        r = r.right;
+	s += r.col.name + ' ';
+	r = r.right;
     }
     return s;
 }
@@ -665,169 +665,169 @@ tricks quickly.)
     cols = [];
 
     headers = {
-        name: 'root',
-        right: null,
-        left: null,
-        up: null,
-        down: null
+	name: 'root',
+	right: null,
+	left: null,
+	up: null,
+	down: null
     };
     headers.right = headers;
     headers.left = headers;
 
     for (i = 0; i &lt; n; i++) {
-        var t = ((i &amp; 1) ? n - 1 - i : n + i) &gt;&gt; 1;
-        var cur = {
-            name: 'R' + t,
-            right: headers,
-            left: headers.left,
-            size: 0,
-            down: null,
-            up: null,
-        };
-        cols.push(cur);
-        headers.left.right = cur;
-        headers.left = cur;
-        cur.up = cur;
-        cur.down = cur;
+	var t = ((i &amp; 1) ? n - 1 - i : n + i) &gt;&gt; 1;
+	var cur = {
+	    name: 'R' + t,
+	    right: headers,
+	    left: headers.left,
+	    size: 0,
+	    down: null,
+	    up: null,
+	};
+	cols.push(cur);
+	headers.left.right = cur;
+	headers.left = cur;
+	cur.up = cur;
+	cur.down = cur;
 
-        cur = {
-            name: 'F' + t,
-            right: headers,
-            left: headers.left,
-            size: 0,
-            down: null,
-            up: null,
-        };
-        cols.push(cur);
-        headers.left.right = cur;
-        headers.left = cur;
-        cur.up = cur;
-        cur.down = cur;
+	cur = {
+	    name: 'F' + t,
+	    right: headers,
+	    left: headers.left,
+	    size: 0,
+	    down: null,
+	    up: null,
+	};
+	cols.push(cur);
+	headers.left.right = cur;
+	headers.left = cur;
+	cur.up = cur;
+	cur.down = cur;
     }
     for (i = 0; i &lt; 2 * n; i++) {
-            var cur = {
-                name: 'A' + i,
-                right: null,
-                left: null,
-                size: 0,
-                up: null,
-                down: null
-            };
-            cols.push(cur);
-            cur.left = cur;
-            cur.right = cur;
-            cur.up = cur;
-            cur.down = cur;
+	    var cur = {
+		name: 'A' + i,
+		right: null,
+		left: null,
+		size: 0,
+		up: null,
+		down: null
+	    };
+	    cols.push(cur);
+	    cur.left = cur;
+	    cur.right = cur;
+	    cur.up = cur;
+	    cur.down = cur;
     }
     for (i = 0; i &lt; 2 * n; i++) {
-            var cur = {
-            name: 'B' + i,
-                right: null,
-                left: null,
-                size: 0,
-                up: null,
-                down: null
-            };
-            cols.push(cur);
-            cur.left = cur;
-            cur.right = cur;
-            cur.up = cur;
-            cur.down = cur;
+	    var cur = {
+	    name: 'B' + i,
+		right: null,
+		left: null,
+		size: 0,
+		up: null,
+		down: null
+	    };
+	    cols.push(cur);
+	    cur.left = cur;
+	    cur.right = cur;
+	    cur.up = cur;
+	    cur.down = cur;
     }
 
     for (i = 0; i &lt; n; i++) {
-        for (j = 0; j &lt; n; j++) {
-            var a, b, c, d;
-            a = {
-                up: null,
-                down: null,
-                left: null,
-                right: null,
-                col: null
-            };
-            b = {
-                up: null,
-                down: null,
-                left: null,
-                right: null,
-                col: null
-            };
-            c = {
-                up: null,
-                down: null,
-                left: null,
-                right: null,
-                col: null
-            };
-            d = {
-                up: null,
-                down: null,
-                left: null,
-                right: null,
-                col: null
-            };
-            a.left = d;
-            a.right = b;
-            b.left = a;
-            b.right = c;
-            c.left = b;
-            c.right = d;
-            d.left = c;
-            d.right = a;
+	for (j = 0; j &lt; n; j++) {
+	    var a, b, c, d;
+	    a = {
+		up: null,
+		down: null,
+		left: null,
+		right: null,
+		col: null
+	    };
+	    b = {
+		up: null,
+		down: null,
+		left: null,
+		right: null,
+		col: null
+	    };
+	    c = {
+		up: null,
+		down: null,
+		left: null,
+		right: null,
+		col: null
+	    };
+	    d = {
+		up: null,
+		down: null,
+		left: null,
+		right: null,
+		col: null
+	    };
+	    a.left = d;
+	    a.right = b;
+	    b.left = a;
+	    b.right = c;
+	    c.left = b;
+	    c.right = d;
+	    d.left = c;
+	    d.right = a;
 
-            var colIdx = 0;
-            var aCol = cols[colIdx++];
-            while (aCol.name !== 'R' + i)
-                aCol = cols[colIdx++];
-            aCol.size++;
-            a.col = aCol;
-            a.down = aCol;
-            a.up = aCol.up;
-            a.down.up = a;
-            a.up.down = a;
+	    var colIdx = 0;
+	    var aCol = cols[colIdx++];
+	    while (aCol.name !== 'R' + i)
+		aCol = cols[colIdx++];
+	    aCol.size++;
+	    a.col = aCol;
+	    a.down = aCol;
+	    a.up = aCol.up;
+	    a.down.up = a;
+	    a.up.down = a;
 
-            colIdx = 0;
-            var bCol = cols[colIdx++];
-            while (bCol.name !== 'F' + j) {
-                bCol = cols[colIdx++];
-            }
-            bCol.size++;
-            b.col = bCol;
-            b.down = bCol;
-            b.up = bCol.up;
-            b.down.up = b;
-            b.up.down = b;
+	    colIdx = 0;
+	    var bCol = cols[colIdx++];
+	    while (bCol.name !== 'F' + j) {
+		bCol = cols[colIdx++];
+	    }
+	    bCol.size++;
+	    b.col = bCol;
+	    b.down = bCol;
+	    b.up = bCol.up;
+	    b.down.up = b;
+	    b.up.down = b;
 
-            colIdx = 0;
-            var cCol = cols[colIdx++];
-            while (cCol.name !== 'A' + (j + i))
-                cCol = cols[colIdx++];
-            cCol.size++;
-            c.col = cCol;
-            c.down = cCol;
-            c.up = cCol.up;
-            c.down.up = c;
-            c.up.down = c;
+	    colIdx = 0;
+	    var cCol = cols[colIdx++];
+	    while (cCol.name !== 'A' + (j + i))
+		cCol = cols[colIdx++];
+	    cCol.size++;
+	    c.col = cCol;
+	    c.down = cCol;
+	    c.up = cCol.up;
+	    c.down.up = c;
+	    c.up.down = c;
 
-            colIdx = 0;
-            var dCol = cols[colIdx++];
-            while (dCol.name !== 'B' + (n - 1 - j + i))
-                dCol = cols[colIdx++];
-            dCol.size++;
-            d.col = dCol;
-            d.down = dCol;
-            d.up = dCol.up;
-            d.up.down = d;
-            d.down.up = d;
-        }
+	    colIdx = 0;
+	    var dCol = cols[colIdx++];
+	    while (dCol.name !== 'B' + (n - 1 - j + i))
+		dCol = cols[colIdx++];
+	    dCol.size++;
+	    d.col = dCol;
+	    d.down = dCol;
+	    d.up = dCol.up;
+	    d.up.down = d;
+	    d.down.up = d;
+	}
     }
     headers = headers.right;
     while (headers.down) {
-        if (headers.size === 0) {
-            headers.left.right = headers.right;
-            headers.right.left = headers.left;
-        }
-        headers = headers.right;
+	if (headers.size === 0) {
+	    headers.left.right = headers.right;
+	    headers.right.left = headers.left;
+	}
+	headers = headers.right;
     }
 }
 </pre>
@@ -855,7 +855,7 @@ as they go <b>much</b> faster than the recursive solution I created.
 <tbody>
 <tr>
 <td class="right">\(N\)</td>
-<td class="right">Number of Solutions</td>
+<td class="right">Solutions</td>
 </tr>
 
 <tr>
@@ -1099,14 +1099,14 @@ while on the train.)
 <pre class="src src-js">function element(name, children) {
     var el = document.createElement(name), i;
     if (children) {
-        for(i = 0; i &lt; children.length; i++) {
-            var child = children[i];
-            if (typeof child === "string") {
-                el.appendChild(document.createTextNode(child));
-            } else {
-                el.appendChild(child);
-            }
-        };
+	for(i = 0; i &lt; children.length; i++) {
+	    var child = children[i];
+	    if (typeof child === "string") {
+		el.appendChild(document.createTextNode(child));
+	    } else {
+		el.appendChild(child);
+	    }
+	};
     }
     return el;
 }
@@ -1129,26 +1129,26 @@ function withMouseMoveListener(element, listener) {
 }
 function slider() {
     return withAttribute(
-        withAttribute(element("input"), "type", "range"),
-        "min", "0");
+	withAttribute(element("input"), "type", "range"),
+	"min", "0");
 }
 
 
 function makeVisualization(n, method) {
     var board = makeBoard(n),
-        input = slider(),
-        curState = span(),
-        states = method(n, true);
+	input = slider(),
+	curState = span(),
+	states = method(n, true);
 
     input.setAttribute("max", states.length - 1);
     curState.innerHTML = "0 / " + (states.length - 1);
     input.value = 0;
     input.oninput = function () {
-        curState.innerHTML = input.value + " / " + (states.length - 1);
-        clearQueens(board);
-        states[input.value].forEach(function (s) {
-            placeQueen(board, "."+s.toString().trim().replace(/ /g, '.'));
-        });
+	curState.innerHTML = input.value + " / " + (states.length - 1);
+	clearQueens(board);
+	states[input.value].forEach(function (s) {
+	    placeQueen(board, "."+s.toString().trim().replace(/ /g, '.'));
+	});
     }
 
     return withClassname(div(curState, board, input), "visualization");
@@ -1158,31 +1158,31 @@ function makeBoard(n) {
     var r = n, c = n;
     var rows = tbody();
     for (var i = 0; i &lt; r; i++) {
-        var row = tr();
-        rows.appendChild(row);
-        for (var j = 0; j &lt; c; j++) {
-            var cell = td();
-            var cls = "";
-            cls += " R"+i;
-            cls += " F"+j;
-            cls += " A"+ (i + j);
-            cls += " B"+ (n - 1 - j + i);
-            cell.setAttribute("class", cls.trim());
-            row.appendChild(cell);
-        }
+	var row = tr();
+	rows.appendChild(row);
+	for (var j = 0; j &lt; c; j++) {
+	    var cell = td();
+	    var cls = "";
+	    cls += " R"+i;
+	    cls += " F"+j;
+	    cls += " A"+ (i + j);
+	    cls += " B"+ (n - 1 - j + i);
+	    cell.setAttribute("class", cls.trim());
+	    row.appendChild(cell);
+	}
     }
     return withMouseMoveListener(withClassname(table(rows),
-                                               "chessboard"),
-                                 hoverListener);
+					       "chessboard"),
+				 hoverListener);
 }
 
 function clearHighlight(board, cls) {
     var i, cells = board.querySelectorAll('.'+cls);
     for (i = 0; i &lt; cells.length; i++) {
-        var cell = cells[i];
-        cell.setAttribute("class",
-                          cell.getAttribute("class")
-                          .replace(new RegExp(cls, 'g'), "").trim());
+	var cell = cells[i];
+	cell.setAttribute("class",
+			  cell.getAttribute("class")
+			  .replace(new RegExp(cls, 'g'), "").trim());
 
     };
 
@@ -1190,7 +1190,7 @@ function clearHighlight(board, cls) {
 
 function getAttackingClasses(cls) {
     if (! cls)
-        return null;
+	return null;
 
     cls = cls.replace(/.*(R.*B\d+).*/, "$1");
     cls = cls.replace(/((R|F|A|B)\d+)/g, ".$1");
@@ -1200,30 +1200,30 @@ function getAttackingClasses(cls) {
 
 function highlight(parent, cls, highlightCls) {
     if (! highlightCls)
-        highlightCls = "highlight";
+	highlightCls = "highlight";
     var i, cells = parent.querySelectorAll(cls);
     for (i = 0; i &lt; cells.length; i++) {
-        var cell = cells[i],
-            curCls = cell.getAttribute("class");
-        if (curCls.indexOf(highlightCls) === -1) {
-            cell.setAttribute("class",
-                              curCls + " " + highlightCls);
-        }
+	var cell = cells[i],
+	    curCls = cell.getAttribute("class");
+	if (curCls.indexOf(highlightCls) === -1) {
+	    cell.setAttribute("class",
+			      curCls + " " + highlightCls);
+	}
     }
 }
 
 function hoverListener(e) {
     if (e.target.tagName === 'TD' &amp;&amp;
-        e.target
-        .parentElement
-        .parentElement
-        .parentElement.getAttribute("class") === "chessboard") {
-        var rows = e.target.parentElement.parentElement;
-        clearHighlight(rows, 'highlight');
-        var toggleCls = getAttackingClasses(e.target.getAttribute("class"));
-        if (toggleCls) {
-            highlight(rows, toggleCls);
-        }
+	e.target
+	.parentElement
+	.parentElement
+	.parentElement.getAttribute("class") === "chessboard") {
+	var rows = e.target.parentElement.parentElement;
+	clearHighlight(rows, 'highlight');
+	var toggleCls = getAttackingClasses(e.target.getAttribute("class"));
+	if (toggleCls) {
+	    highlight(rows, toggleCls);
+	}
     }
 }
 
@@ -1238,9 +1238,9 @@ function placeQueen(board, posSelector) {
 function clearQueens(board) {
     var i, cells = board.querySelectorAll("td");
     for (i = 0; i &lt; cells.length; i++) {
-        var td = cells[i];
-        if (td.firstChild)
-            td.removeChild(td.firstChild);
+	var td = cells[i];
+	if (td.firstChild)
+	    td.removeChild(td.firstChild);
     };
     clearHighlight(board, 'attacked');
 }
@@ -1292,17 +1292,17 @@ input[type='range'] {
 <script type="text/javascript" src="naiveRecursion.js"></script>
 <script type="text/javascript" src="dancingLinks.js"></script>
 <script type="text/javascript" src="chessBoards.js"></script>
-     <script>
-      document.getElementById("recursiveVisualizations").appendChild(makeVisualization(4, solveRecursively));
-      document.getElementById("dlxVisualizations").appendChild(makeVisualization(4, solveWithDancingLinks));
-     </script>
+<script>
+  document.getElementById("recursiveVisualizations").appendChild(makeVisualization(4, solveRecursively));
+  document.getElementById("dlxVisualizations").appendChild(makeVisualization(4, solveWithDancingLinks));
+</script>
 </div>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh Berry</p>
-<p class="date">Created: 2016-05-22 Sun 20:45</p>
+<p class="date">Created: 2016-09-04 Sun 16:23</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

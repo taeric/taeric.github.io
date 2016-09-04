@@ -144,15 +144,15 @@
    #+end_src
 
    #+RESULTS:
-   | $N$ | Number of Solutions |
-   |   1 |                   1 |
-   |   2 |                   0 |
-   |   3 |                   0 |
-   |   4 |                   2 |
-   |   5 |                  10 |
-   |   6 |                   4 |
-   |   7 |                  40 |
-   |   8 |                  92 |
+   | $N$ | Solutions |
+   |   1 |         1 |
+   |   2 |         0 |
+   |   3 |         0 |
+   |   4 |         2 |
+   |   5 |        10 |
+   |   6 |         4 |
+   |   7 |        40 |
+   |   8 |        92 |
 
 
 ** Dancing Links
@@ -541,20 +541,20 @@
     #+end_src
 
     #+RESULTS:
-    | $N$ | Number of Solutions |
-    |   1 |                   1 |
-    |   2 |                   0 |
-    |   3 |                   0 |
-    |   4 |                   2 |
-    |   5 |                  10 |
-    |   6 |                   4 |
-    |   7 |                  40 |
-    |   8 |                  92 |
-    |   9 |                 352 |
-    |  10 |                 724 |
-    |  11 |                2680 |
-    |  12 |               14200 |
-    |  13 |               73712 |
+    | $N$ | Solutions |
+    |   1 |         1 |
+    |   2 |         0 |
+    |   3 |         0 |
+    |   4 |         2 |
+    |   5 |        10 |
+    |   6 |         4 |
+    |   7 |        40 |
+    |   8 |        92 |
+    |   9 |       352 |
+    |  10 |       724 |
+    |  11 |      2680 |
+    |  12 |     14200 |
+    |  13 |     73712 |
 
 
 ** Visualized
@@ -862,11 +862,11 @@
    #+end_src
 
    #+begin_html
-<script type="text/javascript" src="naiveRecursion.js"></script>
-<script type="text/javascript" src="dancingLinks.js"></script>
-<script type="text/javascript" src="chessBoards.js"></script>
-     <script>
-      document.getElementById("recursiveVisualizations").appendChild(makeVisualization(4, solveRecursively));
-      document.getElementById("dlxVisualizations").appendChild(makeVisualization(4, solveWithDancingLinks));
-     </script>
+   <script type="text/javascript" src="naiveRecursion.js"></script>
+   <script type="text/javascript" src="dancingLinks.js"></script>
+   <script type="text/javascript" src="chessBoards.js"></script>
+   <script>
+     document.getElementById("recursiveVisualizations").appendChild(makeVisualization(4, solveRecursively));
+     document.getElementById("dlxVisualizations").appendChild(makeVisualization(4, solveWithDancingLinks));
+   </script>
    #+end_html
