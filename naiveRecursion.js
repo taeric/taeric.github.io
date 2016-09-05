@@ -1,4 +1,4 @@
-// [[file:DancingLinks.org::*Basic%20Recursion][basic_algorithm]]
+// [[file:DancingLinks.org::basic_algorithm][basic_algorithm]]
 function solveRecursively(n, showSteps) {
     var r = n, c = n, allPositions,
         steps = [];

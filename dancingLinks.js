@@ -1,8 +1,8 @@
-// [[file:DancingLinks.org::*Outline][dlx_algorithm]]
+// [[file:DancingLinks.org::dlx_algorithm][dlx_algorithm]]
 function solveWithDancingLinks(n, showSteps) {
     var headers, solutions = [], O = [];
 
-    // [[file:~/repositories/taeric.github.io/DancingLinks.org::*Generate%20Headers][dlx_initialize_headers]]
+    // [[file:~/repositories/taeric.github.io/DancingLinks.org::dlx_initialize_headers][dlx_initialize_headers]]
     function initializeHeaders() {
         var i, j, k, rows=[];
         cols = [];
@@ -175,7 +175,7 @@ function solveWithDancingLinks(n, showSteps) {
     }
     // dlx_initialize_headers ends here
 
-    // [[file:~/repositories/taeric.github.io/DancingLinks.org::*Search][dlx_search]]
+    // [[file:~/repositories/taeric.github.io/DancingLinks.org::dlx_search][dlx_search]]
     function search(k) {
         var c, r;
         if (showSteps || headers.right === headers) {
@@ -206,7 +206,7 @@ function solveWithDancingLinks(n, showSteps) {
     }
     // dlx_search ends here
 
-    // [[file:~/repositories/taeric.github.io/DancingLinks.org::*Covering%20and%20Uncovering%20Columns][dlx_cover_uncover]]
+    // [[file:~/repositories/taeric.github.io/DancingLinks.org::dlx_cover_uncover][dlx_cover_uncover]]
     function cover(c) {
         var r = c.down;
         c.right.left = c.left;
@@ -240,7 +240,7 @@ function solveWithDancingLinks(n, showSteps) {
     }
     // dlx_cover_uncover ends here
 
-    // [[file:~/repositories/taeric.github.io/DancingLinks.org::*Utility%20Methods][dlx_utilities]]
+    // [[file:~/repositories/taeric.github.io/DancingLinks.org::dlx_utilities][dlx_utilities]]
     function smallestColumn() {
         var h, c, s = Number.MAX_VALUE;
         h = headers.right;

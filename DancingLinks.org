@@ -167,7 +167,7 @@
    large.
 
    We'll look at this in pieces, then.  If you want to see it all
-   tangled into a single file, peek over at [[dancingLinks.js]].
+   tangled into a single file, peek over at [[./dancingLinks.js][dancingLinks.js]].
 
 *** Outline
 
