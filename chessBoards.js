@@ -1,4 +1,4 @@
-// [[file:DancingLinks.org::*Board%20Highlighting][Board\ Highlighting:1]]
+// [[file:DancingLinks.org::*Board%20Highlighting][Board Highlighting:1]]
 function element(name, children) {
     var el = document.createElement(name), i;
     if (children) {
@@ -147,4 +147,4 @@ function clearQueens(board) {
     };
     clearHighlight(board, 'attacked');
 }
-// Board\ Highlighting:1 ends here
+// Board Highlighting:1 ends here

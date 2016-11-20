@@ -592,10 +592,9 @@
     Otherwise, this algorithm inspects the pieces in a very straight
     forward left to right, top to bottom method of placing pieces.
 
-   #+begin_html
+   #+begin_export html
    <div id="recursiveVisualizations"></div>
-   #+end_html
-
+   #+end_export
 *** Dancing Links solution
 
     Contrast the previous behavior with the dancing links technique.
@@ -612,9 +611,9 @@
     does not bother trying, as the third rank is already impossible to
     place.
 
-   #+begin_html
+   #+begin_export html
    <div id="dlxVisualizations"></div>
-   #+end_html
+   #+end_export
 
 
 * Conclusion
@@ -861,7 +860,7 @@
      }
    #+end_src
 
-   #+begin_html
+   #+begin_export html
    <script type="text/javascript" src="naiveRecursion.js"></script>
    <script type="text/javascript" src="dancingLinks.js"></script>
    <script type="text/javascript" src="chessBoards.js"></script>
@@ -869,4 +868,4 @@
      document.getElementById("recursiveVisualizations").appendChild(makeVisualization(4, solveRecursively));
      document.getElementById("dlxVisualizations").appendChild(makeVisualization(4, solveWithDancingLinks));
    </script>
-   #+end_html
+   #+end_export

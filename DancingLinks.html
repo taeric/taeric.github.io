@@ -3,12 +3,12 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2016-09-04 Sun 20:33 -->
-<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta  name="viewport" content="width=device-width, initial-scale=1" />
+<!-- 2016-11-19 Sat 17:24 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Dancing Links in Javascript</title>
-<meta  name="generator" content="Org-mode" />
-<meta  name="author" content="Josh Berry" />
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Josh Berry" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center;
@@ -53,13 +53,97 @@
     border: 1px solid black;
   }
   pre.src:hover:before { display: inline;}
-  pre.src-sh:before    { content: 'sh'; }
-  pre.src-bash:before  { content: 'sh'; }
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
   pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
-  pre.src-R:before     { content: 'R'; }
-  pre.src-perl:before  { content: 'Perl'; }
-  pre.src-java:before  { content: 'Java'; }
-  pre.src-sql:before   { content: 'SQL'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
 
   table { border-collapse:collapse; }
   caption.t-above { caption-side: top; }
@@ -92,6 +176,7 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
 <link rel="stylesheet" type="text/css" href="org-overrides.css" />
@@ -172,42 +257,42 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgheadline1">Introduction</a></li>
-<li><a href="#orgheadline2">N-Queens</a>
+<li><a href="#org24a057b">Introduction</a></li>
+<li><a href="#org8fac1f4">N-Queens</a>
 <ul>
-<li><a href="#orgheadline3">Basic Recursion</a></li>
-<li><a href="#orgheadline4">Dancing Links</a>
+<li><a href="#orgce20e7f">Basic Recursion</a></li>
+<li><a href="#org57840c3">Dancing Links</a>
 <ul>
-<li><a href="#orgheadline5">Outline</a></li>
-<li><a href="#orgheadline6">Search</a></li>
-<li><a href="#orgheadline7">Covering and Uncovering Columns</a></li>
-<li><a href="#orgheadline8">Utility Methods</a></li>
-<li><a href="#orgheadline9">Generate Headers</a></li>
-<li><a href="#orgheadline10">Running for small values</a></li>
+<li><a href="#orgfd4d18e">Outline</a></li>
+<li><a href="#orged98076">Search</a></li>
+<li><a href="#orgb177326">Covering and Uncovering Columns</a></li>
+<li><a href="#org9bf3330">Utility Methods</a></li>
+<li><a href="#org62c38e2">Generate Headers</a></li>
+<li><a href="#orgeb2cbaa">Running for small values</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline11">Visualized</a>
+<li><a href="#org1c0a6af">Visualized</a>
 <ul>
-<li><a href="#orgheadline12">Recursive solution</a></li>
-<li><a href="#orgheadline13">Dancing Links solution</a></li>
+<li><a href="#org5b9dff7">Recursive solution</a></li>
+<li><a href="#org2ca2a14">Dancing Links solution</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#orgheadline14">Conclusion</a></li>
-<li><a href="#orgheadline15">Addendum</a></li>
-<li><a href="#orgheadline17">Appendix</a>
+<li><a href="#orgeb51a80">Conclusion</a></li>
+<li><a href="#org34515a4">Addendum</a></li>
+<li><a href="#org9da566b">Appendix</a>
 <ul>
-<li><a href="#orgheadline16">Board Highlighting</a></li>
+<li><a href="#org3be72be">Board Highlighting</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgheadline1" class="outline-2">
-<h2 id="orgheadline1">Introduction</h2>
-<div class="outline-text-2" id="text-orgheadline1">
+<div id="outline-container-org24a057b" class="outline-2">
+<h2 id="org24a057b">Introduction</h2>
+<div class="outline-text-2" id="text-org24a057b">
 <p>
 If you have never heard of it, <a href="http://www-cs-faculty.stanford.edu/~uno/papers/dancing-color.ps.gz">Dancing Links</a> is one of the
 techniques that Knuth describes to implement a recursive
@@ -233,9 +318,9 @@ to use the technique in another algorithm later.
 </div>
 </div>
 
-<div id="outline-container-orgheadline2" class="outline-2">
-<h2 id="orgheadline2">N-Queens</h2>
-<div class="outline-text-2" id="text-orgheadline2">
+<div id="outline-container-org8fac1f4" class="outline-2">
+<h2 id="org8fac1f4">N-Queens</h2>
+<div class="outline-text-2" id="text-org8fac1f4">
 <p>
 I'll be exploring dancing links in solving a straight forward "exact
 cover" problem.  This will be, directly, the DLX algorithm that was
@@ -265,9 +350,9 @@ starting point, remove all positions it eliminates, and repeat.
 </p>
 </div>
 
-<div id="outline-container-orgheadline3" class="outline-3">
-<h3 id="orgheadline3">Basic Recursion</h3>
-<div class="outline-text-3" id="text-orgheadline3">
+<div id="outline-container-orgce20e7f" class="outline-3">
+<h3 id="orgce20e7f">Basic Recursion</h3>
+<div class="outline-text-3" id="text-orgce20e7f">
 <p>
 A ridiculously naive solution follows.  My strategy is simply to go
 as stated above.  Start by enumerating all positions on the board.
@@ -283,8 +368,7 @@ The DLX version turns out to be a lot more code.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="orgsrcblock1"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">solveRecursively</span>(<span style="color: #DFAF8F;">n</span>, <span style="color: #DFAF8F;">showSteps</span>) {
+<pre class="src src-js" id="orgb3f12b3"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">solveRecursively</span>(<span style="color: #DFAF8F;">n</span>, <span style="color: #DFAF8F;">showSteps</span>) {
     <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">r</span> = n, <span style="color: #DFAF8F;">c</span> = n, <span style="color: #DFAF8F;">allPositions</span>,
         steps = [];
 
@@ -416,9 +500,9 @@ like forever.  Bumping up to 11 starts taking tens of seconds.)
 </div>
 
 
-<div id="outline-container-orgheadline4" class="outline-3">
-<h3 id="orgheadline4">Dancing Links</h3>
-<div class="outline-text-3" id="text-orgheadline4">
+<div id="outline-container-org57840c3" class="outline-3">
+<h3 id="org57840c3">Dancing Links</h3>
+<div class="outline-text-3" id="text-org57840c3">
 <p>
 Now that we've looked at solving this with a naive recursive
 solution, how would this look with dancing links?  Not going to
@@ -438,9 +522,9 @@ tangled into a single file, peek over at <a href="./dancingLinks.js">dancingLink
 </p>
 </div>
 
-<div id="outline-container-orgheadline5" class="outline-4">
-<h4 id="orgheadline5">Outline</h4>
-<div class="outline-text-4" id="text-orgheadline5">
+<div id="outline-container-orgfd4d18e" class="outline-4">
+<h4 id="orgfd4d18e">Outline</h4>
+<div class="outline-text-4" id="text-orgfd4d18e">
 <p>
 The basic outline is to create a method that will take in the
 number of queens we want to solve, and then create the necessary
@@ -448,8 +532,7 @@ structures to make it happen.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="orgsrcblock2"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">solveWithDancingLinks</span>(<span style="color: #DFAF8F;">n</span>, <span style="color: #DFAF8F;">showSteps</span>) {
+<pre class="src src-js" id="orge2af4a4"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">solveWithDancingLinks</span>(<span style="color: #DFAF8F;">n</span>, <span style="color: #DFAF8F;">showSteps</span>) {
     <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">headers</span>, <span style="color: #DFAF8F;">solutions</span> = [], <span style="color: #DFAF8F;">O</span> = [];
 
     &lt;&lt;dlx_initialize_headers&gt;&gt;
@@ -470,9 +553,9 @@ structures to make it happen.
 </div>
 </div>
 
-<div id="outline-container-orgheadline6" class="outline-4">
-<h4 id="orgheadline6">Search</h4>
-<div class="outline-text-4" id="text-orgheadline6">
+<div id="outline-container-orged98076" class="outline-4">
+<h4 id="orged98076">Search</h4>
+<div class="outline-text-4" id="text-orged98076">
 <p>
 We'll begin by looking at the search code.  This is fairly
 straight forward.  First, check to see if there are any columns
@@ -487,8 +570,7 @@ on it, we immediately backtrack up and try a different path.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="orgsrcblock3"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">search</span>(<span style="color: #DFAF8F;">k</span>) {
+<pre class="src src-js" id="org98f8482"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">search</span>(<span style="color: #DFAF8F;">k</span>) {
     <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">c</span>, <span style="color: #DFAF8F;">r</span>;
     <span style="color: #F0DFAF; font-weight: bold;">if</span> (showSteps || headers.right === headers) {
         solutions.push(copySolution());
@@ -521,9 +603,9 @@ on it, we immediately backtrack up and try a different path.
 </div>
 </div>
 
-<div id="outline-container-orgheadline7" class="outline-4">
-<h4 id="orgheadline7">Covering and Uncovering Columns</h4>
-<div class="outline-text-4" id="text-orgheadline7">
+<div id="outline-container-orgb177326" class="outline-4">
+<h4 id="orgb177326">Covering and Uncovering Columns</h4>
+<div class="outline-text-4" id="text-orgb177326">
 <p>
 This is actually the heart of the "dancing" in the dancing links
 technique.  Not much to offer on them other than that they have to
@@ -532,8 +614,7 @@ methods are included here.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="orgsrcblock4"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">cover</span>(<span style="color: #DFAF8F;">c</span>) {
+<pre class="src src-js" id="org17ba45d"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">cover</span>(<span style="color: #DFAF8F;">c</span>) {
     <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">r</span> = c.down;
     c.right.left = c.left;
     c.left.right = c.right;
@@ -569,16 +650,15 @@ methods are included here.
 </div>
 </div>
 
-<div id="outline-container-orgheadline8" class="outline-4">
-<h4 id="orgheadline8">Utility Methods</h4>
-<div class="outline-text-4" id="text-orgheadline8">
+<div id="outline-container-org9bf3330" class="outline-4">
+<h4 id="org9bf3330">Utility Methods</h4>
+<div class="outline-text-4" id="text-org9bf3330">
 <p>
 The rest of the methods we need are fairly self explanatory.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="orgsrcblock5"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">smallestColumn</span>() {
+<pre class="src src-js" id="orgda90560"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">smallestColumn</span>() {
     <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">h</span>, <span style="color: #DFAF8F;">c</span>, <span style="color: #DFAF8F;">s</span> = Number.MAX_VALUE;
     h = headers.right;
     <span style="color: #F0DFAF; font-weight: bold;">while</span> (h !== headers) {
@@ -608,9 +688,9 @@ The rest of the methods we need are fairly self explanatory.
 </div>
 </div>
 
-<div id="outline-container-orgheadline9" class="outline-4">
-<h4 id="orgheadline9">Generate Headers</h4>
-<div class="outline-text-4" id="text-orgheadline9">
+<div id="outline-container-org62c38e2" class="outline-4">
+<h4 id="org62c38e2">Generate Headers</h4>
+<div class="outline-text-4" id="text-org62c38e2">
 <p>
 And now, the only part of this code that is actually specific to
 the queens problem, generating the rows and columns of our data
@@ -645,8 +725,7 @@ tricks quickly.)
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="orgsrcblock6"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">initializeHeaders</span>() {
+<pre class="src src-js" id="org3e1d6f5"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">initializeHeaders</span>() {
     <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">i</span>, <span style="color: #DFAF8F;">j</span>, <span style="color: #DFAF8F;">k</span>, <span style="color: #DFAF8F;">rows</span>=[];
     cols = [];
 
@@ -821,9 +900,9 @@ tricks quickly.)
 </div>
 </div>
 
-<div id="outline-container-orgheadline10" class="outline-4">
-<h4 id="orgheadline10">Running for small values</h4>
-<div class="outline-text-4" id="text-orgheadline10">
+<div id="outline-container-orgeb2cbaa" class="outline-4">
+<h4 id="orgeb2cbaa">Running for small values</h4>
+<div class="outline-text-4" id="text-orgeb2cbaa">
 <p>
 And finally, we run for some quick examples to see what we can
 see.  I'm willing to show quite a few more results for this case,
@@ -915,9 +994,9 @@ as they go <b>much</b> faster than the recursive solution I created.
 </div>
 
 
-<div id="outline-container-orgheadline11" class="outline-3">
-<h3 id="orgheadline11">Visualized</h3>
-<div class="outline-text-3" id="text-orgheadline11">
+<div id="outline-container-org1c0a6af" class="outline-3">
+<h3 id="org1c0a6af">Visualized</h3>
+<div class="outline-text-3" id="text-org1c0a6af">
 <p>
 I had originally thought to run some fairly sophisticated
 visualizations of these two algorithms.  Truth to tell, I just
@@ -932,7 +1011,6 @@ some larger visualizations, simply run:
 </p>
 
 <div class="org-src-container">
-
 <pre class="src src-js">document.body.appendChild(makeVisualization(N, solveWithDancingLinks));
 </pre>
 </div>
@@ -943,9 +1021,9 @@ To see the boards that the recursive solution inspects, use
 </p>
 </div>
 
-<div id="outline-container-orgheadline12" class="outline-4">
-<h4 id="orgheadline12">Recursive solution</h4>
-<div class="outline-text-4" id="text-orgheadline12">
+<div id="outline-container-org5b9dff7" class="outline-4">
+<h4 id="org5b9dff7">Recursive solution</h4>
+<div class="outline-text-4" id="text-org5b9dff7">
 <p>
 First thing I was curious on was if I could get a good grasp on
 the speed difference at a lower value of \(N\).  Sure enough, there
@@ -970,10 +1048,9 @@ forward left to right, top to bottom method of placing pieces.
 <div id="recursiveVisualizations"></div>
 </div>
 </div>
-
-<div id="outline-container-orgheadline13" class="outline-4">
-<h4 id="orgheadline13">Dancing Links solution</h4>
-<div class="outline-text-4" id="text-orgheadline13">
+<div id="outline-container-org2ca2a14" class="outline-4">
+<h4 id="org2ca2a14">Dancing Links solution</h4>
+<div class="outline-text-4" id="text-org2ca2a14">
 <p>
 Contrast the previous behavior with the dancing links technique.
 Here, the ordering heuristic of Knuth's accounts for starting on
@@ -1001,9 +1078,9 @@ place.
 </div>
 
 
-<div id="outline-container-orgheadline14" class="outline-2">
-<h2 id="orgheadline14">Conclusion</h2>
-<div class="outline-text-2" id="text-orgheadline14">
+<div id="outline-container-orgeb51a80" class="outline-2">
+<h2 id="orgeb51a80">Conclusion</h2>
+<div class="outline-text-2" id="text-orgeb51a80">
 <p>
 After all of that, what is the reason to use the "dancing links"
 technique?  Mainly for speed.  It seems to be a classic case study
@@ -1036,9 +1113,9 @@ structures.  At least the simple ones.
 </div>
 </div>
 
-<div id="outline-container-orgheadline15" class="outline-2">
-<h2 id="orgheadline15">Addendum</h2>
-<div class="outline-text-2" id="text-orgheadline15">
+<div id="outline-container-org34515a4" class="outline-2">
+<h2 id="org34515a4">Addendum</h2>
+<div class="outline-text-2" id="text-org34515a4">
 <p>
 I should also put a big plug in to the literate programming ideas,
 again.  To note, this document is not just excerpts of the code, but
@@ -1066,12 +1143,12 @@ the programming sections.
 </div>
 </div>
 
-<div id="outline-container-orgheadline17" class="outline-2">
-<h2 id="orgheadline17">Appendix</h2>
-<div class="outline-text-2" id="text-orgheadline17">
-</div><div id="outline-container-orgheadline16" class="outline-3">
-<h3 id="orgheadline16">Board Highlighting</h3>
-<div class="outline-text-3" id="text-orgheadline16">
+<div id="outline-container-org9da566b" class="outline-2">
+<h2 id="org9da566b">Appendix</h2>
+<div class="outline-text-2" id="text-org9da566b">
+</div><div id="outline-container-org3be72be" class="outline-3">
+<h3 id="org3be72be">Board Highlighting</h3>
+<div class="outline-text-3" id="text-org3be72be">
 <p>
 The code I'm using for the board highlighting is here.  I really
 just needed a few things.  Probably could have just pulled in a
@@ -1081,7 +1158,6 @@ while on the train.)
 </p>
 
 <div class="org-src-container">
-
 <pre class="src src-js"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">element</span>(<span style="color: #DFAF8F;">name</span>, <span style="color: #DFAF8F;">children</span>) {
     <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">el</span> = document.createElement(name), <span style="color: #DFAF8F;">i</span>;
     <span style="color: #F0DFAF; font-weight: bold;">if</span> (children) {
@@ -1239,7 +1315,6 @@ Additionally, I used the following css.
 </p>
 
 <div class="org-src-container">
-
 <pre class="src src-css"><span style="color: #93E0E3;">div.visualization </span>{
   <span style="color: #DFAF8F;">text-align</span>: center;
 }
@@ -1288,7 +1363,7 @@ Additionally, I used the following css.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh Berry</p>
-<p class="date">Created: 2016-09-04 Sun 20:33</p>
+<p class="date">Created: 2016-11-19 Sat 17:24</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
