@@ -6,6 +6,8 @@
    - [[./DancingLinks.org][DancingLinks]]: In which I butcher an otherwise elegant technique.
    - [[file:Sudoku.org][Sudoku]]: In which I use dancing links to solve Sudoku.
    - [[file:searching-delimited-log-files.org][sed]]: In which I make an overly complicated sed script.
+   - [[file:ChangeForDollar.org][Change for a Dollar]]: In which I come up with a bad way to solve
+     the change for a dollar problem.
 
 * I'm probably wrong.
 
