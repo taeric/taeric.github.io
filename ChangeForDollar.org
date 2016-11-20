@@ -1,0 +1,61 @@
+#+title: Multiplying Polynomials for Fun.
+#+OPTIONS: num:nil
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
+
+* Change for a dollar
+
+  For some reason, I thought the code to multiply two polynomials
+  would be interesting to implement.  To see if I did it right, I
+  opted to solve the "change for a dollar" question this way.
+
+  I went with the naive approach of using sequences of all
+  coefficients as the parameters.  My first run of this was in the
+  scratch buffer, so copied to here gives us the following.
+
+  #+NAME: in-elisp
+  #+BEGIN_SRC elisp :exports both
+    (defun pmult (as bs)
+      (let ((c (min (length as)
+                    (length bs))))
+        (loop for i from 0 to c
+              collect (apply '+
+                             (loop for j from 0 to i
+                                   collect (* (or (nth j as) 0)
+                                              (or (nth (- i j) bs) 0)))))))
+
+    (defun make-change-seq (d l)
+      (loop for i from 0 to l
+            collect (if (or (eq 0 i)
+                            (eq 0 (mod i d)))
+                        1
+                      0)))
+
+    (defun change-for-amount (a)
+      (nth a (pmult (make-change-seq 50 a)
+                    (pmult (make-change-seq 25 a)
+                           (pmult (make-change-seq 10 a)
+                                  (pmult (make-change-seq 5 a)
+                                         (make-change-seq 1 a)))))))
+
+    (mapcar 'change-for-amount '(1 5 10 25 50 100 200 300 400 500))
+  #+END_SRC
+
+  Executing the above will give us the expected answers.
+
+  #+RESULTS: in-elisp
+  | 1 | 2 | 4 | 13 | 50 | 292 | 2435 | 9590 | 26517 | 59576 |
+
+  I'm new to actually writing elisp, so I suspect I could have done a
+  few things more cleanly.  Regardless, I'm happy with this as a rough
+  implementation.
+
+  I am curious to know if this is any better than the recursive
+  solution for this question.  Just at a glance, this is more work.
+  With how long this takes, I seem to recall that my last attempt at
+  this recursively was a bit faster.
+
+  I will note, however, that the closed form solution of this can
+  answer how many ways to make change for a million dollars instantly.
+  So, this seems a much better example for why you should used closed
+  form if you can.  (Though, I guess this is not that much less
+  artificial than the typical example of Fibonacci.)
