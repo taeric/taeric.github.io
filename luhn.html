@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2017-01-15 Sun 23:03 -->
+<!-- 2017-01-15 Sun 22:55 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Josh Berry's Blog</title>
+<title>Fun with simple lookup tables</title>
 <meta name="generator" content="Org mode" />
 <meta name="author" content="Josh Berry" />
 <style type="text/css">
@@ -229,44 +229,177 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="content">
-<h1 class="title">Josh Berry's Blog</h1>
+<h1 class="title">Fun with simple lookup tables</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org8a91e91">1. Random stuff.</a></li>
-<li><a href="#org685c0f3">2. I'm probably wrong.</a></li>
+<li><a href="#orgff58e04">Luhn Algorithm</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org8a91e91" class="outline-2">
-<h2 id="org8a91e91"><span class="section-number-2">1</span> Random stuff.</h2>
-<div class="outline-text-2" id="text-1">
-<ul class="org-ul">
-<li><a href="./DancingLinks.html">DancingLinks</a>: In which I butcher an otherwise elegant technique.</li>
-<li><a href="Sudoku.html">Sudoku</a>: In which I use dancing links to solve Sudoku.</li>
-<li><a href="searching-delimited-log-files.html">sed</a>: In which I make an overly complicated sed script.</li>
-<li><a href="ChangeForDollar.html">Change for a Dollar</a>: In which I come up with a bad way to solve
-the change for a dollar problem.</li>
-<li><a href="luhn.html">Luhn Checking</a>: In which I perform switch doubling and adding
-digits with a lookup table.</li>
-</ul>
-</div>
+<div id="outline-container-orgff58e04" class="outline-2">
+<h2 id="orgff58e04">Luhn Algorithm</h2>
+<div class="outline-text-2" id="text-orgff58e04">
+<p>
+In the book <a href="https://www.amazon.com/Think-Like-Programmer-Introduction-Creative/dp/1593274246">"Think Like a Programmer"</a>, one of the leading chapters
+discusses writing a Luhn Algorithm application.  Once you read this
+correctly &#x2013; so, two tries by me, due to late night reading &#x2013; the
+code is straight forward and fun to consider.
+</p>
+
+<p>
+The method taken by that text covers a very literal "by the algorithm"
+interpretation.  There is absolutely nothing wrong with this, and it
+has several points in its favor.  However, I have grown more
+interested in lookup table based approaches.  
+</p>
+
+<p>
+To that end, I thought I would try this with elisp.  What I came up
+with is the following:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-elisp" id="orgb255ecd">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">luhn-check</span> (code)
+  (<span style="color: #5af2ee;">let</span> ((len (length code)))
+    (equal 0
+           (mod (<span style="color: #5af2ee;">loop</span> for i from 1 to len
+                      sum (cadr (assoc (elt code (- len i))
+                                       (<span style="color: #5af2ee;">if</span> (equal (mod i 2) 0)
+                                           '((?0 0)
+                                             (?1 2)
+                                             (?2 4)
+                                             (?3 6)
+                                             (?4 8)
+                                             (?5 1)
+                                             (?6 3)
+                                             (?7 5)
+                                             (?8 7)
+                                             (?9 9))
+                                         '((?0 0)
+                                           (?1 1)
+                                           (?2 2)
+                                           (?3 3)
+                                           (?4 4)
+                                           (?5 5)
+                                           (?6 6)
+                                           (?7 7)
+                                           (?8 8)
+                                           (?9 9))))))
+                10))))
+
+(append '((<span style="color: #ff5f87;">"*Input*"</span> <span style="color: #ff5f87;">"*Result*"</span>))
+        (mapcar (<span style="color: #5af2ee;">lambda</span> (n) (list n (luhn-check n)))
+                '(<span style="color: #ff5f87;">"1230"</span>
+                  <span style="color: #ff5f87;">"1231"</span>
+                  <span style="color: #ff5f87;">"1232"</span>
+                  <span style="color: #ff5f87;">"1233"</span>
+                  <span style="color: #ff5f87;">"1234"</span>
+                  <span style="color: #ff5f87;">"1235"</span>
+                  <span style="color: #ff5f87;">"1236"</span>
+                  <span style="color: #ff5f87;">"1237"</span>
+                  <span style="color: #ff5f87;">"1238"</span>
+                  <span style="color: #ff5f87;">"1239"</span>
+                  <span style="color: #ff5f87;">"25239"</span>)))
+</pre>
 </div>
 
-<div id="outline-container-org685c0f3" class="outline-2">
-<h2 id="org685c0f3"><span class="section-number-2">2</span> I'm probably wrong.</h2>
-<div class="outline-text-2" id="text-2">
-<ul class="org-ul">
-<li><a href="sum-types.html">Sum Types and Visitors</a>: In which I make a bad argument with nobody.</li>
-</ul>
+<p>
+Which, thankfully, gives what look to be the correct answers below.
+Yes, I originally screwed up the check for odd/even digit.  Yay tests.
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right"><b>Input</b></td>
+<td class="org-left"><b>Result</b></td>
+</tr>
+
+<tr>
+<td class="org-right">1230</td>
+<td class="org-left">t</td>
+</tr>
+
+<tr>
+<td class="org-right">1231</td>
+<td class="org-left">nil</td>
+</tr>
+
+<tr>
+<td class="org-right">1232</td>
+<td class="org-left">nil</td>
+</tr>
+
+<tr>
+<td class="org-right">1233</td>
+<td class="org-left">nil</td>
+</tr>
+
+<tr>
+<td class="org-right">1234</td>
+<td class="org-left">nil</td>
+</tr>
+
+<tr>
+<td class="org-right">1235</td>
+<td class="org-left">nil</td>
+</tr>
+
+<tr>
+<td class="org-right">1236</td>
+<td class="org-left">nil</td>
+</tr>
+
+<tr>
+<td class="org-right">1237</td>
+<td class="org-left">nil</td>
+</tr>
+
+<tr>
+<td class="org-right">1238</td>
+<td class="org-left">nil</td>
+</tr>
+
+<tr>
+<td class="org-right">1239</td>
+<td class="org-left">nil</td>
+</tr>
+
+<tr>
+<td class="org-right">25239</td>
+<td class="org-left">t</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+At any rate, what did I get to learn in this small exercise?  Not
+much, to be honest.  Seeing the lookup tables does show that 0 and 9
+are unchanged in the branch, so I can see how these would not catch
+all transliterations easily.  
+</p>
+
+<p>
+Checking the <a href="https://en.wikipedia.org/wiki/Luhn_algorithm">Wikipedia</a> page, I see there is also a weakness around
+some twin digits.  That is not tough to see, but I am not sure that
+this method presents them more obviously than the other.
+</p>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh Berry</p>
-<p class="date">Created: 2017-01-15 Sun 23:03</p>
+<p class="date">Created: 2017-01-15 Sun 22:55</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

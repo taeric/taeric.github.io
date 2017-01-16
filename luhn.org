@@ -1,0 +1,90 @@
+#+title: Fun with simple lookup tables (and LOOP)
+#+OPTIONS: num:nil
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
+
+* Luhn Algorithm
+
+In the book [[https://www.amazon.com/Think-Like-Programmer-Introduction-Creative/dp/1593274246]["Think Like a Programmer"]], one of the leading chapters
+discusses writing a Luhn Algorithm application.  Once you read this
+correctly -- so, two tries by me, due to late night reading -- the
+code is straight forward and fun to consider.
+
+The method taken by that text covers a very literal "by the algorithm"
+interpretation.  There is absolutely nothing wrong with this, and it
+has several points in its favor.  However, I have grown more
+interested in lookup table based approaches.  
+
+To that end, I thought I would try this with elisp.  This further let
+me have fun with the LOOP macro.  What I came up with is the
+following:
+
+#+name: luhn-check
+#+BEGIN_SRC elisp :results value :exports both
+  (defun luhn-check (code)
+    (let ((len (length code)))
+      (equal 0
+             (mod (loop for i from 1 to len
+			sum (cadr (assoc (elt code (- len i))
+					 (if (equal (mod i 2) 0)
+                                             '((?0 0)
+                                               (?1 2)
+                                               (?2 4)
+                                               (?3 6)
+                                               (?4 8)
+                                               (?5 1)
+                                               (?6 3)
+                                               (?7 5)
+                                               (?8 7)
+                                               (?9 9))
+                                           '((?0 0)
+                                             (?1 1)
+                                             (?2 2)
+                                             (?3 3)
+                                             (?4 4)
+                                             (?5 5)
+                                             (?6 6)
+                                             (?7 7)
+                                             (?8 8)
+                                             (?9 9))))))
+		  10))))
+
+  (append '(("*Input*" "*Result*"))
+	  (mapcar (lambda (n) (list n (luhn-check n)))
+		  '("1230"
+		    "1231"
+		    "1232"
+		    "1233"
+		    "1234"
+		    "1235"
+		    "1236"
+		    "1237"
+		    "1238"
+		    "1239"
+		    "25239")))
+#+END_SRC
+
+Which, thankfully, gives what look to be the correct answers below.
+Yes, I originally screwed up the check for odd/even digit.  Yay tests.
+
+#+RESULTS: luhn-check
+| *Input* | *Result* |
+|    1230 | t        |
+|    1231 | nil      |
+|    1232 | nil      |
+|    1233 | nil      |
+|    1234 | nil      |
+|    1235 | nil      |
+|    1236 | nil      |
+|    1237 | nil      |
+|    1238 | nil      |
+|    1239 | nil      |
+|   25239 | t        |
+
+At any rate, what did I get to learn in this small exercise?  Not
+much, to be honest.  Seeing the lookup tables does show that 0 and 9
+are unchanged in the branch, so I can see how these would not catch
+all transliterations easily.  
+
+Checking the [[https://en.wikipedia.org/wiki/Luhn_algorithm][Wikipedia]] page, I see there is also a weakness around
+some twin digits.  That is not tough to see, but I am not sure that
+this method presents them more obviously than the other.
