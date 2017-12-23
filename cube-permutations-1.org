@@ -1,0 +1,677 @@
+#+title: Solving a Rubik's Cube by Permutations
+#+OPTIONS: num:nil ':t
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="cube-styles.css" />
+#+HTML_HEAD_EXTRA: <script type="text/javascript" src="rubiks-cube-manipulations.js"></script>
+
+* Solving a Rubik's Cube by Permutations
+
+I have to confess that I never really had a good mental model for how
+to solve a Rubik's Cube.  I am able to manipulate one into a solved
+position, but only because I practiced the moves listed in [[https://smile.amazon.com/Winning-Ways-Your-Mathematical-Plays/dp/1568811446][Winning
+Ways for Your Mathematical Plays, Volume 4]].  
+
+To that end, I have tried to figure out just how I would find my own
+algorithm.  Best approach I ever came up with was what I suspect I was
+just too lazy for before, just put in the hard work of outlining the
+moves I know and looking for patterns.
+
+Luckily, I have a computer to help with this now.  Should be able to
+write a program that can search through the possible combinations
+easily enough.
+
+The question that comes to mind, however, is just how to encode the
+moves and the state of the board.  I could model the cube where I keep
+track of each piece and how it is currently configured.  However, that
+feels like it is more effort than I would care for.  
+
+Instead, I think if you treated each "face" of the cube as a number,
+then the current state is just a permutation of the numbers; with each
+manipulation just an application of another permutation.
+
+(Quick warning that I don't actually get to solving the puzzle in this
+post.  Just playing with the representation and some html/css.)
+
+
+* First, let us see if the idea works
+
+While I was rather confident that this would work, still felt good to
+validate it.
+
+There is a chance I will try and learn how to do 3d projections in
+css.  Most likely, though, I am just going to go with a projection of
+a cube to look at.  If you are reading this and it is still a 2d
+"unfolding" of a cube... you know what I did.
+
+Note that I will always look at the html corresponding to the numeric
+sequence $1,2,3,\ldots,54$.  Whenever we apply a permutation change to
+the sequence, we will simply swap the colors.  You can confirm that
+this is equivalent to changing the numbers easily enough.
+
+Our html for this sequence, then, is a simple set of divs for each
+number.  We go ahead and add a class for the color of the solved cube.
+
+#+BEGIN_SRC html 
+  <div class="cube">
+    <div class="face face1  orange ">1</div>
+    <div class="face face2  orange ">2</div>
+    <div class="face face3  orange ">3</div>
+    <div class="face face4  orange ">4</div>
+    <div class="face face5  orange ">5</div>
+    <div class="face face6  orange ">6</div>
+    <div class="face face7  orange ">7</div>
+    <div class="face face8  orange ">8</div>
+    <div class="face face9  orange ">9</div>
+    <div class="face face10 yellow ">10</div>
+    <div class="face face11 yellow ">11</div>
+    <div class="face face12 yellow ">12</div>
+    <div class="face face13 yellow ">13</div>
+    <div class="face face14 yellow ">14</div>
+    <div class="face face15 yellow ">15</div>
+    <div class="face face16 yellow ">16</div>
+    <div class="face face17 yellow ">17</div>
+    <div class="face face18 yellow ">18</div>
+    <div class="face face19 green  ">19</div>
+    <div class="face face20 green  ">20</div>
+    <div class="face face21 green  ">21</div>
+    <div class="face face22 green  ">22</div>
+    <div class="face face23 green  ">23</div>
+    <div class="face face24 green  ">24</div>
+    <div class="face face25 green  ">25</div>
+    <div class="face face26 green  ">26</div>
+    <div class="face face27 green  ">27</div>
+    <div class="face face28 red    ">28</div>
+    <div class="face face29 red    ">29</div>
+    <div class="face face30 red    ">30</div>
+    <div class="face face31 red    ">31</div>
+    <div class="face face32 red    ">32</div>
+    <div class="face face33 red    ">33</div>
+    <div class="face face34 red    ">34</div>
+    <div class="face face35 red    ">35</div>
+    <div class="face face36 red    ">36</div>
+    <div class="face face37 blue   ">37</div>
+    <div class="face face38 blue   ">38</div>
+    <div class="face face39 blue   ">39</div>
+    <div class="face face40 blue   ">40</div>
+    <div class="face face41 blue   ">41</div>
+    <div class="face face42 blue   ">42</div>
+    <div class="face face43 blue   ">43</div>
+    <div class="face face44 blue   ">44</div>
+    <div class="face face45 blue   ">45</div>
+    <div class="face face46 white  ">46</div>
+    <div class="face face47 white  ">47</div>
+    <div class="face face48 white  ">48</div>
+    <div class="face face49 white  ">49</div>
+    <div class="face face50 white  ">50</div>
+    <div class="face face51 white  ">51</div>
+    <div class="face face52 white  ">52</div>
+    <div class="face face53 white  ">53</div>
+    <div class="face face54 white  ">54</div>
+  </div>
+#+END_SRC
+
+Styled with some no frills css: 
+
+#+BEGIN_SRC css :tangle cube-styles.css  :comments link
+    .cube {
+        margin: auto;
+        margin-bottom: 2em;
+        position: relative;
+        width: 384px;
+        height: 288px;
+    }
+
+    .cube .face {
+        position: absolute;
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+        width: 32px;
+        height: 32px;
+        border: solid 1px black;
+        line-height: 32px;
+        text-align: center;
+    }
+
+    .cube .face1  { top: 96px;  left: 0px;   }
+    .cube .face2  { top: 96px;  left: 32px;  }
+    .cube .face3  { top: 96px;  left: 64px;  }
+    .cube .face4  { top: 128px; left: 0px;   }
+    .cube .face5  { top: 128px; left: 32px;  }
+    .cube .face6  { top: 128px; left: 64px;  }
+    .cube .face7  { top: 160px; left: 0px;   }
+    .cube .face8  { top: 160px; left: 32px;  }
+    .cube .face9  { top: 160px; left: 64px;  }
+    .cube .face10 { top: 96px;  left: 96px;  }
+    .cube .face11 { top: 96px;  left: 128px; }
+    .cube .face12 { top: 96px;  left: 160px; }
+    .cube .face13 { top: 128px; left: 96px;  }
+    .cube .face14 { top: 128px; left: 128px; }
+    .cube .face15 { top: 128px; left: 160px; }
+    .cube .face16 { top: 160px; left: 96px;  }
+    .cube .face17 { top: 160px; left: 128px; }
+    .cube .face18 { top: 160px; left: 160px; }
+    .cube .face19 { top: 96px;  left: 192px; }
+    .cube .face20 { top: 96px;  left: 224px; }
+    .cube .face21 { top: 96px;  left: 256px; }
+    .cube .face22 { top: 128px; left: 192px; }
+    .cube .face23 { top: 128px; left: 224px; }
+    .cube .face24 { top: 128px; left: 256px; }
+    .cube .face25 { top: 160px; left: 192px; }
+    .cube .face26 { top: 160px; left: 224px; }
+    .cube .face27 { top: 160px; left: 256px; }
+    .cube .face28 { top: 96px;  left: 288px; }
+    .cube .face29 { top: 96px;  left: 320px; }
+    .cube .face30 { top: 96px;  left: 352px; }
+    .cube .face31 { top: 128px; left: 288px; }
+    .cube .face32 { top: 128px; left: 320px; }
+    .cube .face33 { top: 128px; left: 352px; }
+    .cube .face34 { top: 160px; left: 288px; }
+    .cube .face35 { top: 160px; left: 320px; }
+    .cube .face36 { top: 160px; left: 352px; }
+    .cube .face37 { top: 0px;   left: 96px;  }
+    .cube .face38 { top: 0px;   left: 128px; }
+    .cube .face39 { top: 0px;   left: 160px; }
+    .cube .face40 { top: 32px;  left: 96px;  }
+    .cube .face41 { top: 32px;  left: 128px; }
+    .cube .face42 { top: 32px;  left: 160px; }
+    .cube .face43 { top: 64px;  left: 96px;  }
+    .cube .face44 { top: 64px;  left: 128px; }
+    .cube .face45 { top: 64px;  left: 160px; }
+    .cube .face46 { top: 192px; left: 96px;  }
+    .cube .face47 { top: 192px; left: 128px; }
+    .cube .face48 { top: 192px; left: 160px; }
+    .cube .face49 { top: 224px; left: 96px;  }
+    .cube .face50 { top: 224px; left: 128px; }
+    .cube .face51 { top: 224px; left: 160px; }
+    .cube .face52 { top: 256px; left: 96px;  }
+    .cube .face53 { top: 256px; left: 128px; }
+    .cube .face54 { top: 256px; left: 160px; }
+
+    .cube .orange { background-color: orange; }
+    .cube .green  { background-color: green;  }
+    .cube .white  { background-color: white;  }
+    .cube .yellow { background-color: yellow; }
+    .cube .red    { background-color: red;    }
+    .cube .blue   { background-color: blue;   }
+#+END_SRC
+
+And we get:
+
+#+BEGIN_HTML
+  <div class="cube">
+    <div class="face face1  orange ">1</div>
+    <div class="face face2  orange ">2</div>
+    <div class="face face3  orange ">3</div>
+    <div class="face face4  orange ">4</div>
+    <div class="face face5  orange ">5</div>
+    <div class="face face6  orange ">6</div>
+    <div class="face face7  orange ">7</div>
+    <div class="face face8  orange ">8</div>
+    <div class="face face9  orange ">9</div>
+    <div class="face face10 yellow ">10</div>
+    <div class="face face11 yellow ">11</div>
+    <div class="face face12 yellow ">12</div>
+    <div class="face face13 yellow ">13</div>
+    <div class="face face14 yellow ">14</div>
+    <div class="face face15 yellow ">15</div>
+    <div class="face face16 yellow ">16</div>
+    <div class="face face17 yellow ">17</div>
+    <div class="face face18 yellow ">18</div>
+    <div class="face face19 green  ">19</div>
+    <div class="face face20 green  ">20</div>
+    <div class="face face21 green  ">21</div>
+    <div class="face face22 green  ">22</div>
+    <div class="face face23 green  ">23</div>
+    <div class="face face24 green  ">24</div>
+    <div class="face face25 green  ">25</div>
+    <div class="face face26 green  ">26</div>
+    <div class="face face27 green  ">27</div>
+    <div class="face face28 red    ">28</div>
+    <div class="face face29 red    ">29</div>
+    <div class="face face30 red    ">30</div>
+    <div class="face face31 red    ">31</div>
+    <div class="face face32 red    ">32</div>
+    <div class="face face33 red    ">33</div>
+    <div class="face face34 red    ">34</div>
+    <div class="face face35 red    ">35</div>
+    <div class="face face36 red    ">36</div>
+    <div class="face face37 blue   ">37</div>
+    <div class="face face38 blue   ">38</div>
+    <div class="face face39 blue   ">39</div>
+    <div class="face face40 blue   ">40</div>
+    <div class="face face41 blue   ">41</div>
+    <div class="face face42 blue   ">42</div>
+    <div class="face face43 blue   ">43</div>
+    <div class="face face44 blue   ">44</div>
+    <div class="face face45 blue   ">45</div>
+    <div class="face face46 white  ">46</div>
+    <div class="face face47 white  ">47</div>
+    <div class="face face48 white  ">48</div>
+    <div class="face face49 white  ">49</div>
+    <div class="face face50 white  ">50</div>
+    <div class="face face51 white  ">51</div>
+    <div class="face face52 white  ">52</div>
+    <div class="face face53 white  ">53</div>
+    <div class="face face54 white  ">54</div>
+  </div>
+#+END_HTML
+
+First, yes, these both would be trivial using loops.  Not really the
+point of what I'm looking for right now, though; so moving on.
+
+Note that I went ahead and displayed the number of each face.  This
+was primarily to help me come up with the moves below.
+
+What I am claiming is that I could represent one of the standard moves
+of a cube as a simple permutation.  More, composing the permutations
+in a standard way where $AB$ means applying $A$ then $B$, and that
+this gives us the resulting state of the cube after applying the two
+moves/permutations.
+
+Under the syntax where $(1\ 2\ 3)$ means moving $1 \rightarrow 2, 2
+\rightarrow 3, 3 \rightarrow 1$, read as 1 moves to 2 moves to 3 moves
+to 1, we would have the rotation of the right face as $R' = (12\ 48\
+34\ 39)(15\ 51\ 31\ 42)(18\ 54\ 28\ 45)(19\ 25\ 27\ 21)(20\ 22\ 26\
+24)$.  (Why $R'$?  Because I mistakenly did that instead of $R$.)
+
+Not so quickly applying $R'$ to the initial board by hand, we get:
+
+#+BEGIN_HTML
+  <div class="cube">
+    <div class="face face1  orange ">1</div>
+    <div class="face face2  orange ">2</div>
+    <div class="face face3  orange ">3</div>
+    <div class="face face4  orange ">4</div>
+    <div class="face face5  orange ">5</div>
+    <div class="face face6  orange ">6</div>
+    <div class="face face7  orange ">7</div>
+    <div class="face face8  orange ">8</div>
+    <div class="face face9  orange ">9</div>
+    <div class="face face10 yellow ">10</div>
+    <div class="face face11 yellow ">11</div>
+    <div class="face face12 blue   ">12</div>
+    <div class="face face13 yellow ">13</div>
+    <div class="face face14 yellow ">14</div>
+    <div class="face face15 blue   ">15</div>
+    <div class="face face16 yellow ">16</div>
+    <div class="face face17 yellow ">17</div>
+    <div class="face face18 blue   ">18</div>
+    <div class="face face19 green  ">19</div>
+    <div class="face face20 green  ">20</div>
+    <div class="face face21 green  ">21</div>
+    <div class="face face22 green  ">22</div>
+    <div class="face face23 green  ">23</div>
+    <div class="face face24 green  ">24</div>
+    <div class="face face25 green  ">25</div>
+    <div class="face face26 green  ">26</div>
+    <div class="face face27 green  ">27</div>
+    <div class="face face28 white  ">28</div>
+    <div class="face face29 red    ">29</div>
+    <div class="face face30 red    ">30</div>
+    <div class="face face31 white  ">31</div>
+    <div class="face face32 red    ">32</div>
+    <div class="face face33 red    ">33</div>
+    <div class="face face34 white  ">34</div>
+    <div class="face face35 red    ">35</div>
+    <div class="face face36 red    ">36</div>
+    <div class="face face37 blue   ">37</div>
+    <div class="face face38 blue   ">38</div>
+    <div class="face face39 red    ">39</div>
+    <div class="face face40 blue   ">40</div>
+    <div class="face face41 blue   ">41</div>
+    <div class="face face42 red    ">42</div>
+    <div class="face face43 blue   ">43</div>
+    <div class="face face44 blue   ">44</div>
+    <div class="face face45 red    ">45</div>
+    <div class="face face46 white  ">46</div>
+    <div class="face face47 white  ">47</div>
+    <div class="face face48 yellow ">48</div>
+    <div class="face face49 white  ">49</div>
+    <div class="face face50 white  ">50</div>
+    <div class="face face51 yellow ">51</div>
+    <div class="face face52 white  ">52</div>
+    <div class="face face53 white  ">53</div>
+    <div class="face face54 yellow ">54</div>
+  </div>
+#+END_HTML
+
+So, comfortingly, this confirms that the permutation at least leaves
+the board as we desired.  However, this is just a single permutation.
+Does applying it twice do as expected?  Specificaly, does $R'^2 = (12\
+34)(48\ 39)(15\ 31)(42\ 51)(18\ 28)(45\ 54)(19\ 27)(21\ 25)(20\
+26)(22\ 24)$?
+
+I am actually not going to redraw it with the colors swapped as
+indicated, leaving that for any intrepid reader that comes along.
+Instead, I will note that we can happily and easily see that $R^4 =
+R'^{2^2} = ()$, which is as expected.  Similarly, if $R'^{-1}$ takes the
+expected shape, we can see that $R'^nR'^{-n} = ()$, which is again as
+expected.
+
+
+* Automating more of this.
+
+Armed with the belief that this works, we can now move on to
+automating more of this.  Since, though it is in some ways easier to
+write these permutations than to manipulate a real cube, there are
+still many more permutations than I could possibly write down.
+
+The goals for this blog are methods that can let me manipulate a set
+of divs similar to above with some simple buttons.  Later, I hope to
+take this in a direction where I can automate the search for moves,
+but for now, I just want something to play with.
+
+To start, lets take something that will insert all of the divs we
+need.  We'll try and reuse the same styling I used above.  Mainly for
+sunken costs reasons.  Which is to say, this might not be an idea
+worth holding onto.
+
+#+BEGIN_SRC javascript :tangle rubiks-cube-manipulations.js  :comments link
+  function createCubeDiv() {
+      var cube = withAttribute(div(),
+                               "class",
+                               "cube");
+      var colors = ["orange",
+                    "blue",
+                    "green",
+                    "red",
+                    "yellow",
+                    "white"]
+     for (var i = 0; i < 54; i++) {
+          cube.appendChild(withAttribute(div(withAttribute(div(),
+                                                           "class",
+                                                           colors[Math.floor(i / 9)])),
+                                         "class",
+                                         "face face" + (i + 1)));
+                                         
+      }
+      return cube;
+  }
+#+END_SRC
+
+We are using a new div for the color for the reason that it makes our
+manipulation of the cube easier.  Specifically, we won't have to worry
+about extracting any information from the elements (or storing them
+elsewhere) and can instead just use a standard selector to get an
+element and set it to the new value we want it to have.  Because of
+that, though, we need to add a few extra styles to make sure this
+works.
+
+We'll also go ahead and add a transition property so that when we move
+the cubes, you can see them moving.
+
+#+BEGIN_SRC css :tangle cube-styles.css  :comments link
+  .cube * {
+      transition: 2s;
+  }
+
+  .face .orange, .face .red,    .face .green,
+  .face .blue,   .face .yellow, .face .white {
+      width: 100%;
+      height: 100%;
+  }
+#+END_SRC
+
+Of course, for this to work, we need the functions "withAttribute" and
+"div".  I suspect these could be replaced with framework methods from
+basically any framework.
+
+#+BEGIN_SRC javascript :tangle rubiks-cube-manipulations.js  :comments link
+  function div(child) {
+      var element = document.createElement("div");
+      if (child) {
+          element.appendChild(child);
+      }
+      return element;
+  }
+
+  function withAttribute(element, name, value) {
+      element.setAttribute(name, value);
+      return element;
+  }
+#+END_SRC
+
+That will get me the divs that we were playing with in the first
+section.  Now we want a function that we can use to pick where I place
+this.  Going with something that will just append the cube to all
+results of a css selector.
+
+#+BEGIN_SRC javascript :tangle rubiks-cube-manipulations.js  :comments link
+  function appendCubeToCssSelector(selector) {
+      Array.from(document.querySelectorAll(selector)).forEach(function(node) {
+          node.appendChild(createCubeDiv());
+      });
+  }
+#+END_SRC
+
+
+Now that we have methods that can create and place a cube, lets create
+some methods that can move the faces around for us.  We'll start with
+defining the moves.  Our datastructure for this is a simple array of
+numbers, indicating where a given piece should go.  For those that
+don't move, they should indicate their current index.
+
+I did make things a little awkward by using 1 based indexes for the
+styles.  I'm currently planning on just living with that awkwardness.
+
+I am also using the names of the moves from [[https://smile.amazon.com/Winning-Ways-Your-Mathematical-Plays/dp/1568811446][Winning Ways]].  (At least,
+that is the intent.)
+
+#+BEGIN_SRC javascript :tangle rubiks-cube-manipulations.js :comments link
+  var CubeMoves = {
+      "R" : [ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
+              11, 39, 13, 14, 42, 16, 17, 45, 21, 24,
+              27, 20, 23, 26, 19, 22, 25, 54, 29, 30,
+              51, 32, 33, 48, 35, 36, 37, 38, 34, 40,
+              41, 31, 43, 44, 28, 46, 47, 12, 49, 50,
+              15, 52, 53, 18 ],
+      "R'" : [ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
+               11, 48, 13, 14, 51, 16, 17, 54, 25, 22,
+               19, 26, 23, 20, 27, 24, 21, 45, 29, 30,
+               42, 32, 33, 39, 35, 36, 37, 38, 12, 40,
+               41, 15, 43, 44, 18, 46, 47, 34, 49, 50,
+               31, 52, 53, 28 ],
+      "L" : [ 3,  6,  9,  2,  5,  8,  1,  4,  7, 46,
+              11, 12, 49, 14, 15, 52, 17, 18, 19, 20,
+              21, 22, 23, 24, 25, 26, 27, 28, 29, 43,
+              31, 32, 40, 34, 35, 37, 10, 38, 39, 13,
+              41, 42, 16, 44, 45, 36, 47, 48, 33, 50,
+              51, 30, 53, 54 ],
+      "L'" : [ 7,  4,  1,  8,  5,  2,  9,  6,  3, 37,
+               11, 12, 40, 14, 15, 43, 17, 18, 19, 20,
+               21, 22, 23, 24, 25, 26, 27, 28, 29, 52,
+               31, 32, 49, 34, 35, 46, 36, 38, 39, 33,
+               41, 42, 30, 44, 45, 10, 47, 48, 13, 50,
+               51, 16, 53, 54 ],
+      "U" : [ 28, 29, 30,  4,  5,  6,  7,  8,  9, 1,
+              2, 3, 13, 14, 15, 16, 17, 18, 10, 11,
+              12, 22, 23, 24, 25, 26, 27, 19, 20, 21,
+              31, 32, 33, 34, 35, 36, 39, 42, 45, 38,
+              41, 44, 37, 40, 43, 46, 47, 48, 49, 50,
+              51, 52, 53, 54 ],
+      "U'" : [ 10, 11, 12,  4,  5,  6,  7,  8,  9, 19,
+               20, 21, 13, 14, 15, 16, 17, 18, 28, 29,
+               30, 22, 23, 24, 25, 26, 27, 1, 2, 3,
+               31, 32, 33, 34, 35, 36, 43, 40, 37, 44,
+               41, 38, 45, 42, 39, 46, 47, 48, 49, 50,
+               51, 52, 53, 54 ],
+      "D" : [ 1,  2,  3,  4,  5,  6,  16, 17, 18, 10,
+              11, 12, 13, 14, 15, 25, 26, 27, 19, 20,
+              21, 22, 23, 24, 34, 35, 36, 28, 29, 30,
+              31, 32, 33, 7, 8, 9, 37, 38, 39, 40,
+              41, 42, 43, 44, 45, 48, 51, 54, 47, 50,
+              53, 46, 49, 52 ],
+      "D'" : [ 1,  2,  3,  4,  5,  6,  34, 35, 36, 10,
+               11, 12, 13, 14, 15, 7, 8, 9, 19, 20,
+               21, 22, 23, 24, 16, 17, 18, 28, 29, 30,
+               31, 32, 33, 25, 26, 27, 37, 38, 39, 40,
+               41, 42, 43, 44, 45, 52, 49, 46, 53, 50,
+               47, 54, 51, 48 ],
+      "F" : [ 1,  2,  45,  4,  5, 44,  7,  8, 43, 12,
+              15, 18, 11, 14, 17, 10, 13, 16, 48, 20,
+              21, 47, 23, 24, 46, 26, 27, 28, 29, 30,
+              31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+              41, 42, 19, 22, 25, 3, 6, 9, 49, 50,
+              51, 52, 53, 54 ],
+      "F'" : [ 1,  2,  46,  4,  5, 47,  7,  8, 48, 16,
+               13, 10, 17, 14, 11, 18, 15, 12, 43, 20,
+               21, 44, 23, 24, 45, 26, 27, 28, 29, 30,
+               31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+               41, 42, 9, 6, 3, 25, 22, 19, 49, 50,
+               51, 52, 53, 54 ],
+      "B" : [ 52,  2,  3,  53,  5,  6,  54,  8,  9, 10,
+              11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+              37, 22, 23, 38, 25, 26, 39, 30, 33, 36,
+              29, 32, 35, 28, 31, 34, 7, 4, 1, 40,
+              41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
+              51, 27, 24, 21 ],
+      "B'" : [ 39,  2,  3,  38,  5,  6,  37,  8,  9, 10,
+               11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+               54, 22, 23, 53, 25, 26, 52, 34, 31, 28,
+               35, 32, 29, 36, 33, 30, 21, 24, 27, 40,
+               41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
+               51, 1, 4, 7 ],
+      "α" : [ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
+              38, 12, 13, 41, 15, 16, 44, 18, 19, 20,
+              21, 22, 23, 24, 25, 26, 27, 28, 53, 30,
+              31, 50, 33, 34, 47, 36, 37, 35, 39, 40,
+              32, 42, 43, 29, 45, 46, 11, 48, 49, 14,
+              51, 52, 17, 54 ],
+      "β" : [ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
+              47, 12, 13, 50, 15, 16, 53, 18, 19, 20,
+              21, 22, 23, 24, 25, 26, 27, 28, 44, 30,
+              31, 41, 33, 34, 38, 36, 37, 11, 39, 40,
+              14, 42, 43, 17, 45, 46, 35, 48, 49, 32,
+              51, 52, 29, 54 ],
+      "γ" : [ 1,  49,  3,  4,  50,  6,  7,  51,  9, 10,
+              11, 12, 13, 14, 15, 16, 17, 18, 19, 40,
+              21, 22, 41, 24, 25, 42, 27, 28, 29, 30,
+              31, 32, 33, 34, 35, 36, 37, 38, 39, 8,
+              5, 2, 43, 44, 45, 46, 47, 48, 26, 23,
+              20, 52, 53, 54 ],
+      "δ" : [ 1,  42,  3,  4,  41,  6,  7,  40,  9, 10,
+              11, 12, 13, 14, 15, 16, 17, 18, 19, 51,
+              21, 22, 50, 24, 25, 49, 27, 28, 29, 30,
+              31, 32, 33, 34, 35, 36, 37, 38, 39, 20,
+              23, 26, 43, 44, 45, 46, 47, 48, 2, 5,
+              8, 52, 53, 54 ],
+      "ε" : [ 1,  2,  3,  13,  14,  15,  7,  8,  9, 10,
+              11, 12, 22, 23, 24, 16, 17, 18, 19, 20,
+              21, 31, 32, 33, 25, 26, 27, 28, 29, 30,
+              4, 5, 6, 34, 35, 36, 37, 38, 39, 40,
+              41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
+              51, 52, 53, 54 ],
+      "ω" : [ 1,  2,  3,  31,  32,  33,  7,  8,  9, 10,
+              11, 12, 4, 5, 6, 16, 17, 18, 19, 20,
+              21, 13, 14, 15, 25, 26, 27, 28, 29, 30,
+              22, 23, 24, 34, 35, 36, 37, 38, 39, 40,
+              41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
+              51, 52, 53, 54 ]
+  };
+#+END_SRC
+
+With the moves defined, we just need a function to apply a named move
+to a cube.  Doing this in two passes, since I don't feel like writing
+a more "efficient" one pass algorithm, and can't imagine this will be
+a bottleneck for me.
+
+#+BEGIN_SRC javascript :tangle rubiks-cube-manipulations.js :comments link
+    function applyCubeMove(cube, moveName) {
+        if (!CubeMoves[moveName]) {
+            throw "Unknown move '" + moveName + "'";
+        }
+        if (!cube) {
+            throw "Need the cube that we will be modifying."
+        }
+        var movesToMake = [];
+        CubeMoves[moveName].forEach(function (item, index) {
+            if (item != (index + 1)) {
+                movesToMake.push({
+                    "div" : cube.querySelector(".face"+(index+1)),
+                    "target" : item
+                });
+            }
+        });
+        movesToMake.forEach(function(item) {
+            item.div.setAttribute("class", "face face"+item.target);
+        });
+    }
+#+END_SRC
+
+Of course, having to drop to the console all of the time, finding the
+selector for a cube, and running the appropriate script would get
+somewhat old.  To that end, lets go ahead and build a "move list" that
+will go with a cube.  Going ahead and building the helper methods in
+this section.
+
+#+BEGIN_SRC javascript :tangle rubiks-cube-manipulations.js :comments link
+  function appendMoveListToCssSelector(selector) {
+      Array.from(document.querySelectorAll(selector)).forEach(function(node) {
+          var moveListDiv = withAttribute(div(text("Move List:")),
+                                          "class",
+                                          "move-list");
+          node.appendChild(moveListDiv)
+          for (var move in CubeMoves) {
+              moveListDiv.appendChild(withOnClick(function(move) {
+                  return function() {
+                      applyCubeMove(node, move);
+                  };
+              }(move), button(text(move))));
+          }
+      });
+  }
+
+  function button(child) {
+      var element = document.createElement("button");
+      if (child) {
+          element.appendChild(child);
+      }
+      return element;
+  }
+
+  function text(text) {
+      return document.createTextNode(text);
+  }
+
+  function withOnClick(f, element) {
+      element.onclick = f;
+      return element;
+  }
+#+END_SRC
+
+We're just going for not terribly ugly.  Fancy may happen at a later
+date.
+
+#+BEGIN_SRC css :tangle cube-styles.css :comments link
+  .move-list {
+      float: left;
+      border: solid thin black;
+      background-color: white;
+      width: 100px;
+      text-align: center;
+  }
+
+  .move-list button {
+      display: inline-block;
+      width: 45px;
+      margin: auto;
+  } 
+#+END_SRC
+
+With all of that done, lets wire it up and see what we can play with.
+
+#+BEGIN_HTML
+<div class="playground"></div>
+<script>
+appendMoveListToCssSelector(".playground");
+appendCubeToCssSelector(".playground");
+</script>
+#+END_HTML
+
+* Till next time.
+
+Playing with this a bit looks like the idea is solid.  Next time, I
+plan on building something that can spit out the directions on how to
+get to solved from a given arrangement.  Some things I skipped out on
+will have to be done then.

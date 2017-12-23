@@ -11,19 +11,20 @@
 
 * Sudoku
 
-  #+begin_export html
+  #+begin_html
     <div id="figure1" style="float:right; margin-left: 1em;">
-.2.......
-...6....3
-.74.8....
-.....3..2
-.8..4..1.
-6..5.....
-....1.78.
-5....9...
-.......4.
+    .2.......
+    ...6....3
+    .74.8....
+    .....3..2
+    .8..4..1.
+    6..5.....
+    ....1.78.
+    5....9...
+    .......4.
     </div>
-  #+end_export
+  #+end_html
+
   Basics of the game can be found on any number of web pages.  Simply
   stated, you have a $9 \times 9$ grid of numbers broken into $3$
   groups of $3 \times 3$ grids.  In each row, column, and group each
@@ -454,7 +455,7 @@
   to backtrack.  I can not tell from position 27 to 28 exactly where
   there were no choices available.  :(
 
-  #+begin_export html
+  #+begin_html
     <div id="figure2" style="text-align: center;">
 .2.......
 ...6....3
@@ -466,7 +467,7 @@
 5....9...
 .......4.
     </div>
-  #+end_export
+  #+end_html
 
 * Appendix
 
@@ -606,14 +607,14 @@
      }
    #+END_SRC
 
-   #+begin_export html
+   #+begin_html
      <script type="text/javascript" src="sudokuBoards.js"></script>
      <script type="text/javascript" src="dlxSudokuSolver.js"></script>
      <script>
           parseAndReplaceWithBoard("figure1");
           parseAndReplaceWithBoard("figure2", true);
      </script>
-   #+end_export
+   #+end_html
 
 ** Styles used.
 

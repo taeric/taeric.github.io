@@ -1,0 +1,118 @@
+
+/* [[file:~/projects/taeric.github.io/cube-permutations-1.org::*First,%20let%20us%20see%20if%20the%20idea%20works][First\,\ let\ us\ see\ if\ the\ idea\ works:1]] */
+
+.cube {
+    margin: auto;
+    margin-bottom: 2em;
+    position: relative;
+    width: 384px;
+    height: 288px;
+}
+
+.cube .face {
+    position: absolute;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    width: 32px;
+    height: 32px;
+    border: solid 1px black;
+    line-height: 32px;
+    text-align: center;
+}
+
+.cube .face1  { top: 96px;  left: 0px;   }
+.cube .face2  { top: 96px;  left: 32px;  }
+.cube .face3  { top: 96px;  left: 64px;  }
+.cube .face4  { top: 128px; left: 0px;   }
+.cube .face5  { top: 128px; left: 32px;  }
+.cube .face6  { top: 128px; left: 64px;  }
+.cube .face7  { top: 160px; left: 0px;   }
+.cube .face8  { top: 160px; left: 32px;  }
+.cube .face9  { top: 160px; left: 64px;  }
+.cube .face10 { top: 96px;  left: 96px;  }
+.cube .face11 { top: 96px;  left: 128px; }
+.cube .face12 { top: 96px;  left: 160px; }
+.cube .face13 { top: 128px; left: 96px;  }
+.cube .face14 { top: 128px; left: 128px; }
+.cube .face15 { top: 128px; left: 160px; }
+.cube .face16 { top: 160px; left: 96px;  }
+.cube .face17 { top: 160px; left: 128px; }
+.cube .face18 { top: 160px; left: 160px; }
+.cube .face19 { top: 96px;  left: 192px; }
+.cube .face20 { top: 96px;  left: 224px; }
+.cube .face21 { top: 96px;  left: 256px; }
+.cube .face22 { top: 128px; left: 192px; }
+.cube .face23 { top: 128px; left: 224px; }
+.cube .face24 { top: 128px; left: 256px; }
+.cube .face25 { top: 160px; left: 192px; }
+.cube .face26 { top: 160px; left: 224px; }
+.cube .face27 { top: 160px; left: 256px; }
+.cube .face28 { top: 96px;  left: 288px; }
+.cube .face29 { top: 96px;  left: 320px; }
+.cube .face30 { top: 96px;  left: 352px; }
+.cube .face31 { top: 128px; left: 288px; }
+.cube .face32 { top: 128px; left: 320px; }
+.cube .face33 { top: 128px; left: 352px; }
+.cube .face34 { top: 160px; left: 288px; }
+.cube .face35 { top: 160px; left: 320px; }
+.cube .face36 { top: 160px; left: 352px; }
+.cube .face37 { top: 0px;   left: 96px;  }
+.cube .face38 { top: 0px;   left: 128px; }
+.cube .face39 { top: 0px;   left: 160px; }
+.cube .face40 { top: 32px;  left: 96px;  }
+.cube .face41 { top: 32px;  left: 128px; }
+.cube .face42 { top: 32px;  left: 160px; }
+.cube .face43 { top: 64px;  left: 96px;  }
+.cube .face44 { top: 64px;  left: 128px; }
+.cube .face45 { top: 64px;  left: 160px; }
+.cube .face46 { top: 192px; left: 96px;  }
+.cube .face47 { top: 192px; left: 128px; }
+.cube .face48 { top: 192px; left: 160px; }
+.cube .face49 { top: 224px; left: 96px;  }
+.cube .face50 { top: 224px; left: 128px; }
+.cube .face51 { top: 224px; left: 160px; }
+.cube .face52 { top: 256px; left: 96px;  }
+.cube .face53 { top: 256px; left: 128px; }
+.cube .face54 { top: 256px; left: 160px; }
+
+.cube .orange { background-color: orange; }
+.cube .green  { background-color: green;  }
+.cube .white  { background-color: white;  }
+.cube .yellow { background-color: yellow; }
+.cube .red    { background-color: red;    }
+.cube .blue   { background-color: blue;   }
+
+/* First\,\ let\ us\ see\ if\ the\ idea\ works:1 ends here */
+
+/* [[file:~/projects/taeric.github.io/cube-permutations-1.org::*Automating%20more%20of%20this.][Automating\ more\ of\ this\.:1]] */
+
+.cube * {
+    transition: 2s;
+}
+
+.face .orange, .face .red,    .face .green,
+.face .blue,   .face .yellow, .face .white {
+    width: 100%;
+    height: 100%;
+}
+
+/* Automating\ more\ of\ this\.:1 ends here */
+
+/* [[file:~/projects/taeric.github.io/cube-permutations-1.org::*Automating%20more%20of%20this.][Automating\ more\ of\ this\.:1]] */
+
+.move-list {
+    float: left;
+    border: solid thin black;
+    background-color: white;
+    width: 100px;
+    text-align: center;
+}
+
+.move-list button {
+    display: inline-block;
+    width: 45px;
+    margin: auto;
+}
+
+/* Automating\ more\ of\ this\.:1 ends here */
