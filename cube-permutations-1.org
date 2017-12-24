@@ -1,10 +1,10 @@
-#+title: Solving a Rubik's Cube by Permutations
+#+title: Playing With a Rubik's Cube by Permutations
 #+OPTIONS: num:nil ':t
 #+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
 #+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="cube-styles.css" />
 #+HTML_HEAD_EXTRA: <script type="text/javascript" src="rubiks-cube-manipulations.js"></script>
 
-* Solving a Rubik's Cube by Permutations
+* Playing with a Rubik's Cube is just playing with ermutations?
 
 I have to confess that I never really had a good mental model for how
 to solve a Rubik's Cube.  I am able to manipulate one into a solved
