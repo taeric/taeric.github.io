@@ -5,12 +5,12 @@ function createCubeDiv() {
     var cube = withAttribute(div(),
                              "class",
                              "cube");
-    var colors = ["orange",
-                  "blue",
-                  "green",
+    var colors = ["green",
                   "red",
-                  "yellow",
-                  "white"]
+                  "blue",
+                  "orange",
+                  "white",
+                  "yellow"]
    for (var i = 0; i < 54; i++) {
         cube.appendChild(withAttribute(div(withAttribute(div(),
                                                          "class",

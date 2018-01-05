@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Playing With a Rubik&rsquo;s Cube by Permutations</title>
-<!-- 2017-12-24 Sun 15:40 -->
+<!-- 2018-01-05 Fri 13:18 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Josh Berry" />
@@ -268,62 +268,62 @@ number.  We go ahead and add a class for the color of the solved cube.
 
 <div class="org-src-container">
 
-<pre class="src src-html">&lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"cube"</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face1  orange "</span>&gt;1&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face2  orange "</span>&gt;2&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face3  orange "</span>&gt;3&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face4  orange "</span>&gt;4&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face5  orange "</span>&gt;5&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face6  orange "</span>&gt;6&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face7  orange "</span>&gt;7&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face8  orange "</span>&gt;8&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face9  orange "</span>&gt;9&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face10 yellow "</span>&gt;10&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face11 yellow "</span>&gt;11&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face12 yellow "</span>&gt;12&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face13 yellow "</span>&gt;13&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face14 yellow "</span>&gt;14&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face15 yellow "</span>&gt;15&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face16 yellow "</span>&gt;16&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face17 yellow "</span>&gt;17&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face18 yellow "</span>&gt;18&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face19 green  "</span>&gt;19&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face20 green  "</span>&gt;20&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face21 green  "</span>&gt;21&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face22 green  "</span>&gt;22&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face23 green  "</span>&gt;23&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face24 green  "</span>&gt;24&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face25 green  "</span>&gt;25&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face26 green  "</span>&gt;26&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face27 green  "</span>&gt;27&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face28 red    "</span>&gt;28&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face29 red    "</span>&gt;29&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face30 red    "</span>&gt;30&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face31 red    "</span>&gt;31&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face32 red    "</span>&gt;32&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face33 red    "</span>&gt;33&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face34 red    "</span>&gt;34&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face35 red    "</span>&gt;35&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face36 red    "</span>&gt;36&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face37 blue   "</span>&gt;37&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face38 blue   "</span>&gt;38&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face39 blue   "</span>&gt;39&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face40 blue   "</span>&gt;40&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face41 blue   "</span>&gt;41&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face42 blue   "</span>&gt;42&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face43 blue   "</span>&gt;43&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face44 blue   "</span>&gt;44&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face45 blue   "</span>&gt;45&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face46 white  "</span>&gt;46&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face47 white  "</span>&gt;47&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face48 white  "</span>&gt;48&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face49 white  "</span>&gt;49&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face50 white  "</span>&gt;50&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face51 white  "</span>&gt;51&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face52 white  "</span>&gt;52&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face53 white  "</span>&gt;53&lt;/<span style="color: #93E0E3;">div</span>&gt;
-  &lt;<span style="color: #93E0E3;">div</span> <span style="color: #DFAF8F;">class</span>=<span style="color: #CC9393;">"face face54 white  "</span>&gt;54&lt;/<span style="color: #93E0E3;">div</span>&gt;
-&lt;/<span style="color: #93E0E3;">div</span>&gt;
+<pre class="src src-html">&lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"cube"</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face1  green  "</span>&gt;1&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face2  green  "</span>&gt;2&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face3  green  "</span>&gt;3&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face4  green  "</span>&gt;4&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face5  green  "</span>&gt;5&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face6  green  "</span>&gt;6&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face7  green  "</span>&gt;7&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face8  green  "</span>&gt;8&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face9  green  "</span>&gt;9&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face10 red    "</span>&gt;10&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face11 red    "</span>&gt;11&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face12 red    "</span>&gt;12&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face13 red    "</span>&gt;13&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face14 red    "</span>&gt;14&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face15 red    "</span>&gt;15&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face16 red    "</span>&gt;16&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face17 red    "</span>&gt;17&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face18 red    "</span>&gt;18&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face19 blue   "</span>&gt;19&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face20 blue   "</span>&gt;20&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face21 blue   "</span>&gt;21&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face22 blue   "</span>&gt;22&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face23 blue   "</span>&gt;23&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face24 blue   "</span>&gt;24&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face25 blue   "</span>&gt;25&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face26 blue   "</span>&gt;26&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face27 blue   "</span>&gt;27&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face28 orange "</span>&gt;28&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face29 orange "</span>&gt;29&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face30 orange "</span>&gt;30&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face31 orange "</span>&gt;31&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face32 orange "</span>&gt;32&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face33 orange "</span>&gt;33&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face34 orange "</span>&gt;34&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face35 orange "</span>&gt;35&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face36 orange "</span>&gt;36&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face37 white  "</span>&gt;37&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face38 white  "</span>&gt;38&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face39 white  "</span>&gt;39&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face40 white  "</span>&gt;40&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face41 white  "</span>&gt;41&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face42 white  "</span>&gt;42&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face43 white  "</span>&gt;43&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face44 white  "</span>&gt;44&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face45 white  "</span>&gt;45&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face46 yellow "</span>&gt;46&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face47 yellow "</span>&gt;47&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face48 yellow "</span>&gt;48&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face49 yellow "</span>&gt;49&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face50 yellow "</span>&gt;50&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face51 yellow "</span>&gt;51&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face52 yellow "</span>&gt;52&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face53 yellow "</span>&gt;53&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+  &lt;<span style="color: #34495e; font-weight: bold;">div</span> <span style="color: #8e44ad;">class</span>=<span style="color: #0a74b9;">"face face54 yellow "</span>&gt;54&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
+&lt;/<span style="color: #34495e; font-weight: bold;">div</span>&gt;
 </pre>
 </div>
 
@@ -333,87 +333,87 @@ Styled with some no frills css:
 
 <div class="org-src-container">
 
-<pre class="src src-css"><span style="color: #93E0E3;">.cube </span>{
-    <span style="color: #DFAF8F;">margin</span>: auto;
-    <span style="color: #DFAF8F;">margin-bottom</span>: 2em;
-    <span style="color: #DFAF8F;">position</span>: relative;
-    <span style="color: #DFAF8F;">width</span>: 384px;
-    <span style="color: #DFAF8F;">height</span>: 288px;
+<pre class="src src-css"><span style="color: #34495e; font-weight: bold;">.cube </span>{
+    <span style="color: #8e44ad;">margin</span>: auto;
+    <span style="color: #8e44ad;">margin-bottom</span>: 2em;
+    <span style="color: #8e44ad;">position</span>: relative;
+    <span style="color: #8e44ad;">width</span>: 384px;
+    <span style="color: #8e44ad;">height</span>: 288px;
 }
 
-<span style="color: #93E0E3;">.cube .face </span>{
-    <span style="color: #DFAF8F;">position</span>: absolute;
-    <span style="color: #DFAF8F;">box-sizing</span>: border-box;
-    <span style="color: #DFAF8F;">padding</span>: 0;
-    <span style="color: #DFAF8F;">margin</span>: 0;
-    <span style="color: #DFAF8F;">width</span>: 32px;
-    <span style="color: #DFAF8F;">height</span>: 32px;
-    <span style="color: #DFAF8F;">border</span>: solid 1px black;
-    <span style="color: #DFAF8F;">line-height</span>: 32px;
-    <span style="color: #DFAF8F;">text-align</span>: center;
+<span style="color: #34495e; font-weight: bold;">.cube .face </span>{
+    <span style="color: #8e44ad;">position</span>: absolute;
+    <span style="color: #8e44ad;">box-sizing</span>: border-box;
+    <span style="color: #8e44ad;">padding</span>: 0;
+    <span style="color: #8e44ad;">margin</span>: 0;
+    <span style="color: #8e44ad;">width</span>: 32px;
+    <span style="color: #8e44ad;">height</span>: 32px;
+    <span style="color: #8e44ad;">border</span>: solid 1px black;
+    <span style="color: #8e44ad;">line-height</span>: 32px;
+    <span style="color: #8e44ad;">text-align</span>: center;
 }
 
-<span style="color: #93E0E3;">.cube .face1  </span>{ <span style="color: #DFAF8F;">top</span>: 96px;  <span style="color: #DFAF8F;">left</span>: 0px;   }
-<span style="color: #93E0E3;">.cube .face2  </span>{ <span style="color: #DFAF8F;">top</span>: 96px;  <span style="color: #DFAF8F;">left</span>: 32px;  }
-<span style="color: #93E0E3;">.cube .face3  </span>{ <span style="color: #DFAF8F;">top</span>: 96px;  <span style="color: #DFAF8F;">left</span>: 64px;  }
-<span style="color: #93E0E3;">.cube .face4  </span>{ <span style="color: #DFAF8F;">top</span>: 128px; <span style="color: #DFAF8F;">left</span>: 0px;   }
-<span style="color: #93E0E3;">.cube .face5  </span>{ <span style="color: #DFAF8F;">top</span>: 128px; <span style="color: #DFAF8F;">left</span>: 32px;  }
-<span style="color: #93E0E3;">.cube .face6  </span>{ <span style="color: #DFAF8F;">top</span>: 128px; <span style="color: #DFAF8F;">left</span>: 64px;  }
-<span style="color: #93E0E3;">.cube .face7  </span>{ <span style="color: #DFAF8F;">top</span>: 160px; <span style="color: #DFAF8F;">left</span>: 0px;   }
-<span style="color: #93E0E3;">.cube .face8  </span>{ <span style="color: #DFAF8F;">top</span>: 160px; <span style="color: #DFAF8F;">left</span>: 32px;  }
-<span style="color: #93E0E3;">.cube .face9  </span>{ <span style="color: #DFAF8F;">top</span>: 160px; <span style="color: #DFAF8F;">left</span>: 64px;  }
-<span style="color: #93E0E3;">.cube .face10 </span>{ <span style="color: #DFAF8F;">top</span>: 96px;  <span style="color: #DFAF8F;">left</span>: 96px;  }
-<span style="color: #93E0E3;">.cube .face11 </span>{ <span style="color: #DFAF8F;">top</span>: 96px;  <span style="color: #DFAF8F;">left</span>: 128px; }
-<span style="color: #93E0E3;">.cube .face12 </span>{ <span style="color: #DFAF8F;">top</span>: 96px;  <span style="color: #DFAF8F;">left</span>: 160px; }
-<span style="color: #93E0E3;">.cube .face13 </span>{ <span style="color: #DFAF8F;">top</span>: 128px; <span style="color: #DFAF8F;">left</span>: 96px;  }
-<span style="color: #93E0E3;">.cube .face14 </span>{ <span style="color: #DFAF8F;">top</span>: 128px; <span style="color: #DFAF8F;">left</span>: 128px; }
-<span style="color: #93E0E3;">.cube .face15 </span>{ <span style="color: #DFAF8F;">top</span>: 128px; <span style="color: #DFAF8F;">left</span>: 160px; }
-<span style="color: #93E0E3;">.cube .face16 </span>{ <span style="color: #DFAF8F;">top</span>: 160px; <span style="color: #DFAF8F;">left</span>: 96px;  }
-<span style="color: #93E0E3;">.cube .face17 </span>{ <span style="color: #DFAF8F;">top</span>: 160px; <span style="color: #DFAF8F;">left</span>: 128px; }
-<span style="color: #93E0E3;">.cube .face18 </span>{ <span style="color: #DFAF8F;">top</span>: 160px; <span style="color: #DFAF8F;">left</span>: 160px; }
-<span style="color: #93E0E3;">.cube .face19 </span>{ <span style="color: #DFAF8F;">top</span>: 96px;  <span style="color: #DFAF8F;">left</span>: 192px; }
-<span style="color: #93E0E3;">.cube .face20 </span>{ <span style="color: #DFAF8F;">top</span>: 96px;  <span style="color: #DFAF8F;">left</span>: 224px; }
-<span style="color: #93E0E3;">.cube .face21 </span>{ <span style="color: #DFAF8F;">top</span>: 96px;  <span style="color: #DFAF8F;">left</span>: 256px; }
-<span style="color: #93E0E3;">.cube .face22 </span>{ <span style="color: #DFAF8F;">top</span>: 128px; <span style="color: #DFAF8F;">left</span>: 192px; }
-<span style="color: #93E0E3;">.cube .face23 </span>{ <span style="color: #DFAF8F;">top</span>: 128px; <span style="color: #DFAF8F;">left</span>: 224px; }
-<span style="color: #93E0E3;">.cube .face24 </span>{ <span style="color: #DFAF8F;">top</span>: 128px; <span style="color: #DFAF8F;">left</span>: 256px; }
-<span style="color: #93E0E3;">.cube .face25 </span>{ <span style="color: #DFAF8F;">top</span>: 160px; <span style="color: #DFAF8F;">left</span>: 192px; }
-<span style="color: #93E0E3;">.cube .face26 </span>{ <span style="color: #DFAF8F;">top</span>: 160px; <span style="color: #DFAF8F;">left</span>: 224px; }
-<span style="color: #93E0E3;">.cube .face27 </span>{ <span style="color: #DFAF8F;">top</span>: 160px; <span style="color: #DFAF8F;">left</span>: 256px; }
-<span style="color: #93E0E3;">.cube .face28 </span>{ <span style="color: #DFAF8F;">top</span>: 96px;  <span style="color: #DFAF8F;">left</span>: 288px; }
-<span style="color: #93E0E3;">.cube .face29 </span>{ <span style="color: #DFAF8F;">top</span>: 96px;  <span style="color: #DFAF8F;">left</span>: 320px; }
-<span style="color: #93E0E3;">.cube .face30 </span>{ <span style="color: #DFAF8F;">top</span>: 96px;  <span style="color: #DFAF8F;">left</span>: 352px; }
-<span style="color: #93E0E3;">.cube .face31 </span>{ <span style="color: #DFAF8F;">top</span>: 128px; <span style="color: #DFAF8F;">left</span>: 288px; }
-<span style="color: #93E0E3;">.cube .face32 </span>{ <span style="color: #DFAF8F;">top</span>: 128px; <span style="color: #DFAF8F;">left</span>: 320px; }
-<span style="color: #93E0E3;">.cube .face33 </span>{ <span style="color: #DFAF8F;">top</span>: 128px; <span style="color: #DFAF8F;">left</span>: 352px; }
-<span style="color: #93E0E3;">.cube .face34 </span>{ <span style="color: #DFAF8F;">top</span>: 160px; <span style="color: #DFAF8F;">left</span>: 288px; }
-<span style="color: #93E0E3;">.cube .face35 </span>{ <span style="color: #DFAF8F;">top</span>: 160px; <span style="color: #DFAF8F;">left</span>: 320px; }
-<span style="color: #93E0E3;">.cube .face36 </span>{ <span style="color: #DFAF8F;">top</span>: 160px; <span style="color: #DFAF8F;">left</span>: 352px; }
-<span style="color: #93E0E3;">.cube .face37 </span>{ <span style="color: #DFAF8F;">top</span>: 0px;   <span style="color: #DFAF8F;">left</span>: 96px;  }
-<span style="color: #93E0E3;">.cube .face38 </span>{ <span style="color: #DFAF8F;">top</span>: 0px;   <span style="color: #DFAF8F;">left</span>: 128px; }
-<span style="color: #93E0E3;">.cube .face39 </span>{ <span style="color: #DFAF8F;">top</span>: 0px;   <span style="color: #DFAF8F;">left</span>: 160px; }
-<span style="color: #93E0E3;">.cube .face40 </span>{ <span style="color: #DFAF8F;">top</span>: 32px;  <span style="color: #DFAF8F;">left</span>: 96px;  }
-<span style="color: #93E0E3;">.cube .face41 </span>{ <span style="color: #DFAF8F;">top</span>: 32px;  <span style="color: #DFAF8F;">left</span>: 128px; }
-<span style="color: #93E0E3;">.cube .face42 </span>{ <span style="color: #DFAF8F;">top</span>: 32px;  <span style="color: #DFAF8F;">left</span>: 160px; }
-<span style="color: #93E0E3;">.cube .face43 </span>{ <span style="color: #DFAF8F;">top</span>: 64px;  <span style="color: #DFAF8F;">left</span>: 96px;  }
-<span style="color: #93E0E3;">.cube .face44 </span>{ <span style="color: #DFAF8F;">top</span>: 64px;  <span style="color: #DFAF8F;">left</span>: 128px; }
-<span style="color: #93E0E3;">.cube .face45 </span>{ <span style="color: #DFAF8F;">top</span>: 64px;  <span style="color: #DFAF8F;">left</span>: 160px; }
-<span style="color: #93E0E3;">.cube .face46 </span>{ <span style="color: #DFAF8F;">top</span>: 192px; <span style="color: #DFAF8F;">left</span>: 96px;  }
-<span style="color: #93E0E3;">.cube .face47 </span>{ <span style="color: #DFAF8F;">top</span>: 192px; <span style="color: #DFAF8F;">left</span>: 128px; }
-<span style="color: #93E0E3;">.cube .face48 </span>{ <span style="color: #DFAF8F;">top</span>: 192px; <span style="color: #DFAF8F;">left</span>: 160px; }
-<span style="color: #93E0E3;">.cube .face49 </span>{ <span style="color: #DFAF8F;">top</span>: 224px; <span style="color: #DFAF8F;">left</span>: 96px;  }
-<span style="color: #93E0E3;">.cube .face50 </span>{ <span style="color: #DFAF8F;">top</span>: 224px; <span style="color: #DFAF8F;">left</span>: 128px; }
-<span style="color: #93E0E3;">.cube .face51 </span>{ <span style="color: #DFAF8F;">top</span>: 224px; <span style="color: #DFAF8F;">left</span>: 160px; }
-<span style="color: #93E0E3;">.cube .face52 </span>{ <span style="color: #DFAF8F;">top</span>: 256px; <span style="color: #DFAF8F;">left</span>: 96px;  }
-<span style="color: #93E0E3;">.cube .face53 </span>{ <span style="color: #DFAF8F;">top</span>: 256px; <span style="color: #DFAF8F;">left</span>: 128px; }
-<span style="color: #93E0E3;">.cube .face54 </span>{ <span style="color: #DFAF8F;">top</span>: 256px; <span style="color: #DFAF8F;">left</span>: 160px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face1  </span>{ <span style="color: #8e44ad;">top</span>: 96px;  <span style="color: #8e44ad;">left</span>: 0px;   }
+<span style="color: #34495e; font-weight: bold;">.cube .face2  </span>{ <span style="color: #8e44ad;">top</span>: 96px;  <span style="color: #8e44ad;">left</span>: 32px;  }
+<span style="color: #34495e; font-weight: bold;">.cube .face3  </span>{ <span style="color: #8e44ad;">top</span>: 96px;  <span style="color: #8e44ad;">left</span>: 64px;  }
+<span style="color: #34495e; font-weight: bold;">.cube .face4  </span>{ <span style="color: #8e44ad;">top</span>: 128px; <span style="color: #8e44ad;">left</span>: 0px;   }
+<span style="color: #34495e; font-weight: bold;">.cube .face5  </span>{ <span style="color: #8e44ad;">top</span>: 128px; <span style="color: #8e44ad;">left</span>: 32px;  }
+<span style="color: #34495e; font-weight: bold;">.cube .face6  </span>{ <span style="color: #8e44ad;">top</span>: 128px; <span style="color: #8e44ad;">left</span>: 64px;  }
+<span style="color: #34495e; font-weight: bold;">.cube .face7  </span>{ <span style="color: #8e44ad;">top</span>: 160px; <span style="color: #8e44ad;">left</span>: 0px;   }
+<span style="color: #34495e; font-weight: bold;">.cube .face8  </span>{ <span style="color: #8e44ad;">top</span>: 160px; <span style="color: #8e44ad;">left</span>: 32px;  }
+<span style="color: #34495e; font-weight: bold;">.cube .face9  </span>{ <span style="color: #8e44ad;">top</span>: 160px; <span style="color: #8e44ad;">left</span>: 64px;  }
+<span style="color: #34495e; font-weight: bold;">.cube .face10 </span>{ <span style="color: #8e44ad;">top</span>: 96px;  <span style="color: #8e44ad;">left</span>: 96px;  }
+<span style="color: #34495e; font-weight: bold;">.cube .face11 </span>{ <span style="color: #8e44ad;">top</span>: 96px;  <span style="color: #8e44ad;">left</span>: 128px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face12 </span>{ <span style="color: #8e44ad;">top</span>: 96px;  <span style="color: #8e44ad;">left</span>: 160px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face13 </span>{ <span style="color: #8e44ad;">top</span>: 128px; <span style="color: #8e44ad;">left</span>: 96px;  }
+<span style="color: #34495e; font-weight: bold;">.cube .face14 </span>{ <span style="color: #8e44ad;">top</span>: 128px; <span style="color: #8e44ad;">left</span>: 128px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face15 </span>{ <span style="color: #8e44ad;">top</span>: 128px; <span style="color: #8e44ad;">left</span>: 160px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face16 </span>{ <span style="color: #8e44ad;">top</span>: 160px; <span style="color: #8e44ad;">left</span>: 96px;  }
+<span style="color: #34495e; font-weight: bold;">.cube .face17 </span>{ <span style="color: #8e44ad;">top</span>: 160px; <span style="color: #8e44ad;">left</span>: 128px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face18 </span>{ <span style="color: #8e44ad;">top</span>: 160px; <span style="color: #8e44ad;">left</span>: 160px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face19 </span>{ <span style="color: #8e44ad;">top</span>: 96px;  <span style="color: #8e44ad;">left</span>: 192px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face20 </span>{ <span style="color: #8e44ad;">top</span>: 96px;  <span style="color: #8e44ad;">left</span>: 224px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face21 </span>{ <span style="color: #8e44ad;">top</span>: 96px;  <span style="color: #8e44ad;">left</span>: 256px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face22 </span>{ <span style="color: #8e44ad;">top</span>: 128px; <span style="color: #8e44ad;">left</span>: 192px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face23 </span>{ <span style="color: #8e44ad;">top</span>: 128px; <span style="color: #8e44ad;">left</span>: 224px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face24 </span>{ <span style="color: #8e44ad;">top</span>: 128px; <span style="color: #8e44ad;">left</span>: 256px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face25 </span>{ <span style="color: #8e44ad;">top</span>: 160px; <span style="color: #8e44ad;">left</span>: 192px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face26 </span>{ <span style="color: #8e44ad;">top</span>: 160px; <span style="color: #8e44ad;">left</span>: 224px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face27 </span>{ <span style="color: #8e44ad;">top</span>: 160px; <span style="color: #8e44ad;">left</span>: 256px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face28 </span>{ <span style="color: #8e44ad;">top</span>: 96px;  <span style="color: #8e44ad;">left</span>: 288px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face29 </span>{ <span style="color: #8e44ad;">top</span>: 96px;  <span style="color: #8e44ad;">left</span>: 320px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face30 </span>{ <span style="color: #8e44ad;">top</span>: 96px;  <span style="color: #8e44ad;">left</span>: 352px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face31 </span>{ <span style="color: #8e44ad;">top</span>: 128px; <span style="color: #8e44ad;">left</span>: 288px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face32 </span>{ <span style="color: #8e44ad;">top</span>: 128px; <span style="color: #8e44ad;">left</span>: 320px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face33 </span>{ <span style="color: #8e44ad;">top</span>: 128px; <span style="color: #8e44ad;">left</span>: 352px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face34 </span>{ <span style="color: #8e44ad;">top</span>: 160px; <span style="color: #8e44ad;">left</span>: 288px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face35 </span>{ <span style="color: #8e44ad;">top</span>: 160px; <span style="color: #8e44ad;">left</span>: 320px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face36 </span>{ <span style="color: #8e44ad;">top</span>: 160px; <span style="color: #8e44ad;">left</span>: 352px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face37 </span>{ <span style="color: #8e44ad;">top</span>: 0px;   <span style="color: #8e44ad;">left</span>: 96px;  }
+<span style="color: #34495e; font-weight: bold;">.cube .face38 </span>{ <span style="color: #8e44ad;">top</span>: 0px;   <span style="color: #8e44ad;">left</span>: 128px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face39 </span>{ <span style="color: #8e44ad;">top</span>: 0px;   <span style="color: #8e44ad;">left</span>: 160px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face40 </span>{ <span style="color: #8e44ad;">top</span>: 32px;  <span style="color: #8e44ad;">left</span>: 96px;  }
+<span style="color: #34495e; font-weight: bold;">.cube .face41 </span>{ <span style="color: #8e44ad;">top</span>: 32px;  <span style="color: #8e44ad;">left</span>: 128px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face42 </span>{ <span style="color: #8e44ad;">top</span>: 32px;  <span style="color: #8e44ad;">left</span>: 160px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face43 </span>{ <span style="color: #8e44ad;">top</span>: 64px;  <span style="color: #8e44ad;">left</span>: 96px;  }
+<span style="color: #34495e; font-weight: bold;">.cube .face44 </span>{ <span style="color: #8e44ad;">top</span>: 64px;  <span style="color: #8e44ad;">left</span>: 128px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face45 </span>{ <span style="color: #8e44ad;">top</span>: 64px;  <span style="color: #8e44ad;">left</span>: 160px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face46 </span>{ <span style="color: #8e44ad;">top</span>: 192px; <span style="color: #8e44ad;">left</span>: 96px;  }
+<span style="color: #34495e; font-weight: bold;">.cube .face47 </span>{ <span style="color: #8e44ad;">top</span>: 192px; <span style="color: #8e44ad;">left</span>: 128px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face48 </span>{ <span style="color: #8e44ad;">top</span>: 192px; <span style="color: #8e44ad;">left</span>: 160px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face49 </span>{ <span style="color: #8e44ad;">top</span>: 224px; <span style="color: #8e44ad;">left</span>: 96px;  }
+<span style="color: #34495e; font-weight: bold;">.cube .face50 </span>{ <span style="color: #8e44ad;">top</span>: 224px; <span style="color: #8e44ad;">left</span>: 128px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face51 </span>{ <span style="color: #8e44ad;">top</span>: 224px; <span style="color: #8e44ad;">left</span>: 160px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face52 </span>{ <span style="color: #8e44ad;">top</span>: 256px; <span style="color: #8e44ad;">left</span>: 96px;  }
+<span style="color: #34495e; font-weight: bold;">.cube .face53 </span>{ <span style="color: #8e44ad;">top</span>: 256px; <span style="color: #8e44ad;">left</span>: 128px; }
+<span style="color: #34495e; font-weight: bold;">.cube .face54 </span>{ <span style="color: #8e44ad;">top</span>: 256px; <span style="color: #8e44ad;">left</span>: 160px; }
 
-<span style="color: #93E0E3;">.cube .orange </span>{ <span style="color: #DFAF8F;">background-color</span>: orange; }
-<span style="color: #93E0E3;">.cube .green  </span>{ <span style="color: #DFAF8F;">background-color</span>: green;  }
-<span style="color: #93E0E3;">.cube .white  </span>{ <span style="color: #DFAF8F;">background-color</span>: white;  }
-<span style="color: #93E0E3;">.cube .yellow </span>{ <span style="color: #DFAF8F;">background-color</span>: yellow; }
-<span style="color: #93E0E3;">.cube .red    </span>{ <span style="color: #DFAF8F;">background-color</span>: red;    }
-<span style="color: #93E0E3;">.cube .blue   </span>{ <span style="color: #DFAF8F;">background-color</span>: blue;   }
+<span style="color: #34495e; font-weight: bold;">.cube .orange </span>{ <span style="color: #8e44ad;">background-color</span>: orange; }
+<span style="color: #34495e; font-weight: bold;">.cube .green  </span>{ <span style="color: #8e44ad;">background-color</span>: green;  }
+<span style="color: #34495e; font-weight: bold;">.cube .white  </span>{ <span style="color: #8e44ad;">background-color</span>: white;  }
+<span style="color: #34495e; font-weight: bold;">.cube .yellow </span>{ <span style="color: #8e44ad;">background-color</span>: yellow; }
+<span style="color: #34495e; font-weight: bold;">.cube .red    </span>{ <span style="color: #8e44ad;">background-color</span>: red;    }
+<span style="color: #34495e; font-weight: bold;">.cube .blue   </span>{ <span style="color: #8e44ad;">background-color</span>: blue;   }
 </pre>
 </div>
 
@@ -422,60 +422,60 @@ And we get:
 </p>
 
 <div class="cube">
-  <div class="face face1  orange ">1</div>
-  <div class="face face2  orange ">2</div>
-  <div class="face face3  orange ">3</div>
-  <div class="face face4  orange ">4</div>
-  <div class="face face5  orange ">5</div>
-  <div class="face face6  orange ">6</div>
-  <div class="face face7  orange ">7</div>
-  <div class="face face8  orange ">8</div>
-  <div class="face face9  orange ">9</div>
-  <div class="face face10 yellow ">10</div>
-  <div class="face face11 yellow ">11</div>
-  <div class="face face12 yellow ">12</div>
-  <div class="face face13 yellow ">13</div>
-  <div class="face face14 yellow ">14</div>
-  <div class="face face15 yellow ">15</div>
-  <div class="face face16 yellow ">16</div>
-  <div class="face face17 yellow ">17</div>
-  <div class="face face18 yellow ">18</div>
-  <div class="face face19 green  ">19</div>
-  <div class="face face20 green  ">20</div>
-  <div class="face face21 green  ">21</div>
-  <div class="face face22 green  ">22</div>
-  <div class="face face23 green  ">23</div>
-  <div class="face face24 green  ">24</div>
-  <div class="face face25 green  ">25</div>
-  <div class="face face26 green  ">26</div>
-  <div class="face face27 green  ">27</div>
-  <div class="face face28 red    ">28</div>
-  <div class="face face29 red    ">29</div>
-  <div class="face face30 red    ">30</div>
-  <div class="face face31 red    ">31</div>
-  <div class="face face32 red    ">32</div>
-  <div class="face face33 red    ">33</div>
-  <div class="face face34 red    ">34</div>
-  <div class="face face35 red    ">35</div>
-  <div class="face face36 red    ">36</div>
-  <div class="face face37 blue   ">37</div>
-  <div class="face face38 blue   ">38</div>
-  <div class="face face39 blue   ">39</div>
-  <div class="face face40 blue   ">40</div>
-  <div class="face face41 blue   ">41</div>
-  <div class="face face42 blue   ">42</div>
-  <div class="face face43 blue   ">43</div>
-  <div class="face face44 blue   ">44</div>
-  <div class="face face45 blue   ">45</div>
-  <div class="face face46 white  ">46</div>
-  <div class="face face47 white  ">47</div>
-  <div class="face face48 white  ">48</div>
-  <div class="face face49 white  ">49</div>
-  <div class="face face50 white  ">50</div>
-  <div class="face face51 white  ">51</div>
-  <div class="face face52 white  ">52</div>
-  <div class="face face53 white  ">53</div>
-  <div class="face face54 white  ">54</div>
+  <div class="face face1  green  ">1</div>
+  <div class="face face2  green  ">2</div>
+  <div class="face face3  green  ">3</div>
+  <div class="face face4  green  ">4</div>
+  <div class="face face5  green  ">5</div>
+  <div class="face face6  green  ">6</div>
+  <div class="face face7  green  ">7</div>
+  <div class="face face8  green  ">8</div>
+  <div class="face face9  green  ">9</div>
+  <div class="face face10 red    ">10</div>
+  <div class="face face11 red    ">11</div>
+  <div class="face face12 red    ">12</div>
+  <div class="face face13 red    ">13</div>
+  <div class="face face14 red    ">14</div>
+  <div class="face face15 red    ">15</div>
+  <div class="face face16 red    ">16</div>
+  <div class="face face17 red    ">17</div>
+  <div class="face face18 red    ">18</div>
+  <div class="face face19 blue   ">19</div>
+  <div class="face face20 blue   ">20</div>
+  <div class="face face21 blue   ">21</div>
+  <div class="face face22 blue   ">22</div>
+  <div class="face face23 blue   ">23</div>
+  <div class="face face24 blue   ">24</div>
+  <div class="face face25 blue   ">25</div>
+  <div class="face face26 blue   ">26</div>
+  <div class="face face27 blue   ">27</div>
+  <div class="face face28 orange ">28</div>
+  <div class="face face29 orange ">29</div>
+  <div class="face face30 orange ">30</div>
+  <div class="face face31 orange ">31</div>
+  <div class="face face32 orange ">32</div>
+  <div class="face face33 orange ">33</div>
+  <div class="face face34 orange ">34</div>
+  <div class="face face35 orange ">35</div>
+  <div class="face face36 orange ">36</div>
+  <div class="face face37 white  ">37</div>
+  <div class="face face38 white  ">38</div>
+  <div class="face face39 white  ">39</div>
+  <div class="face face40 white  ">40</div>
+  <div class="face face41 white  ">41</div>
+  <div class="face face42 white  ">42</div>
+  <div class="face face43 white  ">43</div>
+  <div class="face face44 white  ">44</div>
+  <div class="face face45 white  ">45</div>
+  <div class="face face46 yellow ">46</div>
+  <div class="face face47 yellow ">47</div>
+  <div class="face face48 yellow ">48</div>
+  <div class="face face49 yellow ">49</div>
+  <div class="face face50 yellow ">50</div>
+  <div class="face face51 yellow ">51</div>
+  <div class="face face52 yellow ">52</div>
+  <div class="face face53 yellow ">53</div>
+  <div class="face face54 yellow ">54</div>
 </div>
 
 <p>
@@ -509,60 +509,60 @@ Not so quickly applying \(R'\) to the initial board by hand, we get:
 </p>
 
 <div class="cube">
-  <div class="face face1  orange ">1</div>
-  <div class="face face2  orange ">2</div>
-  <div class="face face3  orange ">3</div>
-  <div class="face face4  orange ">4</div>
-  <div class="face face5  orange ">5</div>
-  <div class="face face6  orange ">6</div>
-  <div class="face face7  orange ">7</div>
-  <div class="face face8  orange ">8</div>
-  <div class="face face9  orange ">9</div>
-  <div class="face face10 yellow ">10</div>
-  <div class="face face11 yellow ">11</div>
-  <div class="face face12 blue   ">12</div>
-  <div class="face face13 yellow ">13</div>
-  <div class="face face14 yellow ">14</div>
-  <div class="face face15 blue   ">15</div>
-  <div class="face face16 yellow ">16</div>
-  <div class="face face17 yellow ">17</div>
-  <div class="face face18 blue   ">18</div>
-  <div class="face face19 green  ">19</div>
-  <div class="face face20 green  ">20</div>
-  <div class="face face21 green  ">21</div>
-  <div class="face face22 green  ">22</div>
-  <div class="face face23 green  ">23</div>
-  <div class="face face24 green  ">24</div>
-  <div class="face face25 green  ">25</div>
-  <div class="face face26 green  ">26</div>
-  <div class="face face27 green  ">27</div>
-  <div class="face face28 white  ">28</div>
-  <div class="face face29 red    ">29</div>
-  <div class="face face30 red    ">30</div>
-  <div class="face face31 white  ">31</div>
-  <div class="face face32 red    ">32</div>
-  <div class="face face33 red    ">33</div>
-  <div class="face face34 white  ">34</div>
-  <div class="face face35 red    ">35</div>
-  <div class="face face36 red    ">36</div>
-  <div class="face face37 blue   ">37</div>
-  <div class="face face38 blue   ">38</div>
-  <div class="face face39 red    ">39</div>
-  <div class="face face40 blue   ">40</div>
-  <div class="face face41 blue   ">41</div>
-  <div class="face face42 red    ">42</div>
-  <div class="face face43 blue   ">43</div>
-  <div class="face face44 blue   ">44</div>
-  <div class="face face45 red    ">45</div>
-  <div class="face face46 white  ">46</div>
-  <div class="face face47 white  ">47</div>
-  <div class="face face48 yellow ">48</div>
-  <div class="face face49 white  ">49</div>
-  <div class="face face50 white  ">50</div>
-  <div class="face face51 yellow ">51</div>
-  <div class="face face52 white  ">52</div>
-  <div class="face face53 white  ">53</div>
-  <div class="face face54 yellow ">54</div>
+  <div class="face face1  green ">1</div>
+  <div class="face face2  green ">2</div>
+  <div class="face face3  green ">3</div>
+  <div class="face face4  green ">4</div>
+  <div class="face face5  green ">5</div>
+  <div class="face face6  green ">6</div>
+  <div class="face face7  green ">7</div>
+  <div class="face face8  green ">8</div>
+  <div class="face face9  green ">9</div>
+  <div class="face face10 red ">10</div>
+  <div class="face face11 red ">11</div>
+  <div class="face face12 white   ">12</div>
+  <div class="face face13 red ">13</div>
+  <div class="face face14 red ">14</div>
+  <div class="face face15 white   ">15</div>
+  <div class="face face16 red ">16</div>
+  <div class="face face17 red ">17</div>
+  <div class="face face18 white   ">18</div>
+  <div class="face face19 blue  ">19</div>
+  <div class="face face20 blue  ">20</div>
+  <div class="face face21 blue  ">21</div>
+  <div class="face face22 blue  ">22</div>
+  <div class="face face23 blue  ">23</div>
+  <div class="face face24 blue  ">24</div>
+  <div class="face face25 blue  ">25</div>
+  <div class="face face26 blue  ">26</div>
+  <div class="face face27 blue  ">27</div>
+  <div class="face face28 yellow  ">28</div>
+  <div class="face face29 orange    ">29</div>
+  <div class="face face30 orange    ">30</div>
+  <div class="face face31 yellow  ">31</div>
+  <div class="face face32 orange    ">32</div>
+  <div class="face face33 orange    ">33</div>
+  <div class="face face34 yellow  ">34</div>
+  <div class="face face35 orange    ">35</div>
+  <div class="face face36 orange    ">36</div>
+  <div class="face face37 white   ">37</div>
+  <div class="face face38 white   ">38</div>
+  <div class="face face39 orange    ">39</div>
+  <div class="face face40 white   ">40</div>
+  <div class="face face41 white   ">41</div>
+  <div class="face face42 orange    ">42</div>
+  <div class="face face43 white   ">43</div>
+  <div class="face face44 white   ">44</div>
+  <div class="face face45 orange    ">45</div>
+  <div class="face face46 yellow  ">46</div>
+  <div class="face face47 yellow  ">47</div>
+  <div class="face face48 red ">48</div>
+  <div class="face face49 yellow  ">49</div>
+  <div class="face face50 yellow  ">50</div>
+  <div class="face face51 red ">51</div>
+  <div class="face face52 yellow  ">52</div>
+  <div class="face face53 yellow  ">53</div>
+  <div class="face face54 red ">54</div>
 </div>
 
 <p>
@@ -611,25 +611,25 @@ worth holding onto.
 
 <div class="org-src-container">
 
-<pre class="src src-javascript"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">createCubeDiv</span>() {
-    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cube</span> = withAttribute(div(),
-                             <span style="color: #CC9393;">"class"</span>,
-                             <span style="color: #CC9393;">"cube"</span>);
-    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">colors</span> = [<span style="color: #CC9393;">"orange"</span>,
-                  <span style="color: #CC9393;">"blue"</span>,
-                  <span style="color: #CC9393;">"green"</span>,
-                  <span style="color: #CC9393;">"red"</span>,
-                  <span style="color: #CC9393;">"yellow"</span>,
-                  <span style="color: #CC9393;">"white"</span>]
-   <span style="color: #F0DFAF; font-weight: bold;">for</span> (<span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">i</span> = 0; i &lt; 54; i++) {
+<pre class="src src-javascript"><span style="color: #d98c10;">function</span> <span style="color: #34495e; font-weight: bold;">createCubeDiv</span>() {
+    <span style="color: #d98c10;">var</span> <span style="color: #8e44ad;">cube</span> = withAttribute(div(),
+                             <span style="color: #0a74b9;">"class"</span>,
+                             <span style="color: #0a74b9;">"cube"</span>);
+    <span style="color: #d98c10;">var</span> <span style="color: #8e44ad;">colors</span> = [<span style="color: #0a74b9;">"green"</span>,
+                  <span style="color: #0a74b9;">"red"</span>,
+                  <span style="color: #0a74b9;">"blue"</span>,
+                  <span style="color: #0a74b9;">"orange"</span>,
+                  <span style="color: #0a74b9;">"white"</span>,
+                  <span style="color: #0a74b9;">"yellow"</span>]
+   <span style="color: #d98c10;">for</span> (<span style="color: #d98c10;">var</span> <span style="color: #8e44ad;">i</span> = 0; i &lt; 54; i++) {
         cube.appendChild(withAttribute(div(withAttribute(div(),
-                                                         <span style="color: #CC9393;">"class"</span>,
+                                                         <span style="color: #0a74b9;">"class"</span>,
                                                          colors[Math.floor(i / 9)])),
-                                       <span style="color: #CC9393;">"class"</span>,
-                                       <span style="color: #CC9393;">"face face"</span> + (i + 1)));
+                                       <span style="color: #0a74b9;">"class"</span>,
+                                       <span style="color: #0a74b9;">"face face"</span> + (i + 1)));
 
     }
-    <span style="color: #F0DFAF; font-weight: bold;">return</span> cube;
+    <span style="color: #d98c10;">return</span> cube;
 }
 </pre>
 </div>
@@ -651,14 +651,14 @@ the cubes, you can see them moving.
 
 <div class="org-src-container">
 
-<pre class="src src-css"><span style="color: #93E0E3;">.cube * </span>{
-    <span style="color: #DFAF8F;">transition</span>: 2s;
+<pre class="src src-css"><span style="color: #34495e; font-weight: bold;">.cube * </span>{
+    <span style="color: #8e44ad;">transition</span>: 2s;
 }
 
-<span style="color: #93E0E3;">.face .orange, .face .red,    .face .green,</span>
-<span style="color: #93E0E3;">.face .blue,   .face .yellow, .face .white </span>{
-    <span style="color: #DFAF8F;">width</span>: 100%;
-    <span style="color: #DFAF8F;">height</span>: 100%;
+<span style="color: #34495e; font-weight: bold;">.face .orange, .face .red,    .face .green,</span>
+<span style="color: #34495e; font-weight: bold;">.face .blue,   .face .yellow, .face .white </span>{
+    <span style="color: #8e44ad;">width</span>: 100%;
+    <span style="color: #8e44ad;">height</span>: 100%;
 }
 </pre>
 </div>
@@ -671,17 +671,17 @@ basically any framework.
 
 <div class="org-src-container">
 
-<pre class="src src-javascript"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">div</span>(<span style="color: #DFAF8F;">child</span>) {
-    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">element</span> = document.createElement(<span style="color: #CC9393;">"div"</span>);
-    <span style="color: #F0DFAF; font-weight: bold;">if</span> (child) {
+<pre class="src src-javascript"><span style="color: #d98c10;">function</span> <span style="color: #34495e; font-weight: bold;">div</span>(<span style="color: #8e44ad;">child</span>) {
+    <span style="color: #d98c10;">var</span> <span style="color: #8e44ad;">element</span> = document.createElement(<span style="color: #0a74b9;">"div"</span>);
+    <span style="color: #d98c10;">if</span> (child) {
         element.appendChild(child);
     }
-    <span style="color: #F0DFAF; font-weight: bold;">return</span> element;
+    <span style="color: #d98c10;">return</span> element;
 }
 
-<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">withAttribute</span>(<span style="color: #DFAF8F;">element</span>, <span style="color: #DFAF8F;">name</span>, <span style="color: #DFAF8F;">value</span>) {
+<span style="color: #d98c10;">function</span> <span style="color: #34495e; font-weight: bold;">withAttribute</span>(<span style="color: #8e44ad;">element</span>, <span style="color: #8e44ad;">name</span>, <span style="color: #8e44ad;">value</span>) {
     element.setAttribute(name, value);
-    <span style="color: #F0DFAF; font-weight: bold;">return</span> element;
+    <span style="color: #d98c10;">return</span> element;
 }
 </pre>
 </div>
@@ -695,8 +695,8 @@ results of a css selector.
 
 <div class="org-src-container">
 
-<pre class="src src-javascript"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">appendCubeToCssSelector</span>(<span style="color: #DFAF8F;">selector</span>) {
-    Array.from(document.querySelectorAll(selector)).forEach(<span style="color: #F0DFAF; font-weight: bold;">function</span>(<span style="color: #DFAF8F;">node</span>) {
+<pre class="src src-javascript"><span style="color: #d98c10;">function</span> <span style="color: #34495e; font-weight: bold;">appendCubeToCssSelector</span>(<span style="color: #8e44ad;">selector</span>) {
+    Array.from(document.querySelectorAll(selector)).forEach(<span style="color: #d98c10;">function</span>(<span style="color: #8e44ad;">node</span>) {
         node.appendChild(createCubeDiv());
     });
 }
@@ -724,110 +724,110 @@ that is the intent.)
 
 <div class="org-src-container">
 
-<pre class="src src-javascript"><span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">CubeMoves</span> = {
-    <span style="color: #CC9393;">"R"</span> : [ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
+<pre class="src src-javascript"><span style="color: #d98c10;">var</span> <span style="color: #8e44ad;">CubeMoves</span> = {
+    <span style="color: #0a74b9;">"R"</span> : [ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
             11, 39, 13, 14, 42, 16, 17, 45, 21, 24,
             27, 20, 23, 26, 19, 22, 25, 54, 29, 30,
             51, 32, 33, 48, 35, 36, 37, 38, 34, 40,
             41, 31, 43, 44, 28, 46, 47, 12, 49, 50,
             15, 52, 53, 18 ],
-    <span style="color: #CC9393;">"R'"</span> : [ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
+    <span style="color: #0a74b9;">"R'"</span> : [ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
              11, 48, 13, 14, 51, 16, 17, 54, 25, 22,
              19, 26, 23, 20, 27, 24, 21, 45, 29, 30,
              42, 32, 33, 39, 35, 36, 37, 38, 12, 40,
              41, 15, 43, 44, 18, 46, 47, 34, 49, 50,
              31, 52, 53, 28 ],
-    <span style="color: #CC9393;">"L"</span> : [ 3,  6,  9,  2,  5,  8,  1,  4,  7, 46,
+    <span style="color: #0a74b9;">"L"</span> : [ 3,  6,  9,  2,  5,  8,  1,  4,  7, 46,
             11, 12, 49, 14, 15, 52, 17, 18, 19, 20,
             21, 22, 23, 24, 25, 26, 27, 28, 29, 43,
             31, 32, 40, 34, 35, 37, 10, 38, 39, 13,
             41, 42, 16, 44, 45, 36, 47, 48, 33, 50,
             51, 30, 53, 54 ],
-    <span style="color: #CC9393;">"L'"</span> : [ 7,  4,  1,  8,  5,  2,  9,  6,  3, 37,
+    <span style="color: #0a74b9;">"L'"</span> : [ 7,  4,  1,  8,  5,  2,  9,  6,  3, 37,
              11, 12, 40, 14, 15, 43, 17, 18, 19, 20,
              21, 22, 23, 24, 25, 26, 27, 28, 29, 52,
              31, 32, 49, 34, 35, 46, 36, 38, 39, 33,
              41, 42, 30, 44, 45, 10, 47, 48, 13, 50,
              51, 16, 53, 54 ],
-    <span style="color: #CC9393;">"U"</span> : [ 28, 29, 30,  4,  5,  6,  7,  8,  9, 1,
+    <span style="color: #0a74b9;">"U"</span> : [ 28, 29, 30,  4,  5,  6,  7,  8,  9, 1,
             2, 3, 13, 14, 15, 16, 17, 18, 10, 11,
             12, 22, 23, 24, 25, 26, 27, 19, 20, 21,
             31, 32, 33, 34, 35, 36, 39, 42, 45, 38,
             41, 44, 37, 40, 43, 46, 47, 48, 49, 50,
             51, 52, 53, 54 ],
-    <span style="color: #CC9393;">"U'"</span> : [ 10, 11, 12,  4,  5,  6,  7,  8,  9, 19,
+    <span style="color: #0a74b9;">"U'"</span> : [ 10, 11, 12,  4,  5,  6,  7,  8,  9, 19,
              20, 21, 13, 14, 15, 16, 17, 18, 28, 29,
              30, 22, 23, 24, 25, 26, 27, 1, 2, 3,
              31, 32, 33, 34, 35, 36, 43, 40, 37, 44,
              41, 38, 45, 42, 39, 46, 47, 48, 49, 50,
              51, 52, 53, 54 ],
-    <span style="color: #CC9393;">"D"</span> : [ 1,  2,  3,  4,  5,  6,  16, 17, 18, 10,
+    <span style="color: #0a74b9;">"D"</span> : [ 1,  2,  3,  4,  5,  6,  16, 17, 18, 10,
             11, 12, 13, 14, 15, 25, 26, 27, 19, 20,
             21, 22, 23, 24, 34, 35, 36, 28, 29, 30,
             31, 32, 33, 7, 8, 9, 37, 38, 39, 40,
             41, 42, 43, 44, 45, 48, 51, 54, 47, 50,
             53, 46, 49, 52 ],
-    <span style="color: #CC9393;">"D'"</span> : [ 1,  2,  3,  4,  5,  6,  34, 35, 36, 10,
+    <span style="color: #0a74b9;">"D'"</span> : [ 1,  2,  3,  4,  5,  6,  34, 35, 36, 10,
              11, 12, 13, 14, 15, 7, 8, 9, 19, 20,
              21, 22, 23, 24, 16, 17, 18, 28, 29, 30,
              31, 32, 33, 25, 26, 27, 37, 38, 39, 40,
              41, 42, 43, 44, 45, 52, 49, 46, 53, 50,
              47, 54, 51, 48 ],
-    <span style="color: #CC9393;">"F"</span> : [ 1,  2,  45,  4,  5, 44,  7,  8, 43, 12,
+    <span style="color: #0a74b9;">"F"</span> : [ 1,  2,  45,  4,  5, 44,  7,  8, 43, 12,
             15, 18, 11, 14, 17, 10, 13, 16, 48, 20,
             21, 47, 23, 24, 46, 26, 27, 28, 29, 30,
             31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
             41, 42, 19, 22, 25, 3, 6, 9, 49, 50,
             51, 52, 53, 54 ],
-    <span style="color: #CC9393;">"F'"</span> : [ 1,  2,  46,  4,  5, 47,  7,  8, 48, 16,
+    <span style="color: #0a74b9;">"F'"</span> : [ 1,  2,  46,  4,  5, 47,  7,  8, 48, 16,
              13, 10, 17, 14, 11, 18, 15, 12, 43, 20,
              21, 44, 23, 24, 45, 26, 27, 28, 29, 30,
              31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
              41, 42, 9, 6, 3, 25, 22, 19, 49, 50,
              51, 52, 53, 54 ],
-    <span style="color: #CC9393;">"B"</span> : [ 52,  2,  3,  53,  5,  6,  54,  8,  9, 10,
+    <span style="color: #0a74b9;">"B"</span> : [ 52,  2,  3,  53,  5,  6,  54,  8,  9, 10,
             11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
             37, 22, 23, 38, 25, 26, 39, 30, 33, 36,
             29, 32, 35, 28, 31, 34, 7, 4, 1, 40,
             41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
             51, 27, 24, 21 ],
-    <span style="color: #CC9393;">"B'"</span> : [ 39,  2,  3,  38,  5,  6,  37,  8,  9, 10,
+    <span style="color: #0a74b9;">"B'"</span> : [ 39,  2,  3,  38,  5,  6,  37,  8,  9, 10,
              11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
              54, 22, 23, 53, 25, 26, 52, 34, 31, 28,
              35, 32, 29, 36, 33, 30, 21, 24, 27, 40,
              41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
              51, 1, 4, 7 ],
-    <span style="color: #CC9393;">"&#945;"</span> : [ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
+    <span style="color: #0a74b9;">"&#945;"</span> : [ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
             38, 12, 13, 41, 15, 16, 44, 18, 19, 20,
             21, 22, 23, 24, 25, 26, 27, 28, 53, 30,
             31, 50, 33, 34, 47, 36, 37, 35, 39, 40,
             32, 42, 43, 29, 45, 46, 11, 48, 49, 14,
             51, 52, 17, 54 ],
-    <span style="color: #CC9393;">"&#946;"</span> : [ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
+    <span style="color: #0a74b9;">"&#946;"</span> : [ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10,
             47, 12, 13, 50, 15, 16, 53, 18, 19, 20,
             21, 22, 23, 24, 25, 26, 27, 28, 44, 30,
             31, 41, 33, 34, 38, 36, 37, 11, 39, 40,
             14, 42, 43, 17, 45, 46, 35, 48, 49, 32,
             51, 52, 29, 54 ],
-    <span style="color: #CC9393;">"&#947;"</span> : [ 1,  49,  3,  4,  50,  6,  7,  51,  9, 10,
+    <span style="color: #0a74b9;">"&#947;"</span> : [ 1,  49,  3,  4,  50,  6,  7,  51,  9, 10,
             11, 12, 13, 14, 15, 16, 17, 18, 19, 40,
             21, 22, 41, 24, 25, 42, 27, 28, 29, 30,
             31, 32, 33, 34, 35, 36, 37, 38, 39, 8,
             5, 2, 43, 44, 45, 46, 47, 48, 26, 23,
             20, 52, 53, 54 ],
-    <span style="color: #CC9393;">"&#948;"</span> : [ 1,  42,  3,  4,  41,  6,  7,  40,  9, 10,
+    <span style="color: #0a74b9;">"&#948;"</span> : [ 1,  42,  3,  4,  41,  6,  7,  40,  9, 10,
             11, 12, 13, 14, 15, 16, 17, 18, 19, 51,
             21, 22, 50, 24, 25, 49, 27, 28, 29, 30,
             31, 32, 33, 34, 35, 36, 37, 38, 39, 20,
             23, 26, 43, 44, 45, 46, 47, 48, 2, 5,
             8, 52, 53, 54 ],
-    <span style="color: #CC9393;">"&#949;"</span> : [ 1,  2,  3,  13,  14,  15,  7,  8,  9, 10,
+    <span style="color: #0a74b9;">"&#949;"</span> : [ 1,  2,  3,  13,  14,  15,  7,  8,  9, 10,
             11, 12, 22, 23, 24, 16, 17, 18, 19, 20,
             21, 31, 32, 33, 25, 26, 27, 28, 29, 30,
             4, 5, 6, 34, 35, 36, 37, 38, 39, 40,
             41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
             51, 52, 53, 54 ],
-    <span style="color: #CC9393;">"&#969;"</span> : [ 1,  2,  3,  31,  32,  33,  7,  8,  9, 10,
+    <span style="color: #0a74b9;">"&#969;"</span> : [ 1,  2,  3,  31,  32,  33,  7,  8,  9, 10,
             11, 12, 4, 5, 6, 16, 17, 18, 19, 20,
             21, 13, 14, 15, 25, 26, 27, 28, 29, 30,
             22, 23, 24, 34, 35, 36, 37, 38, 39, 40,
@@ -846,24 +846,24 @@ a bottleneck for me.
 
 <div class="org-src-container">
 
-<pre class="src src-javascript"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">applyCubeMove</span>(<span style="color: #DFAF8F;">cube</span>, <span style="color: #DFAF8F;">moveName</span>) {
-    <span style="color: #F0DFAF; font-weight: bold;">if</span> (!CubeMoves[moveName]) {
-        <span style="color: #F0DFAF; font-weight: bold;">throw</span> <span style="color: #CC9393;">"Unknown move '"</span> + moveName + <span style="color: #CC9393;">"'"</span>;
+<pre class="src src-javascript"><span style="color: #d98c10;">function</span> <span style="color: #34495e; font-weight: bold;">applyCubeMove</span>(<span style="color: #8e44ad;">cube</span>, <span style="color: #8e44ad;">moveName</span>) {
+    <span style="color: #d98c10;">if</span> (!CubeMoves[moveName]) {
+        <span style="color: #d98c10;">throw</span> <span style="color: #0a74b9;">"Unknown move '"</span> + moveName + <span style="color: #0a74b9;">"'"</span>;
     }
-    <span style="color: #F0DFAF; font-weight: bold;">if</span> (!cube) {
-        <span style="color: #F0DFAF; font-weight: bold;">throw</span> <span style="color: #CC9393;">"Need the cube that we will be modifying."</span>
+    <span style="color: #d98c10;">if</span> (!cube) {
+        <span style="color: #d98c10;">throw</span> <span style="color: #0a74b9;">"Need the cube that we will be modifying."</span>
     }
-    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">movesToMake</span> = [];
-    CubeMoves[moveName].forEach(<span style="color: #F0DFAF; font-weight: bold;">function</span> (<span style="color: #DFAF8F;">item</span>, <span style="color: #DFAF8F;">index</span>) {
-        <span style="color: #F0DFAF; font-weight: bold;">if</span> (item != (index + 1)) {
+    <span style="color: #d98c10;">var</span> <span style="color: #8e44ad;">movesToMake</span> = [];
+    CubeMoves[moveName].forEach(<span style="color: #d98c10;">function</span> (<span style="color: #8e44ad;">item</span>, <span style="color: #8e44ad;">index</span>) {
+        <span style="color: #d98c10;">if</span> (item != (index + 1)) {
             movesToMake.push({
-                <span style="color: #CC9393;">"div"</span> : cube.querySelector(<span style="color: #CC9393;">".face"</span>+(index+1)),
-                <span style="color: #CC9393;">"target"</span> : item
+                <span style="color: #0a74b9;">"div"</span> : cube.querySelector(<span style="color: #0a74b9;">".face"</span>+(index+1)),
+                <span style="color: #0a74b9;">"target"</span> : item
             });
         }
     });
-    movesToMake.forEach(<span style="color: #F0DFAF; font-weight: bold;">function</span>(<span style="color: #DFAF8F;">item</span>) {
-        item.div.setAttribute(<span style="color: #CC9393;">"class"</span>, <span style="color: #CC9393;">"face face"</span>+item.target);
+    movesToMake.forEach(<span style="color: #d98c10;">function</span>(<span style="color: #8e44ad;">item</span>) {
+        item.div.setAttribute(<span style="color: #0a74b9;">"class"</span>, <span style="color: #0a74b9;">"face face"</span>+item.target);
     });
 }
 </pre>
@@ -879,15 +879,15 @@ this section.
 
 <div class="org-src-container">
 
-<pre class="src src-javascript"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">appendMoveListToCssSelector</span>(<span style="color: #DFAF8F;">selector</span>) {
-    Array.from(document.querySelectorAll(selector)).forEach(<span style="color: #F0DFAF; font-weight: bold;">function</span>(<span style="color: #DFAF8F;">node</span>) {
-        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">moveListDiv</span> = withAttribute(div(text(<span style="color: #CC9393;">"Move List:"</span>)),
-                                        <span style="color: #CC9393;">"class"</span>,
-                                        <span style="color: #CC9393;">"move-list"</span>);
+<pre class="src src-javascript"><span style="color: #d98c10;">function</span> <span style="color: #34495e; font-weight: bold;">appendMoveListToCssSelector</span>(<span style="color: #8e44ad;">selector</span>) {
+    Array.from(document.querySelectorAll(selector)).forEach(<span style="color: #d98c10;">function</span>(<span style="color: #8e44ad;">node</span>) {
+        <span style="color: #d98c10;">var</span> <span style="color: #8e44ad;">moveListDiv</span> = withAttribute(div(text(<span style="color: #0a74b9;">"Move List:"</span>)),
+                                        <span style="color: #0a74b9;">"class"</span>,
+                                        <span style="color: #0a74b9;">"move-list"</span>);
         node.appendChild(moveListDiv)
-        <span style="color: #F0DFAF; font-weight: bold;">for</span> (<span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">move</span> <span style="color: #F0DFAF; font-weight: bold;">in</span> CubeMoves) {
-            moveListDiv.appendChild(withOnClick(<span style="color: #F0DFAF; font-weight: bold;">function</span>(<span style="color: #DFAF8F;">move</span>) {
-                <span style="color: #F0DFAF; font-weight: bold;">return</span> <span style="color: #F0DFAF; font-weight: bold;">function</span>() {
+        <span style="color: #d98c10;">for</span> (<span style="color: #d98c10;">var</span> <span style="color: #8e44ad;">move</span> <span style="color: #d98c10;">in</span> CubeMoves) {
+            moveListDiv.appendChild(withOnClick(<span style="color: #d98c10;">function</span>(<span style="color: #8e44ad;">move</span>) {
+                <span style="color: #d98c10;">return</span> <span style="color: #d98c10;">function</span>() {
                     applyCubeMove(node, move);
                 };
             }(move), button(text(move))));
@@ -895,21 +895,21 @@ this section.
     });
 }
 
-<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">button</span>(<span style="color: #DFAF8F;">child</span>) {
-    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">element</span> = document.createElement(<span style="color: #CC9393;">"button"</span>);
-    <span style="color: #F0DFAF; font-weight: bold;">if</span> (child) {
+<span style="color: #d98c10;">function</span> <span style="color: #34495e; font-weight: bold;">button</span>(<span style="color: #8e44ad;">child</span>) {
+    <span style="color: #d98c10;">var</span> <span style="color: #8e44ad;">element</span> = document.createElement(<span style="color: #0a74b9;">"button"</span>);
+    <span style="color: #d98c10;">if</span> (child) {
         element.appendChild(child);
     }
-    <span style="color: #F0DFAF; font-weight: bold;">return</span> element;
+    <span style="color: #d98c10;">return</span> element;
 }
 
-<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">text</span>(<span style="color: #DFAF8F;">text</span>) {
-    <span style="color: #F0DFAF; font-weight: bold;">return</span> document.createTextNode(text);
+<span style="color: #d98c10;">function</span> <span style="color: #34495e; font-weight: bold;">text</span>(<span style="color: #8e44ad;">text</span>) {
+    <span style="color: #d98c10;">return</span> document.createTextNode(text);
 }
 
-<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">withOnClick</span>(<span style="color: #DFAF8F;">f</span>, <span style="color: #DFAF8F;">element</span>) {
+<span style="color: #d98c10;">function</span> <span style="color: #34495e; font-weight: bold;">withOnClick</span>(<span style="color: #8e44ad;">f</span>, <span style="color: #8e44ad;">element</span>) {
     element.onclick = f;
-    <span style="color: #F0DFAF; font-weight: bold;">return</span> element;
+    <span style="color: #d98c10;">return</span> element;
 }
 </pre>
 </div>
@@ -921,18 +921,18 @@ date.
 
 <div class="org-src-container">
 
-<pre class="src src-css"><span style="color: #93E0E3;">.move-list </span>{
-    <span style="color: #DFAF8F;">float</span>: left;
-    <span style="color: #DFAF8F;">border</span>: solid thin black;
-    <span style="color: #DFAF8F;">background-color</span>: white;
-    <span style="color: #DFAF8F;">width</span>: 100px;
-    <span style="color: #DFAF8F;">text-align</span>: center;
+<pre class="src src-css"><span style="color: #34495e; font-weight: bold;">.move-list </span>{
+    <span style="color: #8e44ad;">float</span>: left;
+    <span style="color: #8e44ad;">border</span>: solid thin black;
+    <span style="color: #8e44ad;">background-color</span>: white;
+    <span style="color: #8e44ad;">width</span>: 100px;
+    <span style="color: #8e44ad;">text-align</span>: center;
 }
 
-<span style="color: #93E0E3;">.move-list button </span>{
-    <span style="color: #DFAF8F;">display</span>: inline-block;
-    <span style="color: #DFAF8F;">width</span>: 45px;
-    <span style="color: #DFAF8F;">margin</span>: auto;
+<span style="color: #34495e; font-weight: bold;">.move-list button </span>{
+    <span style="color: #8e44ad;">display</span>: inline-block;
+    <span style="color: #8e44ad;">width</span>: 45px;
+    <span style="color: #8e44ad;">margin</span>: auto;
 }
 </pre>
 </div>
@@ -963,7 +963,7 @@ will have to be done then.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh Berry</p>
-<p class="date">Created: 2017-12-24 Sun 15:40</p>
+<p class="date">Created: 2018-01-05 Fri 13:18</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.2.2 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
