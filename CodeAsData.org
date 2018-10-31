@@ -206,7 +206,7 @@ Showing the definition of "playing/body" to remind us what it was.
 
 In case you forgot what the original was, here it is again.
 
-#+BEGIN_SRC elisp exports both :results verbatim
+#+BEGIN_SRC elisp :exports both :results verbatim
 playing/body
 #+END_SRC
 
