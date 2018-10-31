@@ -1,4 +1,4 @@
-#+title: Code as Data
+#+title: Fun With Symbolic Derivatives in Lisp.
 #+OPTIONS: num:nil
 #+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
 
