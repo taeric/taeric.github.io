@@ -112,7 +112,7 @@ spirit of the argument is that this is not fundamentally different.
 * So, what makes the lisp example different?
 
 Rather than just talk about the differences, lets have some fun.
-Recently, I linked someone the section on symbolic derivatives in lISP
+Recently, I linked someone the section on symbolic derivatives in lisp
 from the original SICP lectures.[fn:1]
 
 For brevity, I'm just going to quickly run through all of the
