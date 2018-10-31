@@ -1,0 +1,317 @@
+#+title: Code as Data
+#+OPTIONS: num:nil
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
+
+* Code as Data
+
+I don't often get to use lisp at work.  Indeed, best chance I have to
+actually code lisp is if I decide to automate something in emacs.
+Though, even then I'm likely to just use an org-mode buffer as what
+people are calling notebooks nowadays.
+
+That said, I do want to take a stab at writing something explaining
+what the lisp community means when they say Code as Data.
+
+* The basic claim
+
+The basic claim is simply that you can treat code as data.  This
+doesn't sound as impressive to folks that are used to "eval" in
+languages like JavaScript.  In large, the basic examples using eval
+don't help.  Lets look at a function that simply performs some math
+and how we can construct it using eval, as well.
+
+First, the straight forward way of defining the function.
+
+#+BEGIN_SRC elisp :exports both :results verbatim
+(defun playing/function (x) (+ (* x 2) 12))
+#+END_SRC
+
+#+RESULTS:
+: playing/function
+
+Nothing fancy.  You can call this in the standard way:
+
+#+BEGIN_SRC elisp :exports both :results verbatim
+(playing/function 12)
+#+END_SRC
+
+#+RESULTS:
+: 36
+
+Now, lets see how we could split the body from the function header.
+
+#+BEGIN_SRC elisp :exports both :results verbatim
+(defvar playing/body '(+ (* x 2) 12))
+#+END_SRC
+
+#+RESULTS:
+: playing/body
+
+At face value, we just have a new variable "playing/body".  What does
+it look like?
+
+#+BEGIN_SRC elisp :exports both :results verbatim
+playing/body
+#+END_SRC
+
+#+RESULTS:
+: (+ (* x 2) 12)
+
+What can we do with this, then?  Well, we could just append it to the
+require syntax and evaluate it to get our function.  Let us try that.
+
+#+BEGIN_SRC elisp :exports both :results verbatim
+  (eval (append '(defun playing/eval-function (x))
+                (list playing/body)))
+#+END_SRC
+
+#+RESULTS:
+: playing/eval-function
+
+Just to confirm, we can call this in the same way as we had previously.
+
+#+BEGIN_SRC elisp :exports both :results verbatim
+(playing/eval-function 12)
+#+END_SRC
+
+#+RESULTS:
+: 36
+
+* But isn't this the same as any language with "eval"?
+
+An obvious and straight forward objection.  I presume this typically
+means doing like the following in JavaScript.
+
+#+BEGIN_SRC js :exports both :results output verbatim
+function example(x) {
+  return x * 2 + 12;
+}
+
+console.log(example)
+console.log(example(12))
+
+var body = "return x * 2 + 12;"
+console.log(body)
+eval("function eval_example(x) {" + body + "}");
+console.log(eval_example)
+console.log(eval_example(12))
+#+END_SRC
+
+#+RESULTS:
+: [Function: example]
+: 36
+: return x * 2 + 12;
+: [Function: eval_example]
+: 36
+
+As we can see, it is possible to have a variable that stores the
+"body" of a function separately from the actual definition of it.
+Yes, there was some funky string concatenation overhead, but the
+spirit of the argument is that this is not fundamentally different.
+
+* So, what makes the lisp example different?
+
+Rather than just talk about the differences, lets have some fun.
+Recently, I linked someone the section on symbolic derivatives in lISP
+from the original SICP lectures.[fn:1]
+
+For brevity, I'm just going to quickly run through all of the
+functions the SICP defined.  I keep the "playing/" prefix to keep from
+littering my current emacs session, and I obviously port the functions
+to elisp, from scheme.
+
+First, the primitives used.
+
+#+BEGIN_SRC elisp
+  (defun playing/variable? (x) (symbolp x))
+  (defun playing/same-variable? (v1 v2)
+    (and (playing/variable? v1) (playing/variable? v2) (eq v1 v2)))
+  (defun playing/make-sum (a1 a2) (list '+ a1 a2))
+  (defun playing/sum? (x)
+    (and (listp x) (eq (car x) '+)))
+  (defun playing/addend (s) (cadr s))
+  (defun playing/augend (s) (caddr s))
+  (defun playing/make-product (m1 m2) (list '* m1 m2))
+  (defun playing/product? (x)
+    (and (listp x) (eq (car x) '*)))
+  (defun playing/multiplier (p) (cadr p))
+  (defun playing/multiplicand (p) (caddr p))
+#+END_SRC
+
+#+RESULTS:
+: playing/multiplicand
+
+Then, the derivative function.
+
+#+BEGIN_SRC elisp
+(defun playing/deriv (exp var)
+  (cond ((numberp exp) 0)
+        ((playing/variable? exp)
+         (if (playing/same-variable? exp var) 1 0))
+        ((playing/sum? exp)
+         (playing/make-sum (playing/deriv (playing/addend exp) var)
+                   (playing/deriv (playing/augend exp) var)))
+        ((playing/product? exp)
+         (playing/make-sum
+           (playing/make-product (playing/multiplier exp)
+                         (playing/deriv (playing/multiplicand exp) var))
+           (playing/make-product (playing/deriv (playing/multiplier exp) var)
+                         (playing/multiplicand exp))))
+        (t (error "unknown expression type -- DERIV" exp))))
+#+END_SRC
+
+#+RESULTS:
+: playing/deriv
+
+Now, lets see if it works.  
+
+#+BEGIN_SRC elisp :exports both :results verbatim
+(playing/deriv playing/body 'x)
+#+END_SRC
+
+#+RESULTS:
+: (+ (+ (* x 0) (* 1 2)) 0)
+
+Not at all reduced form.  And, for fun, the SICP section goes over how
+to fix this at a first order.  So, lets quickly see that here.
+
+#+BEGIN_SRC elisp
+(defun playing/make-sum (a1 a2)
+  (cond ((playing/=number? a1 0) a2)
+        ((playing/=number? a2 0) a1)
+        ((and (numberp a1) (numberp a2)) (+ a1 a2))
+        (t (list '+ a1 a2))))
+(defun playing/make-product (m1 m2)
+  (cond ((or (playing/=number? m1 0) (playing/=number? m2 0)) 0)
+        ((playing/=number? m1 1) m2)
+        ((playing/=number? m2 1) m1)
+        ((and (numberp m1) (numberp m2)) (* m1 m2))
+        (t (list '* m1 m2))))
+(defun playing/=number? (exp num)
+  (and (numberp exp) (= exp num)))
+#+END_SRC
+
+#+RESULTS:
+: playing/=number\?
+
+With that, lets try the deriv function one more time on the original.
+Showing the definition of "playing/body" to remind us what it was.
+
+#+BEGIN_SRC elisp :exports both :results verbatim
+  (playing/deriv playing/body 'x)
+#+END_SRC
+
+#+RESULTS:
+: 2
+
+In case you forgot what the original was, here it is again.
+
+#+BEGIN_SRC elisp exports both :results verbatim
+playing/body
+#+END_SRC
+
+#+RESULTS:
+: (+ (* x 2) 12)
+
+* But who cares, I'm sure you could write a deriv function for javascript.
+
+Probably, but consider the above a bit longer.  Before, we showed that
+you could use eval to just stitch together the body straight to the
+function.  But, since we didn't do anything to the body, it was
+natural to think this is akin to string concatenation into eval.  But,
+we could also easily use eval to create a symbolic derivative.
+
+For example:
+
+#+BEGIN_SRC elisp :exports both :results verbatim
+  (eval (append '(defun playing/eval-function-derivative (x))
+                (list (playing/deriv playing/body 'x))))
+#+END_SRC
+
+#+RESULTS:
+: playing/eval-function-derivative
+
+Calling this will give us the results we expect.
+
+#+BEGIN_SRC elisp :exports both 
+(mapcar #'playing/eval-function-derivative '(1 2 3 4 5 6 7 8 9 10))
+#+END_SRC
+
+#+RESULTS:
+| 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 | 2 |
+
+Which... is just a constant, and kind of boring.  Lets see if it can
+deriv something a little more interesting.
+
+#+BEGIN_SRC elisp :exports both :results verbatim
+  (eval (append '(defun playing/eval-function-derivative-2 (x))
+                (list (playing/deriv '(* x x) 'x))))
+#+END_SRC
+
+#+RESULTS:
+: playing/eval-function-derivative-2
+
+Looking at our values now, we see:
+
+#+BEGIN_SRC elisp :exports both 
+(mapcar #'playing/eval-function-derivative-2 '(1 2 3 4 5 6 7 8 9 10))
+#+END_SRC
+
+#+RESULTS:
+| 2 | 4 | 6 | 8 | 10 | 12 | 14 | 16 | 18 | 20 |
+
+Still not exactly an interesting function, but quite clear that this
+is no longer a constant.
+
+* Note all that was missing.
+
+At no point did we have to write a parser.  At no point did we have to
+really worry about stitching together syntax into the code we created.
+At no point did we have to use a special macro syntax, even.
+
+Instead, we could simply treat the body of our function as any other
+data element in our code, and we were able to write a symbolic deriv
+function that was capable of not just telling us the derivative, but
+doing so in a way that we could turn into an executable function
+fairly easily.
+
+Note also, that if there was something "not function like" in our
+function body, it wouldn't just happily execute the malicious code,
+but would error out.
+
+#+BEGIN_SRC elisp :results verbatim
+  (condition-case err
+      (eval (append '(defun playing/eval-function-derivative-unsafe (x))
+                    (list (playing/deriv '(eval "malicious") 'x))))
+    (error ;; we have to trap the error to show it in the output
+     (concat "We got an error:  " (error-message-string err))))
+#+END_SRC
+
+#+RESULTS:
+: "We got an error:  unknown expression type -- DERIV"
+
+Does this mean eval is safe?  No.  Please don't take it as that.  Just
+realize that the eval of lisp is a lot more powerful because of how
+much more you can do with the data that you put into an eval.  It is
+not just some opaque string that gets to enjoy all of the benefits of
+your language.  It is a first class list of elements that you can
+inspect and have fun with.
+
+* Further reading.
+
+Please don't let the hasty treatment of the SICP lectures I did above
+prevent you from reading that book.  I also got a great deal of fun
+out of watching the videos.[fn:2]  
+
+Similarly, don't get scared away from lisp just because I chose to use
+elisp.  I'll confess I just picked elisp because I didn't want to
+install anything on the machine I'm currently on.  Tried to hammer
+this page out without getting sucked into a rabbit hole of caring how
+my machine was setup.
+
+* Footnotes
+
+[fn:1] https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%_sec_2.3.2
+
+[fn:2] https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/
+  

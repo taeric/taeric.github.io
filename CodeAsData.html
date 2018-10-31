@@ -1,0 +1,674 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Code as Data</title>
+<!-- 2018-10-30 Tue 22:57 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Josh Berry" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="org-overrides.css" />
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Code as Data</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">Code as Data</a></li>
+<li><a href="#sec-2">The basic claim</a></li>
+<li><a href="#sec-3">But isn't this the same as any language with "eval"?</a></li>
+<li><a href="#sec-4">So, what makes the lisp example different?</a></li>
+<li><a href="#sec-5">But who cares, I'm sure you could write a deriv function for javascript.</a></li>
+<li><a href="#sec-6">Note all that was missing.</a></li>
+<li><a href="#sec-7">Further reading.</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1">Code as Data</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+I don't often get to use lisp at work.  Indeed, best chance I have to
+actually code lisp is if I decide to automate something in emacs.
+Though, even then I'm likely to just use an org-mode buffer as what
+people are calling notebooks nowadays.
+</p>
+
+<p>
+That said, I do want to take a stab at writing something explaining
+what the lisp community means when they say Code as Data.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2">The basic claim</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+The basic claim is simply that you can treat code as data.  This
+doesn't sound as impressive to folks that are used to "eval" in
+languages like JavaScript.  In large, the basic examples using eval
+don't help.  Lets look at a function that simply performs some math
+and how we can construct it using eval, as well.
+</p>
+
+<p>
+First, the straight forward way of defining the function.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/function</span> (x) (+ (* x 2) 12))
+</pre>
+</div>
+
+<pre class="example">
+playing/function
+</pre>
+
+<p>
+Nothing fancy.  You can call this in the standard way:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(playing/function 12)
+</pre>
+</div>
+
+<pre class="example">
+36
+</pre>
+
+<p>
+Now, lets see how we could split the body from the function header.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(<span style="color: #d98c10;">defvar</span> <span style="color: #8e44ad;">playing/body</span> '(+ (* x 2) 12))
+</pre>
+</div>
+
+<pre class="example">
+playing/body
+</pre>
+
+<p>
+At face value, we just have a new variable "playing/body".  What does
+it look like?
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">playing/body
+</pre>
+</div>
+
+<pre class="example">
+(+ (* x 2) 12)
+</pre>
+
+<p>
+What can we do with this, then?  Well, we could just append it to the
+require syntax and evaluate it to get our function.  Let us try that.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(eval (append '(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/eval-function</span> (x))
+              (list playing/body)))
+</pre>
+</div>
+
+<pre class="example">
+playing/eval-function
+</pre>
+
+<p>
+Just to confirm, we can call this in the same way as we had previously.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(playing/eval-function 12)
+</pre>
+</div>
+
+<pre class="example">
+36
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3">But isn't this the same as any language with "eval"?</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+An obvious and straight forward objection.  I presume this typically
+means doing like the following in JavaScript.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-js"><span style="color: #d98c10;">function</span> <span style="color: #34495e; font-weight: bold;">example</span>(<span style="color: #8e44ad;">x</span>) {
+  <span style="color: #d98c10;">return</span> x * 2 + 12;
+}
+
+console.log(example)
+console.log(example(12))
+
+<span style="color: #d98c10;">var</span> <span style="color: #8e44ad;">body</span> = <span style="color: #0a74b9;">"return x * 2 + 12;"</span>
+console.log(body)
+eval(<span style="color: #0a74b9;">"function eval_example(x) {"</span> + body + <span style="color: #0a74b9;">"}"</span>);
+console.log(eval_example)
+console.log(eval_example(12))
+</pre>
+</div>
+
+<pre class="example">
+[Function: example]
+36
+return x * 2 + 12;
+[Function: eval_example]
+36
+</pre>
+
+<p>
+As we can see, it is possible to have a variable that stores the
+"body" of a function separately from the actual definition of it.
+Yes, there was some funky string concatenation overhead, but the
+spirit of the argument is that this is not fundamentally different.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4">So, what makes the lisp example different?</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Rather than just talk about the differences, lets have some fun.
+Recently, I linked someone the section on symbolic derivatives in lISP
+from the original SICP lectures.<sup><a id="fnr.1" name="fnr.1" class="footref" href="#fn.1">1</a></sup>
+</p>
+
+<p>
+For brevity, I'm just going to quickly run through all of the
+functions the SICP defined.  I keep the "playing/" prefix to keep from
+littering my current emacs session, and I obviously port the functions
+to elisp, from scheme.
+</p>
+
+<p>
+First, the primitives used.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/variable?</span> (x) (symbolp x))
+(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/same-variable?</span> (v1 v2)
+  (<span style="color: #d98c10;">and</span> (playing/variable? v1) (playing/variable? v2) (eq v1 v2)))
+(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/make-sum</span> (a1 a2) (list '+ a1 a2))
+(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/sum?</span> (x)
+  (<span style="color: #d98c10;">and</span> (listp x) (eq (car x) '+)))
+(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/addend</span> (s) (cadr s))
+(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/augend</span> (s) (caddr s))
+(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/make-product</span> (m1 m2) (list '* m1 m2))
+(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/product?</span> (x)
+  (<span style="color: #d98c10;">and</span> (listp x) (eq (car x) '*)))
+(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/multiplier</span> (p) (cadr p))
+(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/multiplicand</span> (p) (caddr p))
+</pre>
+</div>
+
+<p>
+Then, the derivative function.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/deriv</span> (exp var)
+  (<span style="color: #d98c10;">cond</span> ((numberp exp) 0)
+        ((playing/variable? exp)
+         (<span style="color: #d98c10;">if</span> (playing/same-variable? exp var) 1 0))
+        ((playing/sum? exp)
+         (playing/make-sum (playing/deriv (playing/addend exp) var)
+                   (playing/deriv (playing/augend exp) var)))
+        ((playing/product? exp)
+         (playing/make-sum
+           (playing/make-product (playing/multiplier exp)
+                         (playing/deriv (playing/multiplicand exp) var))
+           (playing/make-product (playing/deriv (playing/multiplier exp) var)
+                         (playing/multiplicand exp))))
+        (t (<span style="color: #d35400; font-weight: bold;">error</span> <span style="color: #0a74b9;">"unknown expression type -- DERIV"</span> exp))))
+</pre>
+</div>
+
+<p>
+Now, lets see if it works.  
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(playing/deriv playing/body 'x)
+</pre>
+</div>
+
+<pre class="example">
+(+ (+ (* x 0) (* 1 2)) 0)
+</pre>
+
+<p>
+Not at all reduced form.  And, for fun, the SICP section goes over how
+to fix this at a first order.  So, lets quickly see that here.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/make-sum</span> (a1 a2)
+  (<span style="color: #d98c10;">cond</span> ((playing/=number? a1 0) a2)
+        ((playing/=number? a2 0) a1)
+        ((<span style="color: #d98c10;">and</span> (numberp a1) (numberp a2)) (+ a1 a2))
+        (t (list '+ a1 a2))))
+(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/make-product</span> (m1 m2)
+  (<span style="color: #d98c10;">cond</span> ((<span style="color: #d98c10;">or</span> (playing/=number? m1 0) (playing/=number? m2 0)) 0)
+        ((playing/=number? m1 1) m2)
+        ((playing/=number? m2 1) m1)
+        ((<span style="color: #d98c10;">and</span> (numberp m1) (numberp m2)) (* m1 m2))
+        (t (list '* m1 m2))))
+(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/=number?</span> (exp num)
+  (<span style="color: #d98c10;">and</span> (numberp exp) (= exp num)))
+</pre>
+</div>
+
+<p>
+With that, lets try the deriv function one more time on the original.
+Showing the definition of "playing/body" to remind us what it was.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(playing/deriv playing/body 'x)
+</pre>
+</div>
+
+<pre class="example">
+2
+</pre>
+
+<p>
+In case you forgot what the original was, here it is again.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">playing/body
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5">But who cares, I'm sure you could write a deriv function for javascript.</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Probably, but consider the above a bit longer.  Before, we showed that
+you could use eval to just stitch together the body straight to the
+function.  But, since we didn't do anything to the body, it was
+natural to think this is akin to string concatenation into eval.  But,
+we could also easily use eval to create a symbolic derivative.
+</p>
+
+<p>
+For example:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(eval (append '(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/eval-function-derivative</span> (x))
+              (list (playing/deriv playing/body 'x))))
+</pre>
+</div>
+
+<pre class="example">
+playing/eval-function-derivative
+</pre>
+
+<p>
+Calling this will give us the results we expect.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(mapcar #'playing/eval-function-derivative '(1 2 3 4 5 6 7 8 9 10))
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="right">2</td>
+<td class="right">2</td>
+<td class="right">2</td>
+<td class="right">2</td>
+<td class="right">2</td>
+<td class="right">2</td>
+<td class="right">2</td>
+<td class="right">2</td>
+<td class="right">2</td>
+<td class="right">2</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Which&#x2026; is just a constant, and kind of boring.  Lets see if it can
+deriv something a little more interesting.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(eval (append '(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/eval-function-derivative-2</span> (x))
+              (list (playing/deriv '(* x x) 'x))))
+</pre>
+</div>
+
+<pre class="example">
+playing/eval-function-derivative-2
+</pre>
+
+<p>
+Looking at our values now, we see:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(mapcar #'playing/eval-function-derivative-2 '(1 2 3 4 5 6 7 8 9 10))
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+
+<col  class="right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="right">2</td>
+<td class="right">4</td>
+<td class="right">6</td>
+<td class="right">8</td>
+<td class="right">10</td>
+<td class="right">12</td>
+<td class="right">14</td>
+<td class="right">16</td>
+<td class="right">18</td>
+<td class="right">20</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Still not exactly an interesting function, but quite clear that this
+is no longer a constant.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-6" class="outline-2">
+<h2 id="sec-6">Note all that was missing.</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+At no point did we have to write a parser.  At no point did we have to
+really worry about stitching together syntax into the code we created.
+At no point did we have to use a special macro syntax, even.
+</p>
+
+<p>
+Instead, we could simply treat the body of our function as any other
+data element in our code, and we were able to write a symbolic deriv
+function that was capable of not just telling us the derivative, but
+doing so in a way that we could turn into an executable function
+fairly easily.
+</p>
+
+<p>
+Note also, that if there was something "not function like" in our
+function body, it wouldn't just happily execute the malicious code,
+but would error out.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-elisp">(<span style="color: #d98c10;">condition-case</span> err
+    (eval (append '(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/eval-function-derivative-unsafe</span> (x))
+                  (list (playing/deriv '(eval <span style="color: #0a74b9;">"malicious"</span>) 'x))))
+  (<span style="color: #d35400; font-weight: bold;">error</span> <span style="color: #95a5a6;">;; </span><span style="color: #7f8c8d;">we have to trap the error to show it in the output</span>
+   (concat <span style="color: #0a74b9;">"We got an error:  "</span> (error-message-string err))))
+</pre>
+</div>
+
+<p>
+Does this mean eval is safe?  No.  Please don't take it as that.  Just
+realize that the eval of lisp is a lot more powerful because of how
+much more you can do with the data that you put into an eval.  It is
+not just some opaque string that gets to enjoy all of the benefits of
+your language.  It is a first class list of elements that you can
+inspect and have fun with.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-7" class="outline-2">
+<h2 id="sec-7">Further reading.</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+Please don't let the hasty treatment of the SICP lectures I did above
+prevent you from reading that book.  I also got a great deal of fun
+out of watching the videos.<sup><a id="fnr.2" name="fnr.2" class="footref" href="#fn.2">2</a></sup>  
+</p>
+
+<p>
+Similarly, don't get scared away from lisp just because I chose to use
+elisp.  I'll confess I just picked elisp because I didn't want to
+install anything on the machine I'm currently on.  Tried to hammer
+this page out without getting sucked into a rabbit hole of caring how
+my machine was setup.
+</p>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" name="fn.1" class="footnum" href="#fnr.1">1</a></sup> <p class="footpara">
+<a href="https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.2">https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%25_sec_2.3.2</a>
+</p></div>
+
+<div class="footdef"><sup><a id="fn.2" name="fn.2" class="footnum" href="#fnr.2">2</a></sup> <p class="footpara">
+<a href="https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/">https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/</a>
+</p></div>
+
+
+</div>
+</div></div>
+<div id="postamble" class="status">
+<p class="author">Author: Josh Berry</p>
+<p class="date">Created: 2018-10-30 Tue 22:57</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.2.2 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

@@ -12,6 +12,8 @@
      a lookup table.
    - [[file:cube-permutations-1.org][Playing with a Rubik's Cube]]: In which I confirm that a
      "permutations" view the toy works.
+   - [[file:CodeAsData.org][Code as Data]]: My attempt at exploring why that means something in
+     lisp.
 
 * I'm probably wrong.
 
