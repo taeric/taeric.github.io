@@ -279,7 +279,7 @@ Note also, that if there was something "not function like" in our
 function body, it wouldn't just happily execute the malicious code,
 but would error out.
 
-#+BEGIN_SRC elisp :results verbatim
+#+BEGIN_SRC elisp :results verbatim :exports both
   (condition-case err
       (eval (append '(defun playing/eval-function-derivative-unsafe (x))
                     (list (playing/deriv '(eval "malicious") 'x))))
@@ -288,7 +288,7 @@ but would error out.
 #+END_SRC
 
 #+RESULTS:
-: "We got an error:  unknown expression type -- DERIV"
+: "We got an error:  Symbol’s function definition is void: playing/deriv"
 
 Does this mean eval is safe?  No.  Please don't take it as that.  Just
 realize that the eval of lisp is a lot more powerful because of how
