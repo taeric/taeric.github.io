@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Fun With Symbolic Derivatives in Lisp.</title>
-<!-- 2018-10-30 Tue 23:46 -->
+<!-- 2018-11-01 Thu 22:42 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="Josh Berry" />
@@ -188,7 +188,7 @@ First, the straight forward way of defining the function.
 
 <div class="org-src-container">
 
-<pre class="src src-elisp">(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/function</span> (x) (+ (* x 2) 12))
+<pre class="src src-elisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">playing/function</span> (x) (+ (* x 2) 12))
 </pre>
 </div>
 
@@ -216,7 +216,7 @@ Now, lets see how we could split the body from the function header.
 
 <div class="org-src-container">
 
-<pre class="src src-elisp">(<span style="color: #d98c10;">defvar</span> <span style="color: #8e44ad;">playing/body</span> '(+ (* x 2) 12))
+<pre class="src src-elisp">(<span style="color: #5af2ee;">defvar</span> <span style="color: #f6df92;">playing/body</span> '(+ (* x 2) 12))
 </pre>
 </div>
 
@@ -246,7 +246,7 @@ require syntax and evaluate it to get our function.  Let us try that.
 
 <div class="org-src-container">
 
-<pre class="src src-elisp">(eval (append '(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/eval-function</span> (x))
+<pre class="src src-elisp">(eval (append '(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">playing/eval-function</span> (x))
               (list playing/body)))
 </pre>
 </div>
@@ -281,16 +281,16 @@ means doing like the following in JavaScript.
 
 <div class="org-src-container">
 
-<pre class="src src-js"><span style="color: #d98c10;">function</span> <span style="color: #34495e; font-weight: bold;">example</span>(<span style="color: #8e44ad;">x</span>) {
-  <span style="color: #d98c10;">return</span> x * 2 + 12;
+<pre class="src src-js"><span style="color: #5af2ee;">function</span> <span style="color: #f09fff;">example</span>(<span style="color: #f6df92;">x</span>) {
+  <span style="color: #5af2ee;">return</span> x * 2 + 12;
 }
 
 console.log(example)
 console.log(example(12))
 
-<span style="color: #d98c10;">var</span> <span style="color: #8e44ad;">body</span> = <span style="color: #0a74b9;">"return x * 2 + 12;"</span>
+<span style="color: #5af2ee;">var</span> <span style="color: #f6df92;">body</span> = <span style="color: #ff5f87;">"return x * 2 + 12;"</span>
 console.log(body)
-eval(<span style="color: #0a74b9;">"function eval_example(x) {"</span> + body + <span style="color: #0a74b9;">"}"</span>);
+eval(<span style="color: #ff5f87;">"function eval_example(x) {"</span> + body + <span style="color: #ff5f87;">"}"</span>);
 console.log(eval_example)
 console.log(eval_example(12))
 </pre>
@@ -335,19 +335,19 @@ First, the primitives used.
 
 <div class="org-src-container">
 
-<pre class="src src-elisp">(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/variable?</span> (x) (symbolp x))
-(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/same-variable?</span> (v1 v2)
-  (<span style="color: #d98c10;">and</span> (playing/variable? v1) (playing/variable? v2) (eq v1 v2)))
-(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/make-sum</span> (a1 a2) (list '+ a1 a2))
-(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/sum?</span> (x)
-  (<span style="color: #d98c10;">and</span> (listp x) (eq (car x) '+)))
-(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/addend</span> (s) (cadr s))
-(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/augend</span> (s) (caddr s))
-(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/make-product</span> (m1 m2) (list '* m1 m2))
-(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/product?</span> (x)
-  (<span style="color: #d98c10;">and</span> (listp x) (eq (car x) '*)))
-(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/multiplier</span> (p) (cadr p))
-(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/multiplicand</span> (p) (caddr p))
+<pre class="src src-elisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">playing/variable?</span> (x) (symbolp x))
+(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">playing/same-variable?</span> (v1 v2)
+  (<span style="color: #5af2ee;">and</span> (playing/variable? v1) (playing/variable? v2) (eq v1 v2)))
+(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">playing/make-sum</span> (a1 a2) (list '+ a1 a2))
+(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">playing/sum?</span> (x)
+  (<span style="color: #5af2ee;">and</span> (listp x) (eq (car x) '+)))
+(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">playing/addend</span> (s) (cadr s))
+(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">playing/augend</span> (s) (caddr s))
+(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">playing/make-product</span> (m1 m2) (list '* m1 m2))
+(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">playing/product?</span> (x)
+  (<span style="color: #5af2ee;">and</span> (listp x) (eq (car x) '*)))
+(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">playing/multiplier</span> (p) (cadr p))
+(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">playing/multiplicand</span> (p) (caddr p))
 </pre>
 </div>
 
@@ -357,10 +357,10 @@ Then, the derivative function.
 
 <div class="org-src-container">
 
-<pre class="src src-elisp">(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/deriv</span> (exp var)
-  (<span style="color: #d98c10;">cond</span> ((numberp exp) 0)
+<pre class="src src-elisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">playing/deriv</span> (exp var)
+  (<span style="color: #5af2ee;">cond</span> ((numberp exp) 0)
         ((playing/variable? exp)
-         (<span style="color: #d98c10;">if</span> (playing/same-variable? exp var) 1 0))
+         (<span style="color: #5af2ee;">if</span> (playing/same-variable? exp var) 1 0))
         ((playing/sum? exp)
          (playing/make-sum (playing/deriv (playing/addend exp) var)
                    (playing/deriv (playing/augend exp) var)))
@@ -370,7 +370,7 @@ Then, the derivative function.
                          (playing/deriv (playing/multiplicand exp) var))
            (playing/make-product (playing/deriv (playing/multiplier exp) var)
                          (playing/multiplicand exp))))
-        (t (<span style="color: #d35400; font-weight: bold;">error</span> <span style="color: #0a74b9;">"unknown expression type -- DERIV"</span> exp))))
+        (t (<span style="color: #f25a5a; font-weight: bold;">error</span> <span style="color: #ff5f87;">"unknown expression type -- DERIV"</span> exp))))
 </pre>
 </div>
 
@@ -395,19 +395,19 @@ to fix this at a first order.  So, lets quickly see that here.
 
 <div class="org-src-container">
 
-<pre class="src src-elisp">(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/make-sum</span> (a1 a2)
-  (<span style="color: #d98c10;">cond</span> ((playing/=number? a1 0) a2)
+<pre class="src src-elisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">playing/make-sum</span> (a1 a2)
+  (<span style="color: #5af2ee;">cond</span> ((playing/=number? a1 0) a2)
         ((playing/=number? a2 0) a1)
-        ((<span style="color: #d98c10;">and</span> (numberp a1) (numberp a2)) (+ a1 a2))
+        ((<span style="color: #5af2ee;">and</span> (numberp a1) (numberp a2)) (+ a1 a2))
         (t (list '+ a1 a2))))
-(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/make-product</span> (m1 m2)
-  (<span style="color: #d98c10;">cond</span> ((<span style="color: #d98c10;">or</span> (playing/=number? m1 0) (playing/=number? m2 0)) 0)
+(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">playing/make-product</span> (m1 m2)
+  (<span style="color: #5af2ee;">cond</span> ((<span style="color: #5af2ee;">or</span> (playing/=number? m1 0) (playing/=number? m2 0)) 0)
         ((playing/=number? m1 1) m2)
         ((playing/=number? m2 1) m1)
-        ((<span style="color: #d98c10;">and</span> (numberp m1) (numberp m2)) (* m1 m2))
+        ((<span style="color: #5af2ee;">and</span> (numberp m1) (numberp m2)) (* m1 m2))
         (t (list '* m1 m2))))
-(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/=number?</span> (exp num)
-  (<span style="color: #d98c10;">and</span> (numberp exp) (= exp num)))
+(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">playing/=number?</span> (exp num)
+  (<span style="color: #5af2ee;">and</span> (numberp exp) (= exp num)))
 </pre>
 </div>
 
@@ -459,7 +459,7 @@ For example:
 
 <div class="org-src-container">
 
-<pre class="src src-elisp">(eval (append '(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/eval-function-derivative</span> (x))
+<pre class="src src-elisp">(eval (append '(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">playing/eval-function-derivative</span> (x))
               (list (playing/deriv playing/body 'x))))
 </pre>
 </div>
@@ -525,7 +525,7 @@ deriv something a little more interesting.
 
 <div class="org-src-container">
 
-<pre class="src src-elisp">(eval (append '(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/eval-function-derivative-2</span> (x))
+<pre class="src src-elisp">(eval (append '(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">playing/eval-function-derivative-2</span> (x))
               (list (playing/deriv '(* x x) 'x))))
 </pre>
 </div>
@@ -616,11 +616,11 @@ but would error out.
 
 <div class="org-src-container">
 
-<pre class="src src-elisp">(<span style="color: #d98c10;">condition-case</span> err
-    (eval (append '(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">playing/eval-function-derivative-unsafe</span> (x))
-                  (list (playing/deriv '(eval <span style="color: #0a74b9;">"malicious"</span>) 'x))))
-  (<span style="color: #d35400; font-weight: bold;">error</span> <span style="color: #95a5a6;">;; </span><span style="color: #7f8c8d;">we have to trap the error to show it in the output</span>
-   (concat <span style="color: #0a74b9;">"We got an error:  "</span> (error-message-string err))))
+<pre class="src src-elisp">(<span style="color: #5af2ee;">condition-case</span> err
+    (eval (append '(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">playing/eval-function-derivative-unsafe</span> (x))
+                  (list (playing/deriv '(eval <span style="color: #ff5f87;">"malicious"</span>) 'x))))
+  (<span style="color: #f25a5a; font-weight: bold;">error</span> <span style="color: #f6df92;">;; </span><span style="color: #efc334;">we have to trap the error to show it in the output</span>
+   (concat <span style="color: #ff5f87;">"We got an error:  "</span> (error-message-string err))))
 </pre>
 </div>
 
@@ -674,7 +674,7 @@ my machine was setup.
 </div></div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh Berry</p>
-<p class="date">Created: 2018-10-30 Tue 23:46</p>
+<p class="date">Created: 2018-11-01 Thu 22:42</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.2.2 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
