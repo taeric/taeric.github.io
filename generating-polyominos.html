@@ -1,0 +1,1080 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2019-06-30 Sun 12:43 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Generating polyominos for exact covering</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Josh Berry" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="org-overrides.css" />
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Generating polyominos for exact covering</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#org9607e75">Generating polyominos.</a></li>
+<li><a href="#org4d064ae">Approach I'm taking.</a></li>
+<li><a href="#org7aa048c">Coordinates</a></li>
+<li><a href="#org3d259aa">But I really want a polyomino representation.</a></li>
+<li><a href="#org40920e1">Now, let's generate some polyominos.</a></li>
+<li><a href="#orgef13041">A brief diversion</a></li>
+<li><a href="#orgfcfbd8f">Of course, I really need something else.</a></li>
+<li><a href="#orgb242d9e">Generating the header row</a></li>
+<li><a href="#org2ae0265">Generating a placement of a piece everywhere it fits</a></li>
+<li><a href="#org32dcf11">Bringing them together</a></li>
+<li><a href="#org244b78b">Afterward</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org9607e75" class="outline-2">
+<h2 id="org9607e75">Generating polyominos.</h2>
+<div class="outline-text-2" id="text-org9607e75">
+<p>
+At the office, someone gave a challenge asking how many ways to tile a
+\(12\times12\) grid with \(8\) cell polyominos.  I remembered this was
+straight out of several of Knuth's exercises, so thought I would try
+my hand.
+</p>
+
+<p>
+First catch, oddly, was that I didn't know how to generate all
+polyominos of the desired size.  From my limited reading online, this
+is itself a challenge.  I just wanted to have the values to plug in to
+DLX.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4d064ae" class="outline-2">
+<h2 id="org4d064ae">Approach I'm taking.</h2>
+<div class="outline-text-2" id="text-org4d064ae">
+<p>
+I finally somewhat understood a crappy way of generating the pieces if
+I treated them as a collection of active coordinates.  In that world,
+to create all polyominos of one more degree up, I just take each
+active coordinate and add up/right/down/left to a list of candidates
+coordinates to try.  (With some caveats I'll discuss as I get to
+them.)
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7aa048c" class="outline-2">
+<h2 id="org7aa048c">Coordinates</h2>
+<div class="outline-text-2" id="text-org7aa048c">
+<p>
+I had originally thought I would play with some of the CLOS methods to
+provide my coordinate class.  I had actually built up some things
+using it, but I had to acknowledge that `defstruct` is more inline
+with what I need/want.  So, yeah, I use a basic struct for a
+coordinate.
+</p>
+
+<p>
+Here is the definition with three sample methods to create/copy one.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #5af2ee;">defstruct</span> <span style="color: #b2baf6;">coordinate</span> (x 0 <span style="color: #b2baf6;">:read-only</span> t) (y 0 <span style="color: #b2baf6;">:read-only</span> t))
+
+(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">left</span> (coordinate)
+  (<span style="color: #5af2ee;">with-slots</span> (x y) coordinate
+    (make-coordinate <span style="color: #b2baf6;">:x</span> x <span style="color: #b2baf6;">:y</span> (- y 1))))
+(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">right</span> (coordinate)
+  (<span style="color: #5af2ee;">with-slots</span> (x y) coordinate
+    (make-coordinate <span style="color: #b2baf6;">:x</span> x <span style="color: #b2baf6;">:y</span> (+ y 1))))
+(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">up</span> (coordinate)
+  (<span style="color: #5af2ee;">with-slots</span> (x y) coordinate
+    (make-coordinate <span style="color: #b2baf6;">:x</span> (- x 1) <span style="color: #b2baf6;">:y</span> y)))
+(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">down</span> (coordinate)
+  (<span style="color: #5af2ee;">with-slots</span> (x y) coordinate
+    (make-coordinate <span style="color: #b2baf6;">:x</span> (+ x 1) <span style="color: #b2baf6;">:y</span> y)))
+</pre>
+</div>
+
+<p>
+And, just to show how to use this, here are some helper methods.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(format nil <span style="color: #ff5f87;">"~{~a~%~}"</span> 
+        (list (make-coordinate <span style="color: #b2baf6;">:x</span> 1)
+              #s(coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 12)
+              (copy-coordinate #s(coordinate <span style="color: #b2baf6;">:x</span> 3 <span style="color: #b2baf6;">:y</span> 3))
+              (up #s(coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 0))
+              (down #s(coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 0))
+              (left #s(coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 0))
+              (right #s(coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 0))))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org3d259aa" class="outline-2">
+<h2 id="org3d259aa">But I really want a polyomino representation.</h2>
+<div class="outline-text-2" id="text-org3d259aa">
+<p>
+Basic structure for a polyomino isn't that tough, just a list of
+coordinates.  I just need a helper method to make sure and only add
+unique coordinates to one.  (I don't have a sanity check to make sure
+it is a legal coordinate to add, though I don't think that would be
+tough here.)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #5af2ee;">defstruct</span> <span style="color: #b2baf6;">polyomino</span> (active-coordinates nil <span style="color: #b2baf6;">:read-only</span> t))
+
+(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-degree</span> (polyomino)
+  (length (slot-value polyomino 'active-coordinates)))
+
+(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-add-coordinate</span> (polyomino coordinate)
+  (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (adjoin coordinate (slot-value polyomino 'active-coordinates) <span style="color: #b2baf6;">:test</span> #'equalp)))
+
+(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-has-coordinate</span> (polyomino coordinate)
+  (member coordinate (slot-value polyomino 'active-coordinates) <span style="color: #b2baf6;">:test</span> #'equalp))
+</pre>
+</div>
+
+<p>
+Of course, just printing an instance of this is not that helpful.  Not
+worthless, since you can see the coordinates in a polyomino; just not
+entirely helpful.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #5af2ee;">let*</span> ((a (make-polyomino))
+       (b (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list (make-coordinate))))
+       (c (polyomino-add-coordinate a (make-coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 0)))
+       (d (polyomino-add-coordinate c (make-coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 0)))
+       (e (polyomino-add-coordinate d (make-coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 1))))
+  (list a b c d e))
+</pre>
+</div>
+
+<pre class="example">
+(#S(POLYOMINO :ACTIVE-COORDINATES NIL)
+ #S(POLYOMINO :ACTIVE-COORDINATES (#S(COORDINATE :X 0 :Y 0)))
+ #S(POLYOMINO :ACTIVE-COORDINATES (#S(COORDINATE :X 0 :Y 0)))
+ #S(POLYOMINO :ACTIVE-COORDINATES (#S(COORDINATE :X 0 :Y 0)))
+ #S(POLYOMINO
+    :ACTIVE-COORDINATES (#S(COORDINATE :X 0 :Y 1) #S(COORDINATE :X 0 :Y 0))))
+</pre>
+
+
+<p>
+That said, it lets make something that will do that for us.  My FORMAT
+skills are less than worth talking about, but it turns out this isn't
+that tough.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-to-string</span> (polyomino)
+  (<span style="color: #5af2ee;">let</span> ((width (polyomino-degree polyomino))
+        (height (polyomino-degree polyomino)))
+    (format nil <span style="color: #ff5f87;">"~{~&amp;~{~a~}~}"</span>
+            (<span style="color: #5af2ee;">loop</span> for i from 0 below height
+               collect (<span style="color: #5af2ee;">loop</span> for j from 0 below width
+                          collect (<span style="color: #5af2ee;">if</span> (polyomino-has-coordinate polyomino (make-coordinate <span style="color: #b2baf6;">:x</span> i <span style="color: #b2baf6;">:y</span> j))
+                                      <span style="color: #ff5f87;">"X"</span>
+                                      <span style="color: #ff5f87;">"_"</span>))))))
+
+(<span style="color: #5af2ee;">let*</span> ((a (make-coordinate))
+       (b (down a))
+       (c (down b))
+       (d (right b))
+       (p (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list a b c d))))
+  (polyomino-to-string p))
+</pre>
+</div>
+
+<pre class="example">
+X___
+XX__
+X___
+____
+</pre>
+
+
+<p>
+That looks almost like what I want.  Printing about 4 spaces by 4
+spaces and letting me see things.  However, it has an obvious flaw,
+demonstrated by:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #5af2ee;">let*</span> ((a (make-coordinate))
+       (b (up a))
+       (c (up b))
+       (d (left b))
+       (p (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list a b c d))))
+  (polyomino-to-string p))
+</pre>
+</div>
+
+<pre class="example">
+X___
+____
+____
+____
+</pre>
+
+
+<p>
+This would also prevent me from seeing that two identical shapes were
+identical, which is annoying.  Luckily, not tough.  Just need to
+normalize us to the origin.  (This was fun to work out on paper.)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-normalize</span> (polyomino)
+  (<span style="color: #5af2ee;">loop</span> for coordinate in (slot-value polyomino 'active-coordinates)
+     minimizing (slot-value coordinate 'x) into min-x
+     minimizing (slot-value coordinate 'y) into min-y
+     finally (<span style="color: #5af2ee;">return</span> (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span>
+                                     (sort (<span style="color: #5af2ee;">loop</span> for coordinate in (slot-value polyomino 'active-coordinates)
+                                              collect (<span style="color: #5af2ee;">with-slots</span> (x y) coordinate
+                                                        (make-coordinate <span style="color: #b2baf6;">:x</span> (- x min-x)
+                                                                         <span style="color: #b2baf6;">:y</span> (- y min-y))))
+                                           (<span style="color: #5af2ee;">lambda</span> (a b)
+                                             (<span style="color: #5af2ee;">with-slots</span> ((ax x) (ay y)) a
+                                               (<span style="color: #5af2ee;">with-slots</span> ((bx x) (by y)) b
+                                                 (&lt; (+ (* ax (polyomino-degree polyomino))
+                                                       ay)
+                                                    (+ (* bx (polyomino-degree polyomino))
+                                                       by))))))))))
+
+
+(<span style="color: #5af2ee;">let*</span> ((a (make-coordinate))
+       (b (up a))
+       (c (up b))
+       (d (left b))
+       (p (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list a b c d))))
+  (polyomino-to-string (polyomino-normalize p)))
+</pre>
+</div>
+
+<pre class="example">
+_X__
+XX__
+_X__
+____
+</pre>
+
+
+<p>
+Of course, this just lets me see it as a person.  I need to somehow
+teach the computer that these would be the same.  Luckily, rotation is
+not that tough.  And then I'd just have to compare successive rotations
+to a collection to know if I had seen it.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-rotate</span> (polyomino)
+  (<span style="color: #5af2ee;">let</span> ((d (- (polyomino-degree polyomino) 1)))
+    (polyomino-normalize 
+     (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> 
+                     (<span style="color: #5af2ee;">with-slots</span> (active-coordinates) polyomino
+                       (<span style="color: #5af2ee;">loop</span> for coordinate in active-coordinates
+                          collect (<span style="color: #5af2ee;">with-slots</span> (x y) coordinate
+                                    (make-coordinate <span style="color: #b2baf6;">:x</span> y <span style="color: #b2baf6;">:y</span> (- d x)))))))))
+
+(<span style="color: #5af2ee;">let*</span> ((a (make-coordinate))
+       (b (up a))
+       (c (up b))
+       (d (left b))
+       (p (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list a b c d))))
+  (format nil <span style="color: #ff5f87;">"~{~a~2%~}"</span> 
+          (list 
+           (polyomino-to-string (polyomino-normalize p))
+           (polyomino-to-string (polyomino-rotate p))
+           (polyomino-to-string (polyomino-rotate (polyomino-rotate p)))
+           (polyomino-to-string (polyomino-rotate (polyomino-rotate (polyomino-rotate p)))))))
+</pre>
+</div>
+
+<pre class="example">
+_X__
+XX__
+_X__
+____
+
+_X__
+XXX_
+____
+____
+
+X___
+XX__
+X___
+____
+
+XXX_
+_X__
+____
+____
+
+</pre>
+
+<p>
+And just to see what that looks like with a domino.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #5af2ee;">let*</span> ((a (make-coordinate))
+       (b (up a))
+       (p (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list a b))))
+  (format nil <span style="color: #ff5f87;">"~{~a~2&amp;~}"</span> 
+          (list 
+           (polyomino-to-string (polyomino-normalize p))
+           (polyomino-to-string (polyomino-rotate p))
+           (polyomino-to-string (polyomino-rotate (polyomino-rotate p)))
+           (polyomino-to-string (polyomino-rotate (polyomino-rotate (polyomino-rotate p)))))))
+
+</pre>
+</div>
+
+<pre class="example">
+X_
+X_
+
+XX
+__
+
+X_
+X_
+
+XX
+__
+
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org40920e1" class="outline-2">
+<h2 id="org40920e1">Now, let's generate some polyominos.</h2>
+<div class="outline-text-2" id="text-org40920e1">
+<p>
+The algorithm I'm going for is ridiculously brute force.  We'll start
+with a function that will grow from a list of seed polyominos into the
+set of all polyominos that can be grown from them.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-grow-list</span> (seeds)
+  (<span style="color: #5af2ee;">let</span> ((grown-values nil))
+    (<span style="color: #5af2ee;">dolist</span> (polyomino seeds)
+      (<span style="color: #5af2ee;">let</span> ((polyomino-coordinates (slot-value polyomino 'active-coordinates))
+            (candidates nil))
+        (<span style="color: #5af2ee;">dolist</span> (c polyomino-coordinates)
+          (<span style="color: #5af2ee;">progn</span>
+            (<span style="color: #5af2ee;">unless</span> (member (up c) polyomino-coordinates <span style="color: #b2baf6;">:test</span> #'equalp)
+              (setf candidates (adjoin (up c) candidates <span style="color: #b2baf6;">:test</span> #'equalp)))
+            (<span style="color: #5af2ee;">unless</span> (member (right c) polyomino-coordinates <span style="color: #b2baf6;">:test</span> #'equalp)
+              (setf candidates (adjoin (right c) candidates <span style="color: #b2baf6;">:test</span> #'equalp)))
+            (<span style="color: #5af2ee;">unless</span> (member (down c) polyomino-coordinates <span style="color: #b2baf6;">:test</span> #'equalp)
+              (setf candidates (adjoin (down c) candidates <span style="color: #b2baf6;">:test</span> #'equalp)))
+            (<span style="color: #5af2ee;">unless</span> (member (left c) polyomino-coordinates <span style="color: #b2baf6;">:test</span> #'equalp)
+              (setf candidates (adjoin (left c) candidates <span style="color: #b2baf6;">:test</span> #'equalp)))))
+        (<span style="color: #5af2ee;">dolist</span> (c candidates)
+          (<span style="color: #5af2ee;">let</span> ((p (polyomino-normalize (polyomino-add-coordinate polyomino c))))
+            (<span style="color: #5af2ee;">unless</span> (or
+                     (member p grown-values <span style="color: #b2baf6;">:test</span> #'equalp)
+                     (member (polyomino-rotate p) grown-values <span style="color: #b2baf6;">:test</span> #'equalp)
+                     (member (polyomino-rotate (polyomino-rotate p)) grown-values <span style="color: #b2baf6;">:test</span> #'equalp)
+                     (member (polyomino-rotate (polyomino-rotate (polyomino-rotate p))) grown-values <span style="color: #b2baf6;">:test</span> #'equalp))
+              (setf grown-values (cons p grown-values)))))))
+    grown-values))
+</pre>
+</div>
+
+<p>
+And, well, did it work?  Luckily, it is pretty fast<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup> for up to
+degree 9.  So, checking expected values on the <a href="https://en.wikipedia.org/wiki/Polyomino">Polyomino</a> wikipedia
+page, I see that I agree with what they have.  Yay!
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #5af2ee;">let*</span> ((a (list (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list (make-coordinate)))))
+       (b (polyomino-grow-list a))
+       (c (polyomino-grow-list b))
+       (d (polyomino-grow-list c))
+       (e (polyomino-grow-list d))
+       (f (polyomino-grow-list e))
+       (g (polyomino-grow-list f))
+       (h (polyomino-grow-list g))
+       (i (polyomino-grow-list h)))
+  (mapcar #'length (list a b c d e f g h i)))
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">2</td>
+<td class="org-right">7</td>
+<td class="org-right">18</td>
+<td class="org-right">60</td>
+<td class="org-right">196</td>
+<td class="org-right">704</td>
+<td class="org-right">2500</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+I'll note that it did start to slog predictably around degree 10.  I
+knew this would be not only a crappy algorithm, but almost certainly
+poorly implemented.  :(
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgef13041" class="outline-2">
+<h2 id="orgef13041">A brief diversion</h2>
+<div class="outline-text-2" id="text-orgef13041">
+<p>
+Before we get to what I actually need, it isn't too late for me to
+waste some more time.  Which we will waste by visually spot checking
+some polyominos that most folks recognize.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #5af2ee;">let*</span> ((monimo (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list (make-coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 0))))
+       (dominos (polyomino-grow-list (list monimo)))
+       (trominos (polyomino-grow-list dominos))
+       (tetrominos (polyomino-grow-list trominos)))
+  (format nil <span style="color: #ff5f87;">"~{~&amp;~a~%....~}"</span> (mapcar #'polyomino-to-string tetrominos)))
+</pre>
+</div>
+
+<pre class="example">
+X___
+XX__
+_X__
+____
+....
+XX__
+XX__
+____
+____
+....
+XX__
+_XX_
+____
+____
+....
+XXX_
+_X__
+____
+____
+....
+__X_
+XXX_
+____
+____
+....
+XXXX
+____
+____
+____
+....
+XXX_
+__X_
+____
+____
+....
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgfcfbd8f" class="outline-2">
+<h2 id="orgfcfbd8f">Of course, I really need something else.</h2>
+<div class="outline-text-2" id="text-orgfcfbd8f">
+<p>
+Because of course I do.  Specifically, I need something I can feed
+into one of Knuth's DLX implementations to get how many ways a
+particular polyomino will tile a grid.  Luckily that is not hard at
+all.  Just hella verbose, such that I will not be putting any of it on
+this page.  I will have the code, though.
+</p>
+
+<p>
+What does that input look like?  Roughly described as a row of column
+names followed by rows of active columns.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb242d9e" class="outline-2">
+<h2 id="orgb242d9e">Generating the header row</h2>
+<div class="outline-text-2" id="text-orgb242d9e">
+<p>
+This is ridiculously straight forward. 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-dlx-headers</span> (board-size)
+  (format nil <span style="color: #ff5f87;">"~{~{R~aC~a~} ~}"</span> (<span style="color: #5af2ee;">loop</span> for i from 0 below board-size
+     append (<span style="color: #5af2ee;">loop</span> for j from 0 below board-size
+                 collect (list i j)))))
+
+(polyomino-dlx-headers 4)
+</pre>
+</div>
+
+<pre class="example">
+R0C0 R0C1 R0C2 R0C3 R1C0 R1C1 R1C2 R1C3 R2C0 R2C1 R2C2 R2C3 R3C0 R3C1 R3C2 R3C3 
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org2ae0265" class="outline-2">
+<h2 id="org2ae0265">Generating a placement of a piece everywhere it fits</h2>
+<div class="outline-text-2" id="text-org2ae0265">
+<p>
+Placing the polyomino is relatively straight forward.  Just get all
+unique rotations of the one I'm placing, and then loop over the
+coordinates as long as they fit on the board outputting what is
+covered.
+</p>
+
+<p>
+We'll start with a function to get all unique rotations.  And, because
+I'm not wasting paper, we'll look at familiar rotations of the
+tetrominos.  Yes, this is in part for me to make sure it worked. :)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-unique-rotations</span> (p)
+  (<span style="color: #5af2ee;">let*</span> ((a (polyomino-rotate p))
+         (b (polyomino-rotate a))
+         (c (polyomino-rotate b))
+         (l (list p))
+         (l (adjoin a l <span style="color: #b2baf6;">:test</span> #'equalp))
+         (l (adjoin b l <span style="color: #b2baf6;">:test</span> #'equalp))
+         (l (adjoin c l <span style="color: #b2baf6;">:test</span> #'equalp)))
+    l))
+
+(<span style="color: #5af2ee;">let*</span> ((monimo (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list (make-coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 0))))
+       (dominos (polyomino-grow-list (list monimo)))
+       (trominos (polyomino-grow-list dominos))
+       (tetrominos (polyomino-grow-list trominos))
+       (unique-rotations (<span style="color: #5af2ee;">loop</span> for polyomino in tetrominos <span style="color: #f6df92;">;;</span><span style="color: #efc334;">I feel like there should be an fmap?</span>
+                              append (<span style="color: #5af2ee;">loop</span> for rotation in (polyomino-unique-rotations polyomino)
+                                          collect rotation))))
+  (format nil <span style="color: #ff5f87;">"~{~&amp;~a~%....~}"</span> (mapcar #'polyomino-to-string unique-rotations)))
+
+</pre>
+</div>
+
+<pre class="example">
+_XX_
+XX__
+____
+____
+....
+X___
+XX__
+_X__
+____
+....
+XX__
+XX__
+____
+____
+....
+_X__
+XX__
+X___
+____
+....
+XX__
+_XX_
+____
+____
+....
+X___
+XX__
+X___
+____
+....
+_X__
+XXX_
+____
+____
+....
+_X__
+XX__
+_X__
+____
+....
+XXX_
+_X__
+____
+____
+....
+XX__
+_X__
+_X__
+____
+....
+XXX_
+X___
+____
+____
+....
+X___
+X___
+XX__
+____
+....
+__X_
+XXX_
+____
+____
+....
+X___
+X___
+X___
+X___
+....
+XXXX
+____
+____
+____
+....
+XX__
+X___
+X___
+____
+....
+X___
+XXX_
+____
+____
+....
+_X__
+_X__
+XX__
+____
+....
+XXX_
+__X_
+____
+____
+....
+</pre>
+
+<p>
+From there, we have a function that will loop over what we just
+produced and keep placing it on the board.  
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-dlx-generate-row</span> (p board-size)
+  (format nil <span style="color: #ff5f87;">"~{~{~{R~aC~a ~}~}~%~}"</span>
+          (<span style="color: #5af2ee;">loop</span> for c in (slot-value p 'active-coordinates)
+             maximizing (slot-value c 'x) into max-x
+             maximizing (slot-value c 'y) into max-y
+             finally (<span style="color: #5af2ee;">return</span> (<span style="color: #5af2ee;">loop</span> for i from 0 below (- board-size max-x)
+                                append (<span style="color: #5af2ee;">loop</span> for j from 0 below (- board-size max-y)
+                                          collect (<span style="color: #5af2ee;">loop</span> for c in (slot-value p 'active-coordinates)
+                                                     collect (<span style="color: #5af2ee;">with-slots</span> (x y) c
+                                                               (list (+ x i) (+ y j))))))))))
+</pre>
+</div>
+
+<p>
+And just confirming there are 12 ways to place a domino on a
+\(4\times4\) board.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #5af2ee;">let*</span> ((monimo (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list (make-coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 0))))
+       (dominos (polyomino-grow-list (list monimo))))
+  (polyomino-dlx-generate-row (elt dominos 0) 4))
+</pre>
+</div>
+
+<pre class="example">
+R0C0 R0C1 
+R0C1 R0C2 
+R0C2 R0C3 
+R1C0 R1C1 
+R1C1 R1C2 
+R1C2 R1C3 
+R2C0 R2C1 
+R2C1 R2C2 
+R2C2 R2C3 
+R3C0 R3C1 
+R3C1 R3C2 
+R3C2 R3C3 
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org32dcf11" class="outline-2">
+<h2 id="org32dcf11">Bringing them together</h2>
+<div class="outline-text-2" id="text-org32dcf11">
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-dlx-generate</span> (fileprefix degree board-size)
+  (<span style="color: #5af2ee;">let</span> ((polyominos (list (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list (make-coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 0))))))
+    (<span style="color: #5af2ee;">dotimes</span> (i (- degree 1))
+      (setf polyominos (polyomino-grow-list polyominos)))
+
+    (<span style="color: #5af2ee;">dotimes</span> (i (length polyominos))
+      (<span style="color: #5af2ee;">with-open-file</span> (stream (format nil <span style="color: #ff5f87;">"~a-~a-~a.dlx"</span> fileprefix degree i) 
+                              <span style="color: #b2baf6;">:direction</span> <span style="color: #b2baf6;">:output</span>
+                              <span style="color: #b2baf6;">:if-exists</span> <span style="color: #b2baf6;">:supersede</span>
+                              <span style="color: #b2baf6;">:if-does-not-exist</span> <span style="color: #b2baf6;">:create</span>)
+        (format stream <span style="color: #ff5f87;">"~a~&amp;"</span> (polyomino-dlx-headers board-size))
+        (<span style="color: #5af2ee;">dolist</span> (rotation (polyomino-unique-rotations (elt polyominos i)))
+          (format stream <span style="color: #ff5f87;">"~a~&amp;"</span> (polyomino-dlx-generate-row rotation board-size)))))))
+
+(polyomino-dlx-generate <span style="color: #ff5f87;">"testing"</span> 8 16)
+</pre>
+</div>
+
+<p>
+From this point, I simply piped each file into a compiled version of
+Knuth's DLX1.  Took about a minute to find how many ways to tile a
+\(16\times16\) board with all "one-sided" polyominos.  Which, when I saw
+my answer disagreed with the colleague, I saw he was looking at just
+the 369 free octominos, whereas I looked at the 704 one-sided ones.
+Oops.
+</p>
+
+<p>
+I'll try and get the time to change this write up to account for that.
+We're going camping, though, so I that takes precedence.  (This is
+also why I have not found a way to show the output from running the
+DLX algorithm directly.)
+</p>
+</div>
+</div>
+
+<div id="outline-container-org244b78b" class="outline-2">
+<h2 id="org244b78b">Afterward</h2>
+<div class="outline-text-2" id="text-org244b78b">
+<p>
+This is officially the first program I've written in Common Lisp.  I
+have found it fun.  Though, it is amusing how long it took something I
+wrote on paper in a java like language, to this.
+</p>
+
+<p>
+I'm hopeful to stick with it.  The tooling is fun.
+</p>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+Where pretty fast means running it with (time) gives.  Not
+record breaking, but good enough for what I'm doing.
+</p>
+
+<pre class="example">
+Evaluation took:
+  2.136 seconds of real time
+  2.136099 seconds of total run time (2.124089 user, 0.012010 system)
+  [ Run times consist of 0.006 seconds GC time, and 2.131 seconds non-GC time. ]
+  100.00% CPU
+  5,323,001,318 processor cycles
+  44,098,208 bytes consed
+</pre></div></div>
+
+
+</div>
+</div></div>
+<div id="postamble" class="status">
+<p class="author">Author: Josh Berry</p>
+<p class="date">Created: 2019-06-30 Sun 12:43</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

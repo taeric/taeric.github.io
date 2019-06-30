@@ -32,9 +32,17 @@ div.outline-text-2, div.outline-text-3, div.outline-text-4 {
   margin: auto;
 }
 .org-src-container .src {
+  positioning: relative;
   color: #EEE;
   background-color: #222;
   overflow: auto;
+}
+.org-src-container .src::before {
+  positioning: absolute;
+  top: 0;
+  right: 15px;
+  color: black;
+  background-color: white;
 }
 #table-of-contents {
   display: none;

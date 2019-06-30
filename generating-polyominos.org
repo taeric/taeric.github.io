@@ -1,0 +1,663 @@
+#+title: Generating polyominos for exact covering
+#+OPTIONS: num:nil
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
+
+* Generating polyominos.
+
+At the office, someone gave a challenge asking how many ways to tile a
+$12\times12$ grid with $8$ cell polyominos.  I remembered this was
+straight out of several of Knuth's exercises, so thought I would try
+my hand.
+
+First catch, oddly, was that I didn't know how to generate all
+polyominos of the desired size.  From my limited reading online, this
+is itself a challenge.  I just wanted to have the values to plug in to
+DLX.
+
+* Approach I'm taking.
+
+I finally somewhat understood a crappy way of generating the pieces if
+I treated them as a collection of active coordinates.  In that world,
+to create all polyominos of one more degree up, I just take each
+active coordinate and add up/right/down/left to a list of candidates
+coordinates to try.  (With some caveats I'll discuss as I get to
+them.)
+
+* Coordinates
+
+I had originally thought I would play with some of the CLOS methods to
+provide my coordinate class.  I had actually built up some things
+using it, but I had to acknowledge that `defstruct` is more inline
+with what I need/want.  So, yeah, I use a basic struct for a
+coordinate.
+
+Here is the definition with three sample methods to create/copy one.
+
+#+begin_src lisp 
+  (defstruct coordinate (x 0 :read-only t) (y 0 :read-only t))
+
+  (defun left (coordinate)
+    (with-slots (x y) coordinate
+      (make-coordinate :x x :y (- y 1))))
+  (defun right (coordinate)
+    (with-slots (x y) coordinate
+      (make-coordinate :x x :y (+ y 1))))
+  (defun up (coordinate)
+    (with-slots (x y) coordinate
+      (make-coordinate :x (- x 1) :y y)))
+  (defun down (coordinate)
+    (with-slots (x y) coordinate
+      (make-coordinate :x (+ x 1) :y y)))
+#+end_src
+
+#+RESULTS:
+: DOWN
+
+And, just to show how to use this, here are some helper methods.
+
+#+begin_src lisp
+  (format nil "~{~a~%~}" 
+          (list (make-coordinate :x 1)
+                #s(coordinate :x 0 :y 12)
+                (copy-coordinate #s(coordinate :x 3 :y 3))
+                (up #s(coordinate :x 0 :y 0))
+                (down #s(coordinate :x 0 :y 0))
+                (left #s(coordinate :x 0 :y 0))
+                (right #s(coordinate :x 0 :y 0))))
+#+end_src
+
+#+RESULTS:
+: #S(COORDINATE :X 1 :Y 0)
+: #S(COORDINATE :X 0 :Y 12)
+: #S(COORDINATE :X 3 :Y 3)
+: #S(COORDINATE :X -1 :Y 0)
+: #S(COORDINATE :X 1 :Y 0)
+: #S(COORDINATE :X 0 :Y -1)
+: #S(COORDINATE :X 0 :Y 1)
+
+* But I really want a polyomino representation.
+
+Basic structure for a polyomino isn't that tough, just a list of
+coordinates.  I just need a helper method to make sure and only add
+unique coordinates to one.  (I don't have a sanity check to make sure
+it is a legal coordinate to add, though I don't think that would be
+tough here.)
+
+#+begin_src lisp
+  (defstruct polyomino (active-coordinates nil :read-only t))
+
+  (defun polyomino-degree (polyomino)
+    (length (slot-value polyomino 'active-coordinates)))
+
+  (defun polyomino-add-coordinate (polyomino coordinate)
+    (make-polyomino :active-coordinates (adjoin coordinate (slot-value polyomino 'active-coordinates) :test #'equalp)))
+
+  (defun polyomino-has-coordinate (polyomino coordinate)
+    (member coordinate (slot-value polyomino 'active-coordinates) :test #'equalp))
+#+end_src
+
+#+RESULTS:
+: POLYOMINO-HAS-COORDINATE
+
+Of course, just printing an instance of this is not that helpful.  Not
+worthless, since you can see the coordinates in a polyomino; just not
+entirely helpful.
+
+#+begin_src lisp :exports both
+  (let* ((a (make-polyomino))
+         (b (make-polyomino :active-coordinates (list (make-coordinate))))
+         (c (polyomino-add-coordinate a (make-coordinate :x 0 :y 0)))
+         (d (polyomino-add-coordinate c (make-coordinate :x 0 :y 0)))
+         (e (polyomino-add-coordinate d (make-coordinate :x 0 :y 1))))
+    (list a b c d e))
+#+end_src
+
+#+RESULTS:
+: (#S(POLYOMINO :ACTIVE-COORDINATES NIL)
+:  #S(POLYOMINO :ACTIVE-COORDINATES (#S(COORDINATE :X 0 :Y 0)))
+:  #S(POLYOMINO :ACTIVE-COORDINATES (#S(COORDINATE :X 0 :Y 0)))
+:  #S(POLYOMINO :ACTIVE-COORDINATES (#S(COORDINATE :X 0 :Y 0)))
+:  #S(POLYOMINO
+:     :ACTIVE-COORDINATES (#S(COORDINATE :X 0 :Y 1) #S(COORDINATE :X 0 :Y 0))))
+
+That said, it lets make something that will do that for us.  My FORMAT
+skills are less than worth talking about, but it turns out this isn't
+that tough.
+
+#+begin_src lisp :exports both 
+  (defun polyomino-to-string (polyomino)
+    (let ((width (polyomino-degree polyomino))
+          (height (polyomino-degree polyomino)))
+      (format nil "~{~&~{~a~}~}"
+              (loop for i from 0 below height
+                 collect (loop for j from 0 below width
+                            collect (if (polyomino-has-coordinate polyomino (make-coordinate :x i :y j))
+                                        "X"
+                                        "_"))))))
+
+  (let* ((a (make-coordinate))
+         (b (down a))
+         (c (down b))
+         (d (right b))
+         (p (make-polyomino :active-coordinates (list a b c d))))
+    (polyomino-to-string p))
+#+end_src
+
+#+RESULTS:
+: X___
+: XX__
+: X___
+: ____
+
+That looks almost like what I want.  Printing about 4 spaces by 4
+spaces and letting me see things.  However, it has an obvious flaw,
+demonstrated by:
+
+#+begin_src lisp :exports both
+  (let* ((a (make-coordinate))
+         (b (up a))
+         (c (up b))
+         (d (left b))
+         (p (make-polyomino :active-coordinates (list a b c d))))
+    (polyomino-to-string p))
+#+end_src
+
+#+RESULTS:
+: X___
+: ____
+: ____
+: ____
+
+This would also prevent me from seeing that two identical shapes were
+identical, which is annoying.  Luckily, not tough.  Just need to
+normalize us to the origin.  (This was fun to work out on paper.)
+
+#+begin_src lisp :exports both
+  (defun polyomino-normalize (polyomino)
+    (loop for coordinate in (slot-value polyomino 'active-coordinates)
+       minimizing (slot-value coordinate 'x) into min-x
+       minimizing (slot-value coordinate 'y) into min-y
+       finally (return (make-polyomino :active-coordinates
+                                       (sort (loop for coordinate in (slot-value polyomino 'active-coordinates)
+                                                collect (with-slots (x y) coordinate
+                                                          (make-coordinate :x (- x min-x)
+                                                                           :y (- y min-y))))
+                                             (lambda (a b)
+                                               (with-slots ((ax x) (ay y)) a
+                                                 (with-slots ((bx x) (by y)) b
+                                                   (< (+ (* ax (polyomino-degree polyomino))
+                                                         ay)
+                                                      (+ (* bx (polyomino-degree polyomino))
+                                                         by))))))))))
+
+
+  (let* ((a (make-coordinate))
+         (b (up a))
+         (c (up b))
+         (d (left b))
+         (p (make-polyomino :active-coordinates (list a b c d))))
+    (polyomino-to-string (polyomino-normalize p)))
+#+end_src
+
+#+RESULTS:
+: _X__
+: XX__
+: _X__
+: ____
+
+Of course, this just lets me see it as a person.  I need to somehow
+teach the computer that these would be the same.  Luckily, rotation is
+not that tough.  And then I'd just have to compare successive rotations
+to a collection to know if I had seen it.
+
+#+begin_src lisp :exports both 
+  (defun polyomino-rotate (polyomino)
+    (let ((d (- (polyomino-degree polyomino) 1)))
+      (polyomino-normalize 
+       (make-polyomino :active-coordinates 
+                       (with-slots (active-coordinates) polyomino
+                         (loop for coordinate in active-coordinates
+                            collect (with-slots (x y) coordinate
+                                      (make-coordinate :x y :y (- d x)))))))))
+
+  (let* ((a (make-coordinate))
+         (b (up a))
+         (c (up b))
+         (d (left b))
+         (p (make-polyomino :active-coordinates (list a b c d))))
+    (format nil "~{~a~2%~}" 
+            (list 
+             (polyomino-to-string (polyomino-normalize p))
+             (polyomino-to-string (polyomino-rotate p))
+             (polyomino-to-string (polyomino-rotate (polyomino-rotate p)))
+             (polyomino-to-string (polyomino-rotate (polyomino-rotate (polyomino-rotate p)))))))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+_X__
+XX__
+_X__
+____
+
+_X__
+XXX_
+____
+____
+
+X___
+XX__
+X___
+____
+
+XXX_
+_X__
+____
+____
+
+#+end_example
+
+And just to see what that looks like with a domino.
+
+#+begin_src lisp :exports both
+  (let* ((a (make-coordinate))
+         (b (up a))
+         (p (make-polyomino :active-coordinates (list a b))))
+    (format nil "~{~a~2&~}" 
+            (list 
+             (polyomino-to-string (polyomino-normalize p))
+             (polyomino-to-string (polyomino-rotate p))
+             (polyomino-to-string (polyomino-rotate (polyomino-rotate p)))
+             (polyomino-to-string (polyomino-rotate (polyomino-rotate (polyomino-rotate p)))))))
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+X_
+X_
+
+XX
+__
+
+X_
+X_
+
+XX
+__
+
+#+end_example
+
+* Now, let's generate some polyominos.
+
+The algorithm I'm going for is ridiculously brute force.  We'll start
+with a function that will grow from a list of seed polyominos into the
+set of all polyominos that can be grown from them.
+
+#+begin_src lisp
+  (defun polyomino-grow-list (seeds)
+    (let ((grown-values nil))
+      (dolist (polyomino seeds)
+        (let ((polyomino-coordinates (slot-value polyomino 'active-coordinates))
+              (candidates nil))
+          (dolist (c polyomino-coordinates)
+            (progn
+              (unless (member (up c) polyomino-coordinates :test #'equalp)
+                (setf candidates (adjoin (up c) candidates :test #'equalp)))
+              (unless (member (right c) polyomino-coordinates :test #'equalp)
+                (setf candidates (adjoin (right c) candidates :test #'equalp)))
+              (unless (member (down c) polyomino-coordinates :test #'equalp)
+                (setf candidates (adjoin (down c) candidates :test #'equalp)))
+              (unless (member (left c) polyomino-coordinates :test #'equalp)
+                (setf candidates (adjoin (left c) candidates :test #'equalp)))))
+          (dolist (c candidates)
+            (let ((p (polyomino-normalize (polyomino-add-coordinate polyomino c))))
+              (unless (or
+                       (member p grown-values :test #'equalp)
+                       (member (polyomino-rotate p) grown-values :test #'equalp)
+                       (member (polyomino-rotate (polyomino-rotate p)) grown-values :test #'equalp)
+                       (member (polyomino-rotate (polyomino-rotate (polyomino-rotate p))) grown-values :test #'equalp))
+                (setf grown-values (cons p grown-values)))))))
+      grown-values))
+#+end_src
+
+#+RESULTS:
+: POLYOMINO-GROW-LIST
+
+And, well, did it work?  Luckily, it is pretty fast[fn:1] for up to
+degree 9.  So, checking expected values on the [[https://en.wikipedia.org/wiki/Polyomino][Polyomino]] wikipedia
+page, I see that I agree with what they have.  Yay!
+
+#+begin_src lisp :exports both
+  (let* ((a (list (make-polyomino :active-coordinates (list (make-coordinate)))))
+         (b (polyomino-grow-list a))
+         (c (polyomino-grow-list b))
+         (d (polyomino-grow-list c))
+         (e (polyomino-grow-list d))
+         (f (polyomino-grow-list e))
+         (g (polyomino-grow-list f))
+         (h (polyomino-grow-list g))
+         (i (polyomino-grow-list h)))
+    (mapcar #'length (list a b c d e f g h i)))
+#+end_src
+
+#+RESULTS:
+| 1 | 1 | 2 | 7 | 18 | 60 | 196 | 704 | 2500 |
+
+I'll note that it did start to slog predictably around degree 10.  I
+knew this would be not only a crappy algorithm, but almost certainly
+poorly implemented.  :(
+
+* A brief diversion
+
+Before we get to what I actually need, it isn't too late for me to
+waste some more time.  Which we will waste by visually spot checking
+some polyominos that most folks recognize.
+
+#+begin_src lisp :exports both
+  (let* ((monimo (make-polyomino :active-coordinates (list (make-coordinate :x 0 :y 0))))
+         (dominos (polyomino-grow-list (list monimo)))
+         (trominos (polyomino-grow-list dominos))
+         (tetrominos (polyomino-grow-list trominos)))
+    (format nil "~{~&~a~%....~}" (mapcar #'polyomino-to-string tetrominos)))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+X___
+XX__
+_X__
+____
+....
+XX__
+XX__
+____
+____
+....
+XX__
+_XX_
+____
+____
+....
+XXX_
+_X__
+____
+____
+....
+__X_
+XXX_
+____
+____
+....
+XXXX
+____
+____
+____
+....
+XXX_
+__X_
+____
+____
+....
+#+end_example
+
+* Of course, I really need something else.
+
+Because of course I do.  Specifically, I need something I can feed
+into one of Knuth's DLX implementations to get how many ways a
+particular polyomino will tile a grid.  Luckily that is not hard at
+all.  Just hella verbose, such that I will not be putting any of it on
+this page.  I will have the code, though.
+
+What does that input look like?  Roughly described as a row of column
+names followed by rows of active columns.
+
+* Generating the header row
+
+This is ridiculously straight forward. 
+
+#+begin_src lisp :exports both
+  (defun polyomino-dlx-headers (board-size)
+    (format nil "~{~{R~aC~a~} ~}" (loop for i from 0 below board-size
+       append (loop for j from 0 below board-size
+                   collect (list i j)))))
+
+  (polyomino-dlx-headers 4)
+#+end_src
+
+#+RESULTS:
+: R0C0 R0C1 R0C2 R0C3 R1C0 R1C1 R1C2 R1C3 R2C0 R2C1 R2C2 R2C3 R3C0 R3C1 R3C2 R3C3 
+
+* Generating a placement of a piece everywhere it fits
+
+Placing the polyomino is relatively straight forward.  Just get all
+unique rotations of the one I'm placing, and then loop over the
+coordinates as long as they fit on the board outputting what is
+covered.
+
+We'll start with a function to get all unique rotations.  And, because
+I'm not wasting paper, we'll look at familiar rotations of the
+tetrominos.  Yes, this is in part for me to make sure it worked. :)
+
+#+begin_src lisp :exports both
+    (defun polyomino-unique-rotations (p)
+      (let* ((a (polyomino-rotate p))
+             (b (polyomino-rotate a))
+             (c (polyomino-rotate b))
+             (l (list p))
+             (l (adjoin a l :test #'equalp))
+             (l (adjoin b l :test #'equalp))
+             (l (adjoin c l :test #'equalp)))
+        l))
+
+    (let* ((monimo (make-polyomino :active-coordinates (list (make-coordinate :x 0 :y 0))))
+           (dominos (polyomino-grow-list (list monimo)))
+           (trominos (polyomino-grow-list dominos))
+           (tetrominos (polyomino-grow-list trominos))
+           (unique-rotations (loop for polyomino in tetrominos ;;I feel like there should be an fmap?
+                                  append (loop for rotation in (polyomino-unique-rotations polyomino)
+                                              collect rotation))))
+      (format nil "~{~&~a~%....~}" (mapcar #'polyomino-to-string unique-rotations)))
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+_XX_
+XX__
+____
+____
+....
+X___
+XX__
+_X__
+____
+....
+XX__
+XX__
+____
+____
+....
+_X__
+XX__
+X___
+____
+....
+XX__
+_XX_
+____
+____
+....
+X___
+XX__
+X___
+____
+....
+_X__
+XXX_
+____
+____
+....
+_X__
+XX__
+_X__
+____
+....
+XXX_
+_X__
+____
+____
+....
+XX__
+_X__
+_X__
+____
+....
+XXX_
+X___
+____
+____
+....
+X___
+X___
+XX__
+____
+....
+__X_
+XXX_
+____
+____
+....
+X___
+X___
+X___
+X___
+....
+XXXX
+____
+____
+____
+....
+XX__
+X___
+X___
+____
+....
+X___
+XXX_
+____
+____
+....
+_X__
+_X__
+XX__
+____
+....
+XXX_
+__X_
+____
+____
+....
+#+end_example
+
+From there, we have a function that will loop over what we just
+produced and keep placing it on the board.  
+
+#+begin_src lisp 
+  (defun polyomino-dlx-generate-row (p board-size)
+    (format nil "~{~{~{R~aC~a ~}~}~%~}"
+            (loop for c in (slot-value p 'active-coordinates)
+               maximizing (slot-value c 'x) into max-x
+               maximizing (slot-value c 'y) into max-y
+               finally (return (loop for i from 0 below (- board-size max-x)
+                                  append (loop for j from 0 below (- board-size max-y)
+                                            collect (loop for c in (slot-value p 'active-coordinates)
+                                                       collect (with-slots (x y) c
+                                                                 (list (+ x i) (+ y j))))))))))
+#+end_src
+
+#+RESULTS:
+: POLYOMINO-DLX-GENERATE-ROW
+
+And just confirming there are 12 ways to place a domino on a
+$4\times4$ board.
+
+#+begin_src lisp :exports both 
+  (let* ((monimo (make-polyomino :active-coordinates (list (make-coordinate :x 0 :y 0))))
+         (dominos (polyomino-grow-list (list monimo))))
+    (polyomino-dlx-generate-row (elt dominos 0) 4))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+  R0C0 R0C1 
+  R0C1 R0C2 
+  R0C2 R0C3 
+  R1C0 R1C1 
+  R1C1 R1C2 
+  R1C2 R1C3 
+  R2C0 R2C1 
+  R2C1 R2C2 
+  R2C2 R2C3 
+  R3C0 R3C1 
+  R3C1 R3C2 
+  R3C2 R3C3 
+#+end_example
+
+* Bringing them together
+
+#+begin_src lisp
+  (defun polyomino-dlx-generate (fileprefix degree board-size)
+    (let ((polyominos (list (make-polyomino :active-coordinates (list (make-coordinate :x 0 :y 0))))))
+      (dotimes (i (- degree 1))
+        (setf polyominos (polyomino-grow-list polyominos)))
+
+      (dotimes (i (length polyominos))
+        (with-open-file (stream (format nil "~a-~a-~a.dlx" fileprefix degree i) 
+                                :direction :output
+                                :if-exists :supersede
+                                :if-does-not-exist :create)
+          (format stream "~a~&" (polyomino-dlx-headers board-size))
+          (dolist (rotation (polyomino-unique-rotations (elt polyominos i)))
+            (format stream "~a~&" (polyomino-dlx-generate-row rotation board-size)))))))
+
+  (polyomino-dlx-generate "testing" 8 16)
+#+end_src
+
+#+RESULTS:
+: NIL
+
+From this point, I simply piped each file into a compiled version of
+Knuth's DLX1.  Took about a minute to find how many ways to tile a
+$16\times16$ board with all "one-sided" polyominos.  Which, when I saw
+my answer disagreed with the colleague, I saw he was looking at just
+the 369 free octominos, whereas I looked at the 704 one-sided ones.
+Oops.
+
+I'll try and get the time to change this write up to account for that.
+We're going camping, though, so I that takes precedence.  (This is
+also why I have not found a way to show the output from running the
+DLX algorithm directly.)
+
+* Afterward
+
+This is officially the first program I've written in Common Lisp.  I
+have found it fun.  Though, it is amusing how long it took something I
+wrote on paper in a java like language, to this.
+
+I'm hopeful to stick with it.  The tooling is fun.
+
+* Footnotes
+
+[fn:1] Where pretty fast means running it with (time) gives.  Not
+record breaking, but good enough for what I'm doing.
+
+#+begin_example
+Evaluation took:
+  2.136 seconds of real time
+  2.136099 seconds of total run time (2.124089 user, 0.012010 system)
+  [ Run times consist of 0.006 seconds GC time, and 2.131 seconds non-GC time. ]
+  100.00% CPU
+  5,323,001,318 processor cycles
+  44,098,208 bytes consed
+#+end_example
