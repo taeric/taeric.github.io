@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-06-30 Sun 12:43 -->
+<!-- 2019-07-05 Fri 20:30 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Generating polyominos for exact covering</title>
@@ -270,27 +270,27 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org9607e75">Generating polyominos.</a></li>
-<li><a href="#org4d064ae">Approach I'm taking.</a></li>
-<li><a href="#org7aa048c">Coordinates</a></li>
-<li><a href="#org3d259aa">But I really want a polyomino representation.</a></li>
-<li><a href="#org40920e1">Now, let's generate some polyominos.</a></li>
-<li><a href="#orgef13041">A brief diversion</a></li>
-<li><a href="#orgfcfbd8f">Of course, I really need something else.</a></li>
-<li><a href="#orgb242d9e">Generating the header row</a></li>
-<li><a href="#org2ae0265">Generating a placement of a piece everywhere it fits</a></li>
-<li><a href="#org32dcf11">Bringing them together</a></li>
-<li><a href="#org244b78b">Afterward</a></li>
+<li><a href="#orgd013593">Generating polyominos.</a></li>
+<li><a href="#org8f5a0b9">Approach I'm taking.</a></li>
+<li><a href="#org5b4ead9">Coordinates</a></li>
+<li><a href="#orgc5f015e">But I really want a polyomino representation.</a></li>
+<li><a href="#org0888cb0">Now, let's generate some polyominos.</a></li>
+<li><a href="#orgd6fa03e">A brief diversion</a></li>
+<li><a href="#orgd2adcc3">Of course, I really need something else.</a></li>
+<li><a href="#org7118b57">Generating the header row</a></li>
+<li><a href="#orge1fa39b">Generating a placement of a piece everywhere it fits</a></li>
+<li><a href="#org7272614">Bringing them together</a></li>
+<li><a href="#org3e496f8">Afterward</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org9607e75" class="outline-2">
-<h2 id="org9607e75">Generating polyominos.</h2>
-<div class="outline-text-2" id="text-org9607e75">
+<div id="outline-container-orgd013593" class="outline-2">
+<h2 id="orgd013593">Generating polyominos.</h2>
+<div class="outline-text-2" id="text-orgd013593">
 <p>
 At the office, someone gave a challenge asking how many ways to tile a
-\(12\times12\) grid with \(8\) cell polyominos.  I remembered this was
+\(16\times16\) grid with \(8\) cell polyominos.  I remembered this was
 straight out of several of Knuth's exercises, so thought I would try
 my hand.
 </p>
@@ -304,9 +304,9 @@ DLX.
 </div>
 </div>
 
-<div id="outline-container-org4d064ae" class="outline-2">
-<h2 id="org4d064ae">Approach I'm taking.</h2>
-<div class="outline-text-2" id="text-org4d064ae">
+<div id="outline-container-org8f5a0b9" class="outline-2">
+<h2 id="org8f5a0b9">Approach I'm taking.</h2>
+<div class="outline-text-2" id="text-org8f5a0b9">
 <p>
 I finally somewhat understood a crappy way of generating the pieces if
 I treated them as a collection of active coordinates.  In that world,
@@ -318,9 +318,9 @@ them.)
 </div>
 </div>
 
-<div id="outline-container-org7aa048c" class="outline-2">
-<h2 id="org7aa048c">Coordinates</h2>
-<div class="outline-text-2" id="text-org7aa048c">
+<div id="outline-container-org5b4ead9" class="outline-2">
+<h2 id="org5b4ead9">Coordinates</h2>
+<div class="outline-text-2" id="text-org5b4ead9">
 <p>
 I had originally thought I would play with some of the CLOS methods to
 provide my coordinate class.  I had actually built up some things
@@ -334,20 +334,20 @@ Here is the definition with three sample methods to create/copy one.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #5af2ee;">defstruct</span> <span style="color: #b2baf6;">coordinate</span> (x 0 <span style="color: #b2baf6;">:read-only</span> t) (y 0 <span style="color: #b2baf6;">:read-only</span> t))
+<pre class="src src-lisp">(<span style="color: #d98c10;">defstruct</span> <span style="color: #2492db;">coordinate</span> (x 0 <span style="color: #16a085;">:read-only</span> t) (y 0 <span style="color: #16a085;">:read-only</span> t))
 
-(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">left</span> (coordinate)
-  (<span style="color: #5af2ee;">with-slots</span> (x y) coordinate
-    (make-coordinate <span style="color: #b2baf6;">:x</span> x <span style="color: #b2baf6;">:y</span> (- y 1))))
-(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">right</span> (coordinate)
-  (<span style="color: #5af2ee;">with-slots</span> (x y) coordinate
-    (make-coordinate <span style="color: #b2baf6;">:x</span> x <span style="color: #b2baf6;">:y</span> (+ y 1))))
-(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">up</span> (coordinate)
-  (<span style="color: #5af2ee;">with-slots</span> (x y) coordinate
-    (make-coordinate <span style="color: #b2baf6;">:x</span> (- x 1) <span style="color: #b2baf6;">:y</span> y)))
-(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">down</span> (coordinate)
-  (<span style="color: #5af2ee;">with-slots</span> (x y) coordinate
-    (make-coordinate <span style="color: #b2baf6;">:x</span> (+ x 1) <span style="color: #b2baf6;">:y</span> y)))
+(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">left</span> (coordinate)
+  (<span style="color: #d98c10;">with-slots</span> (x y) coordinate
+    (make-coordinate <span style="color: #16a085;">:x</span> x <span style="color: #16a085;">:y</span> (- y 1))))
+(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">right</span> (coordinate)
+  (<span style="color: #d98c10;">with-slots</span> (x y) coordinate
+    (make-coordinate <span style="color: #16a085;">:x</span> x <span style="color: #16a085;">:y</span> (+ y 1))))
+(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">up</span> (coordinate)
+  (<span style="color: #d98c10;">with-slots</span> (x y) coordinate
+    (make-coordinate <span style="color: #16a085;">:x</span> (- x 1) <span style="color: #16a085;">:y</span> y)))
+(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">down</span> (coordinate)
+  (<span style="color: #d98c10;">with-slots</span> (x y) coordinate
+    (make-coordinate <span style="color: #16a085;">:x</span> (+ x 1) <span style="color: #16a085;">:y</span> y)))
 </pre>
 </div>
 
@@ -356,22 +356,32 @@ And, just to show how to use this, here are some helper methods.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lisp">(format nil <span style="color: #ff5f87;">"~{~a~%~}"</span> 
-        (list (make-coordinate <span style="color: #b2baf6;">:x</span> 1)
-              #s(coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 12)
-              (copy-coordinate #s(coordinate <span style="color: #b2baf6;">:x</span> 3 <span style="color: #b2baf6;">:y</span> 3))
-              (up #s(coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 0))
-              (down #s(coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 0))
-              (left #s(coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 0))
-              (right #s(coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 0))))
+<pre class="src src-lisp">(format nil <span style="color: #0a74b9;">"~{~a~%~}"</span> 
+        (list (make-coordinate <span style="color: #16a085;">:x</span> 1)
+              #s(coordinate <span style="color: #16a085;">:x</span> 0 <span style="color: #16a085;">:y</span> 12)
+              (copy-coordinate #s(coordinate <span style="color: #16a085;">:x</span> 3 <span style="color: #16a085;">:y</span> 3))
+              (up #s(coordinate <span style="color: #16a085;">:x</span> 0 <span style="color: #16a085;">:y</span> 0))
+              (down #s(coordinate <span style="color: #16a085;">:x</span> 0 <span style="color: #16a085;">:y</span> 0))
+              (left #s(coordinate <span style="color: #16a085;">:x</span> 0 <span style="color: #16a085;">:y</span> 0))
+              (right #s(coordinate <span style="color: #16a085;">:x</span> 0 <span style="color: #16a085;">:y</span> 0))))
+</pre>
+</div>
+
+<pre class="example">
+#S(COORDINATE :X 1 :Y 0)
+#S(COORDINATE :X 0 :Y 12)
+#S(COORDINATE :X 3 :Y 3)
+#S(COORDINATE :X -1 :Y 0)
+#S(COORDINATE :X 1 :Y 0)
+#S(COORDINATE :X 0 :Y -1)
+#S(COORDINATE :X 0 :Y 1)
 </pre>
 </div>
 </div>
-</div>
 
-<div id="outline-container-org3d259aa" class="outline-2">
-<h2 id="org3d259aa">But I really want a polyomino representation.</h2>
-<div class="outline-text-2" id="text-org3d259aa">
+<div id="outline-container-orgc5f015e" class="outline-2">
+<h2 id="orgc5f015e">But I really want a polyomino representation.</h2>
+<div class="outline-text-2" id="text-orgc5f015e">
 <p>
 Basic structure for a polyomino isn't that tough, just a list of
 coordinates.  I just need a helper method to make sure and only add
@@ -381,16 +391,16 @@ tough here.)
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #5af2ee;">defstruct</span> <span style="color: #b2baf6;">polyomino</span> (active-coordinates nil <span style="color: #b2baf6;">:read-only</span> t))
+<pre class="src src-lisp">(<span style="color: #d98c10;">defstruct</span> <span style="color: #2492db;">polyomino</span> (active-coordinates nil <span style="color: #16a085;">:read-only</span> t))
 
-(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-degree</span> (polyomino)
+(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">polyomino-degree</span> (polyomino)
   (length (slot-value polyomino 'active-coordinates)))
 
-(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-add-coordinate</span> (polyomino coordinate)
-  (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (adjoin coordinate (slot-value polyomino 'active-coordinates) <span style="color: #b2baf6;">:test</span> #'equalp)))
+(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">polyomino-add-coordinate</span> (polyomino coordinate)
+  (make-polyomino <span style="color: #16a085;">:active-coordinates</span> (adjoin coordinate (slot-value polyomino 'active-coordinates) <span style="color: #16a085;">:test</span> #'equalp)))
 
-(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-has-coordinate</span> (polyomino coordinate)
-  (member coordinate (slot-value polyomino 'active-coordinates) <span style="color: #b2baf6;">:test</span> #'equalp))
+(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">polyomino-has-coordinate</span> (polyomino coordinate)
+  (member coordinate (slot-value polyomino 'active-coordinates) <span style="color: #16a085;">:test</span> #'equalp))
 </pre>
 </div>
 
@@ -401,11 +411,11 @@ entirely helpful.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #5af2ee;">let*</span> ((a (make-polyomino))
-       (b (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list (make-coordinate))))
-       (c (polyomino-add-coordinate a (make-coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 0)))
-       (d (polyomino-add-coordinate c (make-coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 0)))
-       (e (polyomino-add-coordinate d (make-coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 1))))
+<pre class="src src-lisp">(<span style="color: #d98c10;">let*</span> ((a (make-polyomino))
+       (b (make-polyomino <span style="color: #16a085;">:active-coordinates</span> (list (make-coordinate))))
+       (c (polyomino-add-coordinate a (make-coordinate <span style="color: #16a085;">:x</span> 0 <span style="color: #16a085;">:y</span> 0)))
+       (d (polyomino-add-coordinate c (make-coordinate <span style="color: #16a085;">:x</span> 0 <span style="color: #16a085;">:y</span> 0)))
+       (e (polyomino-add-coordinate d (make-coordinate <span style="color: #16a085;">:x</span> 0 <span style="color: #16a085;">:y</span> 1))))
   (list a b c d e))
 </pre>
 </div>
@@ -421,36 +431,36 @@ entirely helpful.
 
 
 <p>
-That said, it lets make something that will do that for us.  My FORMAT
+That said, lets make something that will do that for us.  My FORMAT
 skills are less than worth talking about, but it turns out this isn't
 that tough.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-to-string</span> (polyomino)
-  (<span style="color: #5af2ee;">let</span> ((width (polyomino-degree polyomino))
+<pre class="src src-lisp">(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">polyomino-to-string</span> (polyomino)
+  (<span style="color: #d98c10;">let</span> ((width (polyomino-degree polyomino))
         (height (polyomino-degree polyomino)))
-    (format nil <span style="color: #ff5f87;">"~{~&amp;~{~a~}~}"</span>
-            (<span style="color: #5af2ee;">loop</span> for i from 0 below height
-               collect (<span style="color: #5af2ee;">loop</span> for j from 0 below width
-                          collect (<span style="color: #5af2ee;">if</span> (polyomino-has-coordinate polyomino (make-coordinate <span style="color: #b2baf6;">:x</span> i <span style="color: #b2baf6;">:y</span> j))
-                                      <span style="color: #ff5f87;">"X"</span>
-                                      <span style="color: #ff5f87;">"_"</span>))))))
+    (format nil <span style="color: #0a74b9;">"~{~&amp;~{~a~}~}"</span>
+            (<span style="color: #d98c10;">loop</span> for i from 0 below height
+               collect (<span style="color: #d98c10;">loop</span> for j from 0 below width
+                          collect (<span style="color: #d98c10;">if</span> (polyomino-has-coordinate polyomino (make-coordinate <span style="color: #16a085;">:x</span> i <span style="color: #16a085;">:y</span> j))
+                                      <span style="color: #0a74b9;">"X"</span>
+                                      <span style="color: #0a74b9;">"-"</span>))))))
 
-(<span style="color: #5af2ee;">let*</span> ((a (make-coordinate))
+(<span style="color: #d98c10;">let*</span> ((a (make-coordinate))
        (b (down a))
        (c (down b))
        (d (right b))
-       (p (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list a b c d))))
+       (p (make-polyomino <span style="color: #16a085;">:active-coordinates</span> (list a b c d))))
   (polyomino-to-string p))
 </pre>
 </div>
 
 <pre class="example">
-X___
-XX__
-X___
-____
+X---
+XX--
+X---
+----
 </pre>
 
 
@@ -461,20 +471,20 @@ demonstrated by:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #5af2ee;">let*</span> ((a (make-coordinate))
+<pre class="src src-lisp">(<span style="color: #d98c10;">let*</span> ((a (make-coordinate))
        (b (up a))
        (c (up b))
        (d (left b))
-       (p (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list a b c d))))
+       (p (make-polyomino <span style="color: #16a085;">:active-coordinates</span> (list a b c d))))
   (polyomino-to-string p))
 </pre>
 </div>
 
 <pre class="example">
-X___
-____
-____
-____
+X---
+----
+----
+----
 </pre>
 
 
@@ -485,38 +495,38 @@ normalize us to the origin.  (This was fun to work out on paper.)
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-normalize</span> (polyomino)
-  (<span style="color: #5af2ee;">loop</span> for coordinate in (slot-value polyomino 'active-coordinates)
+<pre class="src src-lisp">(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">polyomino-normalize</span> (polyomino)
+  (<span style="color: #d98c10;">loop</span> for coordinate in (slot-value polyomino 'active-coordinates)
      minimizing (slot-value coordinate 'x) into min-x
      minimizing (slot-value coordinate 'y) into min-y
-     finally (<span style="color: #5af2ee;">return</span> (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span>
-                                     (sort (<span style="color: #5af2ee;">loop</span> for coordinate in (slot-value polyomino 'active-coordinates)
-                                              collect (<span style="color: #5af2ee;">with-slots</span> (x y) coordinate
-                                                        (make-coordinate <span style="color: #b2baf6;">:x</span> (- x min-x)
-                                                                         <span style="color: #b2baf6;">:y</span> (- y min-y))))
-                                           (<span style="color: #5af2ee;">lambda</span> (a b)
-                                             (<span style="color: #5af2ee;">with-slots</span> ((ax x) (ay y)) a
-                                               (<span style="color: #5af2ee;">with-slots</span> ((bx x) (by y)) b
+     finally (<span style="color: #d98c10;">return</span> (make-polyomino <span style="color: #16a085;">:active-coordinates</span>
+                                     (sort (<span style="color: #d98c10;">loop</span> for coordinate in (slot-value polyomino 'active-coordinates)
+                                              collect (<span style="color: #d98c10;">with-slots</span> (x y) coordinate
+                                                        (make-coordinate <span style="color: #16a085;">:x</span> (- x min-x)
+                                                                         <span style="color: #16a085;">:y</span> (- y min-y))))
+                                           (<span style="color: #d98c10;">lambda</span> (a b)
+                                             (<span style="color: #d98c10;">with-slots</span> ((ax x) (ay y)) a
+                                               (<span style="color: #d98c10;">with-slots</span> ((bx x) (by y)) b
                                                  (&lt; (+ (* ax (polyomino-degree polyomino))
                                                        ay)
                                                     (+ (* bx (polyomino-degree polyomino))
                                                        by))))))))))
 
 
-(<span style="color: #5af2ee;">let*</span> ((a (make-coordinate))
+(<span style="color: #d98c10;">let*</span> ((a (make-coordinate))
        (b (up a))
        (c (up b))
        (d (left b))
-       (p (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list a b c d))))
+       (p (make-polyomino <span style="color: #16a085;">:active-coordinates</span> (list a b c d))))
   (polyomino-to-string (polyomino-normalize p)))
 </pre>
 </div>
 
 <pre class="example">
-_X__
-XX__
-_X__
-____
+-X--
+XX--
+-X--
+----
 </pre>
 
 
@@ -528,21 +538,21 @@ to a collection to know if I had seen it.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-rotate</span> (polyomino)
-  (<span style="color: #5af2ee;">let</span> ((d (- (polyomino-degree polyomino) 1)))
+<pre class="src src-lisp">(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">polyomino-rotate</span> (polyomino)
+  (<span style="color: #d98c10;">let</span> ((d (- (polyomino-degree polyomino) 1)))
     (polyomino-normalize 
-     (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> 
-                     (<span style="color: #5af2ee;">with-slots</span> (active-coordinates) polyomino
-                       (<span style="color: #5af2ee;">loop</span> for coordinate in active-coordinates
-                          collect (<span style="color: #5af2ee;">with-slots</span> (x y) coordinate
-                                    (make-coordinate <span style="color: #b2baf6;">:x</span> y <span style="color: #b2baf6;">:y</span> (- d x)))))))))
+     (make-polyomino <span style="color: #16a085;">:active-coordinates</span> 
+                     (<span style="color: #d98c10;">with-slots</span> (active-coordinates) polyomino
+                       (<span style="color: #d98c10;">loop</span> for coordinate in active-coordinates
+                          collect (<span style="color: #d98c10;">with-slots</span> (x y) coordinate
+                                    (make-coordinate <span style="color: #16a085;">:x</span> y <span style="color: #16a085;">:y</span> (- d x)))))))))
 
-(<span style="color: #5af2ee;">let*</span> ((a (make-coordinate))
+(<span style="color: #d98c10;">let*</span> ((a (make-coordinate))
        (b (up a))
        (c (up b))
        (d (left b))
-       (p (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list a b c d))))
-  (format nil <span style="color: #ff5f87;">"~{~a~2%~}"</span> 
+       (p (make-polyomino <span style="color: #16a085;">:active-coordinates</span> (list a b c d))))
+  (format nil <span style="color: #0a74b9;">"~{~a~2%~}"</span> 
           (list 
            (polyomino-to-string (polyomino-normalize p))
            (polyomino-to-string (polyomino-rotate p))
@@ -552,25 +562,25 @@ to a collection to know if I had seen it.
 </div>
 
 <pre class="example">
-_X__
-XX__
-_X__
-____
+-X--
+XX--
+-X--
+----
 
-_X__
-XXX_
-____
-____
+-X--
+XXX-
+----
+----
 
-X___
-XX__
-X___
-____
+X---
+XX--
+X---
+----
 
-XXX_
-_X__
-____
-____
+XXX-
+-X--
+----
+----
 
 </pre>
 
@@ -579,10 +589,10 @@ And just to see what that looks like with a domino.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #5af2ee;">let*</span> ((a (make-coordinate))
+<pre class="src src-lisp">(<span style="color: #d98c10;">let*</span> ((a (make-coordinate))
        (b (up a))
-       (p (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list a b))))
-  (format nil <span style="color: #ff5f87;">"~{~a~2&amp;~}"</span> 
+       (p (make-polyomino <span style="color: #16a085;">:active-coordinates</span> (list a b))))
+  (format nil <span style="color: #0a74b9;">"~{~a~2&amp;~}"</span> 
           (list 
            (polyomino-to-string (polyomino-normalize p))
            (polyomino-to-string (polyomino-rotate p))
@@ -593,25 +603,25 @@ And just to see what that looks like with a domino.
 </div>
 
 <pre class="example">
-X_
-X_
+X-
+X-
 
 XX
-__
+--
 
-X_
-X_
+X-
+X-
 
 XX
-__
+--
 
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org40920e1" class="outline-2">
-<h2 id="org40920e1">Now, let's generate some polyominos.</h2>
-<div class="outline-text-2" id="text-org40920e1">
+<div id="outline-container-org0888cb0" class="outline-2">
+<h2 id="org0888cb0">Now, let's generate some polyominos.</h2>
+<div class="outline-text-2" id="text-org0888cb0">
 <p>
 The algorithm I'm going for is ridiculously brute force.  We'll start
 with a function that will grow from a list of seed polyominos into the
@@ -619,28 +629,28 @@ set of all polyominos that can be grown from them.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-grow-list</span> (seeds)
-  (<span style="color: #5af2ee;">let</span> ((grown-values nil))
-    (<span style="color: #5af2ee;">dolist</span> (polyomino seeds)
-      (<span style="color: #5af2ee;">let</span> ((polyomino-coordinates (slot-value polyomino 'active-coordinates))
+<pre class="src src-lisp">(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">polyomino-grow-list</span> (seeds)
+  (<span style="color: #d98c10;">let</span> ((grown-values nil))
+    (<span style="color: #d98c10;">dolist</span> (polyomino seeds)
+      (<span style="color: #d98c10;">let</span> ((polyomino-coordinates (slot-value polyomino 'active-coordinates))
             (candidates nil))
-        (<span style="color: #5af2ee;">dolist</span> (c polyomino-coordinates)
-          (<span style="color: #5af2ee;">progn</span>
-            (<span style="color: #5af2ee;">unless</span> (member (up c) polyomino-coordinates <span style="color: #b2baf6;">:test</span> #'equalp)
-              (setf candidates (adjoin (up c) candidates <span style="color: #b2baf6;">:test</span> #'equalp)))
-            (<span style="color: #5af2ee;">unless</span> (member (right c) polyomino-coordinates <span style="color: #b2baf6;">:test</span> #'equalp)
-              (setf candidates (adjoin (right c) candidates <span style="color: #b2baf6;">:test</span> #'equalp)))
-            (<span style="color: #5af2ee;">unless</span> (member (down c) polyomino-coordinates <span style="color: #b2baf6;">:test</span> #'equalp)
-              (setf candidates (adjoin (down c) candidates <span style="color: #b2baf6;">:test</span> #'equalp)))
-            (<span style="color: #5af2ee;">unless</span> (member (left c) polyomino-coordinates <span style="color: #b2baf6;">:test</span> #'equalp)
-              (setf candidates (adjoin (left c) candidates <span style="color: #b2baf6;">:test</span> #'equalp)))))
-        (<span style="color: #5af2ee;">dolist</span> (c candidates)
-          (<span style="color: #5af2ee;">let</span> ((p (polyomino-normalize (polyomino-add-coordinate polyomino c))))
-            (<span style="color: #5af2ee;">unless</span> (or
-                     (member p grown-values <span style="color: #b2baf6;">:test</span> #'equalp)
-                     (member (polyomino-rotate p) grown-values <span style="color: #b2baf6;">:test</span> #'equalp)
-                     (member (polyomino-rotate (polyomino-rotate p)) grown-values <span style="color: #b2baf6;">:test</span> #'equalp)
-                     (member (polyomino-rotate (polyomino-rotate (polyomino-rotate p))) grown-values <span style="color: #b2baf6;">:test</span> #'equalp))
+        (<span style="color: #d98c10;">dolist</span> (c polyomino-coordinates)
+          (<span style="color: #d98c10;">progn</span>
+            (<span style="color: #d98c10;">unless</span> (member (up c) polyomino-coordinates <span style="color: #16a085;">:test</span> #'equalp)
+              (setf candidates (adjoin (up c) candidates <span style="color: #16a085;">:test</span> #'equalp)))
+            (<span style="color: #d98c10;">unless</span> (member (right c) polyomino-coordinates <span style="color: #16a085;">:test</span> #'equalp)
+              (setf candidates (adjoin (right c) candidates <span style="color: #16a085;">:test</span> #'equalp)))
+            (<span style="color: #d98c10;">unless</span> (member (down c) polyomino-coordinates <span style="color: #16a085;">:test</span> #'equalp)
+              (setf candidates (adjoin (down c) candidates <span style="color: #16a085;">:test</span> #'equalp)))
+            (<span style="color: #d98c10;">unless</span> (member (left c) polyomino-coordinates <span style="color: #16a085;">:test</span> #'equalp)
+              (setf candidates (adjoin (left c) candidates <span style="color: #16a085;">:test</span> #'equalp)))))
+        (<span style="color: #d98c10;">dolist</span> (c candidates)
+          (<span style="color: #d98c10;">let</span> ((p (polyomino-normalize (polyomino-add-coordinate polyomino c))))
+            (<span style="color: #d98c10;">unless</span> (or
+                     (member p grown-values <span style="color: #16a085;">:test</span> #'equalp)
+                     (member (polyomino-rotate p) grown-values <span style="color: #16a085;">:test</span> #'equalp)
+                     (member (polyomino-rotate (polyomino-rotate p)) grown-values <span style="color: #16a085;">:test</span> #'equalp)
+                     (member (polyomino-rotate (polyomino-rotate (polyomino-rotate p))) grown-values <span style="color: #16a085;">:test</span> #'equalp))
               (setf grown-values (cons p grown-values)))))))
     grown-values))
 </pre>
@@ -653,7 +663,7 @@ page, I see that I agree with what they have.  Yay!
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #5af2ee;">let*</span> ((a (list (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list (make-coordinate)))))
+<pre class="src src-lisp">(<span style="color: #d98c10;">let*</span> ((a (list (make-polyomino <span style="color: #16a085;">:active-coordinates</span> (list (make-coordinate)))))
        (b (polyomino-grow-list a))
        (c (polyomino-grow-list b))
        (d (polyomino-grow-list c))
@@ -711,9 +721,9 @@ poorly implemented.  :(
 </div>
 </div>
 
-<div id="outline-container-orgef13041" class="outline-2">
-<h2 id="orgef13041">A brief diversion</h2>
-<div class="outline-text-2" id="text-orgef13041">
+<div id="outline-container-orgd6fa03e" class="outline-2">
+<h2 id="orgd6fa03e">A brief diversion</h2>
+<div class="outline-text-2" id="text-orgd6fa03e">
 <p>
 Before we get to what I actually need, it isn't too late for me to
 waste some more time.  Which we will waste by visually spot checking
@@ -721,57 +731,57 @@ some polyominos that most folks recognize.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #5af2ee;">let*</span> ((monimo (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list (make-coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 0))))
+<pre class="src src-lisp">(<span style="color: #d98c10;">let*</span> ((monimo (make-polyomino <span style="color: #16a085;">:active-coordinates</span> (list (make-coordinate <span style="color: #16a085;">:x</span> 0 <span style="color: #16a085;">:y</span> 0))))
        (dominos (polyomino-grow-list (list monimo)))
        (trominos (polyomino-grow-list dominos))
        (tetrominos (polyomino-grow-list trominos)))
-  (format nil <span style="color: #ff5f87;">"~{~&amp;~a~%....~}"</span> (mapcar #'polyomino-to-string tetrominos)))
+  (format nil <span style="color: #0a74b9;">"~{~&amp;~a~%~%~}"</span> (mapcar #'polyomino-to-string tetrominos)))
 </pre>
 </div>
 
 <pre class="example">
-X___
-XX__
-_X__
-____
-....
-XX__
-XX__
-____
-____
-....
-XX__
-_XX_
-____
-____
-....
-XXX_
-_X__
-____
-____
-....
-__X_
-XXX_
-____
-____
-....
+X---
+XX--
+-X--
+----
+
+XX--
+XX--
+----
+----
+
+XX--
+-XX-
+----
+----
+
+XXX-
+-X--
+----
+----
+
+--X-
+XXX-
+----
+----
+
 XXXX
-____
-____
-____
-....
-XXX_
-__X_
-____
-____
-....
+----
+----
+----
+
+XXX-
+--X-
+----
+----
+
 </pre>
 </div>
 </div>
 
-<div id="outline-container-orgfcfbd8f" class="outline-2">
-<h2 id="orgfcfbd8f">Of course, I really need something else.</h2>
-<div class="outline-text-2" id="text-orgfcfbd8f">
+<div id="outline-container-orgd2adcc3" class="outline-2">
+<h2 id="orgd2adcc3">Of course, I really need something else.</h2>
+<div class="outline-text-2" id="text-orgd2adcc3">
 <p>
 Because of course I do.  Specifically, I need something I can feed
 into one of Knuth's DLX implementations to get how many ways a
@@ -787,17 +797,17 @@ names followed by rows of active columns.
 </div>
 </div>
 
-<div id="outline-container-orgb242d9e" class="outline-2">
-<h2 id="orgb242d9e">Generating the header row</h2>
-<div class="outline-text-2" id="text-orgb242d9e">
+<div id="outline-container-org7118b57" class="outline-2">
+<h2 id="org7118b57">Generating the header row</h2>
+<div class="outline-text-2" id="text-org7118b57">
 <p>
 This is ridiculously straight forward. 
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-dlx-headers</span> (board-size)
-  (format nil <span style="color: #ff5f87;">"~{~{R~aC~a~} ~}"</span> (<span style="color: #5af2ee;">loop</span> for i from 0 below board-size
-     append (<span style="color: #5af2ee;">loop</span> for j from 0 below board-size
+<pre class="src src-lisp">(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">polyomino-dlx-headers</span> (board-size)
+  (format nil <span style="color: #0a74b9;">"~{~{R~aC~a~} ~}"</span> (<span style="color: #d98c10;">loop</span> for i from 0 below board-size
+     append (<span style="color: #d98c10;">loop</span> for j from 0 below board-size
                  collect (list i j)))))
 
 (polyomino-dlx-headers 4)
@@ -810,9 +820,9 @@ R0C0 R0C1 R0C2 R0C3 R1C0 R1C1 R1C2 R1C3 R2C0 R2C1 R2C2 R2C3 R3C0 R3C1 R3C2 R3C3
 </div>
 </div>
 
-<div id="outline-container-org2ae0265" class="outline-2">
-<h2 id="org2ae0265">Generating a placement of a piece everywhere it fits</h2>
-<div class="outline-text-2" id="text-org2ae0265">
+<div id="outline-container-orge1fa39b" class="outline-2">
+<h2 id="orge1fa39b">Generating a placement of a piece everywhere it fits</h2>
+<div class="outline-text-2" id="text-orge1fa39b">
 <p>
 Placing the polyomino is relatively straight forward.  Just get all
 unique rotations of the one I'm placing, and then loop over the
@@ -827,124 +837,124 @@ tetrominos.  Yes, this is in part for me to make sure it worked. :)
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-unique-rotations</span> (p)
-  (<span style="color: #5af2ee;">let*</span> ((a (polyomino-rotate p))
+<pre class="src src-lisp">(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">polyomino-unique-rotations</span> (p)
+  (<span style="color: #d98c10;">let*</span> ((a (polyomino-rotate p))
          (b (polyomino-rotate a))
          (c (polyomino-rotate b))
          (l (list p))
-         (l (adjoin a l <span style="color: #b2baf6;">:test</span> #'equalp))
-         (l (adjoin b l <span style="color: #b2baf6;">:test</span> #'equalp))
-         (l (adjoin c l <span style="color: #b2baf6;">:test</span> #'equalp)))
+         (l (adjoin a l <span style="color: #16a085;">:test</span> #'equalp))
+         (l (adjoin b l <span style="color: #16a085;">:test</span> #'equalp))
+         (l (adjoin c l <span style="color: #16a085;">:test</span> #'equalp)))
     l))
 
-(<span style="color: #5af2ee;">let*</span> ((monimo (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list (make-coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 0))))
+(<span style="color: #d98c10;">let*</span> ((monimo (make-polyomino <span style="color: #16a085;">:active-coordinates</span> (list (make-coordinate <span style="color: #16a085;">:x</span> 0 <span style="color: #16a085;">:y</span> 0))))
        (dominos (polyomino-grow-list (list monimo)))
        (trominos (polyomino-grow-list dominos))
        (tetrominos (polyomino-grow-list trominos))
-       (unique-rotations (<span style="color: #5af2ee;">loop</span> for polyomino in tetrominos <span style="color: #f6df92;">;;</span><span style="color: #efc334;">I feel like there should be an fmap?</span>
-                              append (<span style="color: #5af2ee;">loop</span> for rotation in (polyomino-unique-rotations polyomino)
+       (unique-rotations (<span style="color: #d98c10;">loop</span> for polyomino in tetrominos <span style="color: #95a5a6;">;;</span><span style="color: #7f8c8d;">I feel like there should be an fmap?</span>
+                              append (<span style="color: #d98c10;">loop</span> for rotation in (polyomino-unique-rotations polyomino)
                                           collect rotation))))
-  (format nil <span style="color: #ff5f87;">"~{~&amp;~a~%....~}"</span> (mapcar #'polyomino-to-string unique-rotations)))
+  (format nil <span style="color: #0a74b9;">"~{~&amp;~a~%~%~}"</span> (mapcar #'polyomino-to-string unique-rotations)))
 
 </pre>
 </div>
 
 <pre class="example">
-_XX_
-XX__
-____
-____
-....
-X___
-XX__
-_X__
-____
-....
-XX__
-XX__
-____
-____
-....
-_X__
-XX__
-X___
-____
-....
-XX__
-_XX_
-____
-____
-....
-X___
-XX__
-X___
-____
-....
-_X__
-XXX_
-____
-____
-....
-_X__
-XX__
-_X__
-____
-....
-XXX_
-_X__
-____
-____
-....
-XX__
-_X__
-_X__
-____
-....
-XXX_
-X___
-____
-____
-....
-X___
-X___
-XX__
-____
-....
-__X_
-XXX_
-____
-____
-....
-X___
-X___
-X___
-X___
-....
+-XX-
+XX--
+----
+----
+
+X---
+XX--
+-X--
+----
+
+XX--
+XX--
+----
+----
+
+-X--
+XX--
+X---
+----
+
+XX--
+-XX-
+----
+----
+
+X---
+XX--
+X---
+----
+
+-X--
+XXX-
+----
+----
+
+-X--
+XX--
+-X--
+----
+
+XXX-
+-X--
+----
+----
+
+XX--
+-X--
+-X--
+----
+
+XXX-
+X---
+----
+----
+
+X---
+X---
+XX--
+----
+
+--X-
+XXX-
+----
+----
+
+X---
+X---
+X---
+X---
+
 XXXX
-____
-____
-____
-....
-XX__
-X___
-X___
-____
-....
-X___
-XXX_
-____
-____
-....
-_X__
-_X__
-XX__
-____
-....
-XXX_
-__X_
-____
-____
-....
+----
+----
+----
+
+XX--
+X---
+X---
+----
+
+X---
+XXX-
+----
+----
+
+-X--
+-X--
+XX--
+----
+
+XXX-
+--X-
+----
+----
+
 </pre>
 
 <p>
@@ -953,26 +963,26 @@ produced and keep placing it on the board.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-dlx-generate-row</span> (p board-size)
-  (format nil <span style="color: #ff5f87;">"~{~{~{R~aC~a ~}~}~%~}"</span>
-          (<span style="color: #5af2ee;">loop</span> for c in (slot-value p 'active-coordinates)
+<pre class="src src-lisp">(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">polyomino-dlx-generate-row</span> (p board-size)
+  (format nil <span style="color: #0a74b9;">"~{~{~{R~aC~a ~}~}~%~}"</span>
+          (<span style="color: #d98c10;">loop</span> for c in (slot-value p 'active-coordinates)
              maximizing (slot-value c 'x) into max-x
              maximizing (slot-value c 'y) into max-y
-             finally (<span style="color: #5af2ee;">return</span> (<span style="color: #5af2ee;">loop</span> for i from 0 below (- board-size max-x)
-                                append (<span style="color: #5af2ee;">loop</span> for j from 0 below (- board-size max-y)
-                                          collect (<span style="color: #5af2ee;">loop</span> for c in (slot-value p 'active-coordinates)
-                                                     collect (<span style="color: #5af2ee;">with-slots</span> (x y) c
+             finally (<span style="color: #d98c10;">return</span> (<span style="color: #d98c10;">loop</span> for i from 0 below (- board-size max-x)
+                                append (<span style="color: #d98c10;">loop</span> for j from 0 below (- board-size max-y)
+                                          collect (<span style="color: #d98c10;">loop</span> for c in (slot-value p 'active-coordinates)
+                                                     collect (<span style="color: #d98c10;">with-slots</span> (x y) c
                                                                (list (+ x i) (+ y j))))))))))
 </pre>
 </div>
 
 <p>
-And just confirming there are 12 ways to place a domino on a
-\(4\times4\) board.
+And just confirming there are 12 ways to place a non-rotating domino
+on a \(4\times4\) board.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #5af2ee;">let*</span> ((monimo (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list (make-coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 0))))
+<pre class="src src-lisp">(<span style="color: #d98c10;">let*</span> ((monimo (make-polyomino <span style="color: #16a085;">:active-coordinates</span> (list (make-coordinate <span style="color: #16a085;">:x</span> 0 <span style="color: #16a085;">:y</span> 0))))
        (dominos (polyomino-grow-list (list monimo))))
   (polyomino-dlx-generate-row (elt dominos 0) 4))
 </pre>
@@ -995,25 +1005,25 @@ R3C2 R3C3
 </div>
 </div>
 
-<div id="outline-container-org32dcf11" class="outline-2">
-<h2 id="org32dcf11">Bringing them together</h2>
-<div class="outline-text-2" id="text-org32dcf11">
+<div id="outline-container-org7272614" class="outline-2">
+<h2 id="org7272614">Bringing them together</h2>
+<div class="outline-text-2" id="text-org7272614">
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">polyomino-dlx-generate</span> (fileprefix degree board-size)
-  (<span style="color: #5af2ee;">let</span> ((polyominos (list (make-polyomino <span style="color: #b2baf6;">:active-coordinates</span> (list (make-coordinate <span style="color: #b2baf6;">:x</span> 0 <span style="color: #b2baf6;">:y</span> 0))))))
-    (<span style="color: #5af2ee;">dotimes</span> (i (- degree 1))
+<pre class="src src-lisp">(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">polyomino-dlx-generate</span> (fileprefix degree board-size)
+  (<span style="color: #d98c10;">let</span> ((polyominos (list (make-polyomino <span style="color: #16a085;">:active-coordinates</span> (list (make-coordinate <span style="color: #16a085;">:x</span> 0 <span style="color: #16a085;">:y</span> 0))))))
+    (<span style="color: #d98c10;">dotimes</span> (i (- degree 1))
       (setf polyominos (polyomino-grow-list polyominos)))
 
-    (<span style="color: #5af2ee;">dotimes</span> (i (length polyominos))
-      (<span style="color: #5af2ee;">with-open-file</span> (stream (format nil <span style="color: #ff5f87;">"~a-~a-~a.dlx"</span> fileprefix degree i) 
-                              <span style="color: #b2baf6;">:direction</span> <span style="color: #b2baf6;">:output</span>
-                              <span style="color: #b2baf6;">:if-exists</span> <span style="color: #b2baf6;">:supersede</span>
-                              <span style="color: #b2baf6;">:if-does-not-exist</span> <span style="color: #b2baf6;">:create</span>)
-        (format stream <span style="color: #ff5f87;">"~a~&amp;"</span> (polyomino-dlx-headers board-size))
-        (<span style="color: #5af2ee;">dolist</span> (rotation (polyomino-unique-rotations (elt polyominos i)))
-          (format stream <span style="color: #ff5f87;">"~a~&amp;"</span> (polyomino-dlx-generate-row rotation board-size)))))))
+    (<span style="color: #d98c10;">dotimes</span> (i (length polyominos))
+      (<span style="color: #d98c10;">with-open-file</span> (stream (format nil <span style="color: #0a74b9;">"~a-~a-~a.dlx"</span> fileprefix degree i) 
+                              <span style="color: #16a085;">:direction</span> <span style="color: #16a085;">:output</span>
+                              <span style="color: #16a085;">:if-exists</span> <span style="color: #16a085;">:supersede</span>
+                              <span style="color: #16a085;">:if-does-not-exist</span> <span style="color: #16a085;">:create</span>)
+        (format stream <span style="color: #0a74b9;">"~a~&amp;"</span> (polyomino-dlx-headers board-size))
+        (<span style="color: #d98c10;">dolist</span> (rotation (polyomino-unique-rotations (elt polyominos i)))
+          (format stream <span style="color: #0a74b9;">"~a~&amp;"</span> (polyomino-dlx-generate-row rotation board-size)))))))
 
-(polyomino-dlx-generate <span style="color: #ff5f87;">"testing"</span> 8 16)
+(polyomino-dlx-generate <span style="color: #0a74b9;">"testing"</span> 8 16)
 </pre>
 </div>
 
@@ -1035,9 +1045,9 @@ DLX algorithm directly.)
 </div>
 </div>
 
-<div id="outline-container-org244b78b" class="outline-2">
-<h2 id="org244b78b">Afterward</h2>
-<div class="outline-text-2" id="text-org244b78b">
+<div id="outline-container-org3e496f8" class="outline-2">
+<h2 id="org3e496f8">Afterward</h2>
+<div class="outline-text-2" id="text-org3e496f8">
 <p>
 This is officially the first program I've written in Common Lisp.  I
 have found it fun.  Though, it is amusing how long it took something I
@@ -1073,7 +1083,7 @@ Evaluation took:
 </div></div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh Berry</p>
-<p class="date">Created: 2019-06-30 Sun 12:43</p>
+<p class="date">Created: 2019-07-05 Fri 20:30</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
