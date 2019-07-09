@@ -16,6 +16,8 @@
      lisp.
    - [[file:generating-polyominos.org][Generating Polyominos for Tiling]]: How many ways can you tile a
      board with polyominos?
+   - [[file:generating-free-polyominos.org][Generating Free Polyominos]]: Same as last time, just no longer
+     with a tetris mindset.
 
 * I'm probably wrong.
 

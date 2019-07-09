@@ -1,0 +1,326 @@
+#+title: Generating free polyominos for exact covering
+#+OPTIONS: num:nil
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
+
+* Generating "free" polyominos.
+
+My [[file:generating-polyominos.org][last attempt]] at this resulted in a program that would give me all
+of the files to pipe into DLX for "one-sided" versions of polyominos.
+(I blame a tetris mindset for me thinking that was the natural place
+to start.)
+
+This time, we'll do the same thing, but not for the "one-sided
+variants."  I'll go quicker through some of the earlier parts, since
+they aren't changing.
+
+* From last time
+
+We'll start by simply pulling in all of the functions from last time.
+Not going to look at output from them, since I did enough of that in
+the [[file:generating-polyominos.org][previous page]].
+
+#+begin_src lisp
+  (defstruct coordinate (x 0 :read-only t) (y 0 :read-only t))
+
+  (defun left (coordinate)
+    (with-slots (x y) coordinate
+      (make-coordinate :x x :y (- y 1))))
+  (defun right (coordinate)
+    (with-slots (x y) coordinate
+      (make-coordinate :x x :y (+ y 1))))
+  (defun up (coordinate)
+    (with-slots (x y) coordinate
+      (make-coordinate :x (- x 1) :y y)))
+  (defun down (coordinate)
+    (with-slots (x y) coordinate
+      (make-coordinate :x (+ x 1) :y y)))
+
+  (defstruct polyomino (active-coordinates nil :read-only t))
+
+  (defun polyomino-degree (polyomino)
+    (length (slot-value polyomino 'active-coordinates)))
+
+  (defun polyomino-add-coordinate (polyomino coordinate)
+    (make-polyomino :active-coordinates (adjoin coordinate (slot-value polyomino 'active-coordinates) :test #'equalp)))
+
+  (defun polyomino-has-coordinate (polyomino coordinate)
+    (member coordinate (slot-value polyomino 'active-coordinates) :test #'equalp))
+
+  (defun polyomino-to-string (polyomino)
+    (let ((width (polyomino-degree polyomino))
+          (height (polyomino-degree polyomino)))
+      (format nil "~{~&~{~a~}~}"
+              (loop for i from 0 below height
+                 collect (loop for j from 0 below width
+                            collect (if (polyomino-has-coordinate polyomino (make-coordinate :x i :y j))
+                                        "X"
+                                        "-"))))))
+
+  (defun polyomino-normalize (polyomino)
+    (loop for coordinate in (slot-value polyomino 'active-coordinates)
+       minimizing (slot-value coordinate 'x) into min-x
+       minimizing (slot-value coordinate 'y) into min-y
+       finally (return (make-polyomino :active-coordinates
+                                       (sort (loop for coordinate in (slot-value polyomino 'active-coordinates)
+                                                collect (with-slots (x y) coordinate
+                                                          (make-coordinate :x (- x min-x)
+                                                                           :y (- y min-y))))
+                                             (lambda (a b)
+                                               (with-slots ((ax x) (ay y)) a
+                                                 (with-slots ((bx x) (by y)) b
+                                                   (< (+ (* ax (polyomino-degree polyomino))
+                                                         ay)
+                                                      (+ (* bx (polyomino-degree polyomino))
+                                                         by))))))))))
+
+  (defun polyomino-rotate (polyomino)
+    (let ((d (- (polyomino-degree polyomino) 1)))
+      (polyomino-normalize 
+       (make-polyomino :active-coordinates 
+                       (with-slots (active-coordinates) polyomino
+                         (loop for coordinate in active-coordinates
+                            collect (with-slots (x y) coordinate
+                                      (make-coordinate :x y :y (- d x)))))))))
+#+end_src
+
+#+RESULTS:
+: POLYOMINO-ROTATE
+
+* Now, flipping.
+
+With all of that, I simply need a way to flip polyominos so that I can
+get to the "other side" of them.  
+
+#+begin_src lisp
+  (defun polyomino-flip (polyomino)
+    (polyomino-normalize 
+     (make-polyomino :active-coordinates 
+                     (loop for coordinate in (slot-value polyomino 'active-coordinates)
+                        collect (with-slots (x y) coordinate
+                                  (make-coordinate :x y :y x))))))
+#+end_src
+
+And, just to make sure it turns a "s" piece into an "z" piece.
+
+#+begin_src lisp :exports both
+  (let* ((a (make-coordinate))
+         (b (up a))
+         (c (left b))
+         (d (up c))
+         (p (make-polyomino :active-coordinates (list a b c d))))
+    (format nil "~{~a~2%~}" 
+            (list 
+             (polyomino-to-string (polyomino-normalize p))
+             (polyomino-to-string (polyomino-flip p)))))
+
+#+end_src
+
+#+RESULTS:
+#+begin_example
+X---
+XX--
+-X--
+----
+
+XX--
+-XX-
+----
+----
+
+#+end_example
+
+* Now, continuing basically from before.
+
+#+begin_src lisp
+  (defun polyomino-grow-list (seeds)
+    (let ((grown-values nil))
+      (dolist (polyomino seeds)
+        (let ((polyomino-coordinates (slot-value polyomino 'active-coordinates))
+              (candidates nil))
+          (dolist (c polyomino-coordinates)
+            (progn
+              (unless (member (up c) polyomino-coordinates :test #'equalp)
+                (setf candidates (adjoin (up c) candidates :test #'equalp)))
+              (unless (member (right c) polyomino-coordinates :test #'equalp)
+                (setf candidates (adjoin (right c) candidates :test #'equalp)))
+              (unless (member (down c) polyomino-coordinates :test #'equalp)
+                (setf candidates (adjoin (down c) candidates :test #'equalp)))
+              (unless (member (left c) polyomino-coordinates :test #'equalp)
+                (setf candidates (adjoin (left c) candidates :test #'equalp)))))
+          (dolist (c candidates)
+            (let ((p (polyomino-normalize (polyomino-add-coordinate polyomino c))))
+              (unless (or
+                       (member p grown-values :test #'equalp)
+                       (member (polyomino-rotate p) grown-values :test #'equalp)
+                       (member (polyomino-flip p) grown-values :test #'equalp)
+                       (member (polyomino-flip (polyomino-rotate p)) grown-values :test #'equalp)
+                       (member (polyomino-rotate (polyomino-rotate p)) grown-values :test #'equalp)
+                       (member (polyomino-flip (polyomino-rotate (polyomino-rotate p))) grown-values :test #'equalp)
+                       (member (polyomino-rotate (polyomino-rotate (polyomino-rotate p))) grown-values :test #'equalp)
+                       (member (polyomino-flip (polyomino-rotate (polyomino-rotate (polyomino-rotate p)))) grown-values :test #'equalp))
+                (setf grown-values (cons p grown-values)))))))
+      grown-values))
+#+end_src
+
+#+RESULTS:
+: POLYOMINO-GROW-LIST
+
+So, was that all it took?  This time comparing to the "Total" count on the
+[[https://en.wikipedia.org/wiki/Polyomino][Polyomino]] wikipedia page.
+
+#+begin_src lisp :exports both
+  (let* ((a (list (make-polyomino :active-coordinates (list (make-coordinate)))))
+         (b (polyomino-grow-list a))
+         (c (polyomino-grow-list b))
+         (d (polyomino-grow-list c))
+         (e (polyomino-grow-list d))
+         (f (polyomino-grow-list e))
+         (g (polyomino-grow-list f))
+         (h (polyomino-grow-list g))
+         (i (polyomino-grow-list h)))
+    (mapcar #'length (list a b c d e f g h i)))
+#+end_src
+
+#+RESULTS:
+| 1 | 1 | 2 | 7 | 18 | 60 | 196 | 704 | 2500 |
+
+
+Yes, we match again.  Yay!
+
+* With one last change
+
+Before, when I generated the placements, I iterated all unique
+rotations.  Now, I need to iterate the unique rotations and flips.
+
+#+begin_src lisp
+      (defun polyomino-unique-placements (p)
+        (let* ((a (polyomino-rotate p))
+               (b (polyomino-rotate a))
+               (c (polyomino-rotate b))
+               (d (polyomino-flip p))
+               (e (polyomino-flip a))
+               (f (polyomino-flip b))
+               (g (polyomino-flip c))
+               (l (list (polyomino-normalize p)))
+               (l (adjoin a l :test #'equalp))
+               (l (adjoin b l :test #'equalp))
+               (l (adjoin c l :test #'equalp))
+               (l (adjoin d l :test #'equalp))
+               (l (adjoin e l :test #'equalp))
+               (l (adjoin f l :test #'equalp))
+               (l (adjoin g l :test #'equalp)))
+          l))
+#+end_src
+
+#+RESULTS:
+: POLYOMINO-UNIQUE-PLACEMENTS
+
+And, just to see how this treats an "s" piece:
+
+#+begin_src lisp :exports both
+  (let* ((a (make-coordinate))
+         (b (up a))
+         (c (left b))
+         (d (up c))
+         (p (make-polyomino :active-coordinates (list a b c d))))
+    (format nil "~{~a~2%~}" 
+            (mapcar #'polyomino-to-string (polyomino-unique-placements p))))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+-X--
+XX--
+X---
+----
+
+XX--
+-XX-
+----
+----
+
+-XX-
+XX--
+----
+----
+
+X---
+XX--
+-X--
+----
+
+#+end_example
+
+
+* And finally, the same dance as last time
+
+Nothing changes in generating the DLX inputs.  So, just dumping them
+here again.
+
+#+begin_src lisp
+  (defun polyomino-dlx-headers (board-size)
+    (format nil "~{~{R~aC~a~} ~}" (loop for i from 0 below board-size
+       append (loop for j from 0 below board-size
+                   collect (list i j)))))
+
+  (defun polyomino-dlx-generate-row (p board-size)
+    (format nil "~{~{~{R~aC~a ~}~}~%~}"
+            (loop for c in (slot-value p 'active-coordinates)
+               maximizing (slot-value c 'x) into max-x
+               maximizing (slot-value c 'y) into max-y
+               finally (return (loop for i from 0 below (- board-size max-x)
+                                  append (loop for j from 0 below (- board-size max-y)
+                                            collect (loop for c in (slot-value p 'active-coordinates)
+                                                       collect (with-slots (x y) c
+                                                                 (list (+ x i) (+ y j))))))))))
+  (defun polyomino-dlx-generate (fileprefix degree board-size)
+    (let ((polyominos (list (make-polyomino :active-coordinates (list (make-coordinate :x 0 :y 0))))))
+      (dotimes (i (- degree 1))
+        (setf polyominos (polyomino-grow-list polyominos)))
+
+      (dotimes (i (length polyominos))
+        (with-open-file (stream (format nil "~a-~a-~a.dlx" fileprefix degree i) 
+                                :direction :output
+                                :if-exists :supersede
+                                :if-does-not-exist :create)
+          (format stream "~a~&" (polyomino-dlx-headers board-size))
+          (dolist (rotation (polyomino-unique-placements (elt polyominos i)))
+            (format stream "~a~&" (polyomino-dlx-generate-row rotation board-size)))))))
+
+  (polyomino-dlx-generate "testing" 8 16)
+
+#+end_src
+
+#+RESULTS:
+: NIL
+
+* Conclusion
+
+Not motivated enough to really dive into this.  Piping the above
+programs into the dlx algorithm from Knuth's [[https://www-cs-faculty.stanford.edu/~knuth/programs.html][homepage]] takes a long
+time.  About 4000 minutes, all told.  On a whim, I retried the
+previous try's effort on the same program compiled with optimizations.
+Result went from a minute down to 19 seconds.
+
+Assuming the same benefit in time, I'm still looking at about a day's
+worth of runtime.  I think I see how I could reduce the symmetric
+solutions.  That drops me by a factor 4 (8?).  Still has me in the
+hours for runtime, at best.
+
+Granted, this /could/ be a factor of the speed of my laptop.  Pushing
+a decade in age, sure, but I don't think anything has really happened
+recently to help in speed.  I was only running on 4 threads total for
+all of the run, with a single thread dominating the runtime.[fn:1]
+
+At any rate I had fun.  Modifying the common lisp program was as easy
+as to be expected.  Looking forward to more programs in that language.
+
+* Footnotes
+
+[fn:1] Specifically, I ran 
+#+begin_src shell
+time $(find . -name '*.dlx' | grep "dlx" | xargs -P4 -n1 -I file sh -c './dlx < "file"')
+#+end_src
+
+So, yes, I got some use of my multiple cores.  But only while there
+were subproblems I could fan out.
