@@ -100,6 +100,9 @@ get to the "other side" of them.
                                   (make-coordinate :x y :y x))))))
 #+end_src
 
+#+RESULTS:
+: POLYOMINO-FLIP
+
 And, just to make sure it turns a "s" piece into an "z" piece.
 
 #+begin_src lisp :exports both
@@ -182,7 +185,7 @@ So, was that all it took?  This time comparing to the "Total" count on the
 #+end_src
 
 #+RESULTS:
-| 1 | 1 | 2 | 7 | 18 | 60 | 196 | 704 | 2500 |
+| 1 | 1 | 2 | 5 | 12 | 35 | 108 | 369 | 1285 |
 
 
 Yes, we match again.  Yay!
@@ -300,7 +303,7 @@ Not motivated enough to really dive into this.  Piping the above
 programs into the dlx algorithm from Knuth's [[https://www-cs-faculty.stanford.edu/~knuth/programs.html][homepage]] takes a long
 time.  About 4000 minutes, all told.  On a whim, I retried the
 previous try's effort on the same program compiled with optimizations.
-Result went from a minute down to 19 seconds.
+Result went from a minute down to 19 seconds.[fn:2]
 
 Assuming the same benefit in time, I'm still looking at about a day's
 worth of runtime.  I think I see how I could reduce the symmetric
@@ -316,6 +319,10 @@ At any rate I had fun.  Modifying the common lisp program was as easy
 as to be expected.  Looking forward to more programs in that language.
 
 * Footnotes
+
+[fn:2] Since it really just meant leaving my home computer on while I
+was at work, I ran the optimized compilation against the larger set.
+Brought it down to 1200 minutes, as predicted.
 
 [fn:1] Specifically, I ran 
 #+begin_src shell

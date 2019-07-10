@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-07-08 Mon 23:40 -->
+<!-- 2019-07-09 Tue 21:27 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Generating free polyominos for exact covering</title>
@@ -248,20 +248,20 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org233d478">Generating "free" polyominos.</a></li>
-<li><a href="#org23e33ec">From last time</a></li>
-<li><a href="#org0cd53f2">Now, flipping.</a></li>
-<li><a href="#orgcb2f593">Now, continuing basically from before.</a></li>
-<li><a href="#org9886d50">With one last change</a></li>
-<li><a href="#org0743656">And finally, the same dance as last time</a></li>
-<li><a href="#orgcebd57a">Conclusion</a></li>
+<li><a href="#org8b2f68e">Generating "free" polyominos.</a></li>
+<li><a href="#org0c9bbec">From last time</a></li>
+<li><a href="#org0f93aee">Now, flipping.</a></li>
+<li><a href="#org823470c">Now, continuing basically from before.</a></li>
+<li><a href="#org5c61e40">With one last change</a></li>
+<li><a href="#org25c006a">And finally, the same dance as last time</a></li>
+<li><a href="#orgde7e47b">Conclusion</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org233d478" class="outline-2">
-<h2 id="org233d478">Generating "free" polyominos.</h2>
-<div class="outline-text-2" id="text-org233d478">
+<div id="outline-container-org8b2f68e" class="outline-2">
+<h2 id="org8b2f68e">Generating "free" polyominos.</h2>
+<div class="outline-text-2" id="text-org8b2f68e">
 <p>
 My <a href="generating-polyominos.html">last attempt</a> at this resulted in a program that would give me all
 of the files to pipe into DLX for "one-sided" versions of polyominos.
@@ -277,9 +277,9 @@ they aren't changing.
 </div>
 </div>
 
-<div id="outline-container-org23e33ec" class="outline-2">
-<h2 id="org23e33ec">From last time</h2>
-<div class="outline-text-2" id="text-org23e33ec">
+<div id="outline-container-org0c9bbec" class="outline-2">
+<h2 id="org0c9bbec">From last time</h2>
+<div class="outline-text-2" id="text-org0c9bbec">
 <p>
 We'll start by simply pulling in all of the functions from last time.
 Not going to look at output from them, since I did enough of that in
@@ -353,9 +353,9 @@ the <a href="generating-polyominos.html">previous page</a>.
 </div>
 </div>
 
-<div id="outline-container-org0cd53f2" class="outline-2">
-<h2 id="org0cd53f2">Now, flipping.</h2>
-<div class="outline-text-2" id="text-org0cd53f2">
+<div id="outline-container-org0f93aee" class="outline-2">
+<h2 id="org0f93aee">Now, flipping.</h2>
+<div class="outline-text-2" id="text-org0f93aee">
 <p>
 With all of that, I simply need a way to flip polyominos so that I can
 get to the "other side" of them.  
@@ -404,9 +404,9 @@ XX--
 </div>
 </div>
 
-<div id="outline-container-orgcb2f593" class="outline-2">
-<h2 id="orgcb2f593">Now, continuing basically from before.</h2>
-<div class="outline-text-2" id="text-orgcb2f593">
+<div id="outline-container-org823470c" class="outline-2">
+<h2 id="org823470c">Now, continuing basically from before.</h2>
+<div class="outline-text-2" id="text-org823470c">
 <div class="org-src-container">
 <pre class="src src-lisp">(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">polyomino-grow-list</span> (seeds)
   (<span style="color: #d98c10;">let</span> ((grown-values nil))
@@ -485,12 +485,12 @@ So, was that all it took?  This time comparing to the "Total" count on the
 <td class="org-right">1</td>
 <td class="org-right">1</td>
 <td class="org-right">2</td>
-<td class="org-right">7</td>
-<td class="org-right">18</td>
-<td class="org-right">60</td>
-<td class="org-right">196</td>
-<td class="org-right">704</td>
-<td class="org-right">2500</td>
+<td class="org-right">5</td>
+<td class="org-right">12</td>
+<td class="org-right">35</td>
+<td class="org-right">108</td>
+<td class="org-right">369</td>
+<td class="org-right">1285</td>
 </tr>
 </tbody>
 </table>
@@ -502,9 +502,9 @@ Yes, we match again.  Yay!
 </div>
 </div>
 
-<div id="outline-container-org9886d50" class="outline-2">
-<h2 id="org9886d50">With one last change</h2>
-<div class="outline-text-2" id="text-org9886d50">
+<div id="outline-container-org5c61e40" class="outline-2">
+<h2 id="org5c61e40">With one last change</h2>
+<div class="outline-text-2" id="text-org5c61e40">
 <p>
 Before, when I generated the placements, I iterated all unique
 rotations.  Now, I need to iterate the unique rotations and flips.
@@ -572,9 +572,9 @@ XX--
 </div>
 
 
-<div id="outline-container-org0743656" class="outline-2">
-<h2 id="org0743656">And finally, the same dance as last time</h2>
-<div class="outline-text-2" id="text-org0743656">
+<div id="outline-container-org25c006a" class="outline-2">
+<h2 id="org25c006a">And finally, the same dance as last time</h2>
+<div class="outline-text-2" id="text-org25c006a">
 <p>
 Nothing changes in generating the DLX inputs.  So, just dumping them
 here again.
@@ -617,15 +617,15 @@ here again.
 </div>
 </div>
 
-<div id="outline-container-orgcebd57a" class="outline-2">
-<h2 id="orgcebd57a">Conclusion</h2>
-<div class="outline-text-2" id="text-orgcebd57a">
+<div id="outline-container-orgde7e47b" class="outline-2">
+<h2 id="orgde7e47b">Conclusion</h2>
+<div class="outline-text-2" id="text-orgde7e47b">
 <p>
 Not motivated enough to really dive into this.  Piping the above
 programs into the dlx algorithm from Knuth's <a href="https://www-cs-faculty.stanford.edu/~knuth/programs.html">homepage</a> takes a long
 time.  About 4000 minutes, all told.  On a whim, I retried the
 previous try's effort on the same program compiled with optimizations.
-Result went from a minute down to 19 seconds.
+Result went from a minute down to 19 seconds.<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>
 </p>
 
 <p>
@@ -639,7 +639,7 @@ hours for runtime, at best.
 Granted, this <i>could</i> be a factor of the speed of my laptop.  Pushing
 a decade in age, sure, but I don't think anything has really happened
 recently to help in speed.  I was only running on 4 threads total for
-all of the run, with a single thread dominating the runtime.<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>
+all of the run, with a single thread dominating the runtime.<sup><a id="fnr.2" class="footref" href="#fn.2">2</a></sup>
 </p>
 
 <p>
@@ -653,6 +653,12 @@ as to be expected.  Looking forward to more programs in that language.
 <div id="text-footnotes">
 
 <div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1">1</a></sup> <div class="footpara"><p class="footpara">
+Since it really just meant leaving my home computer on while I
+was at work, I ran the optimized compilation against the larger set.
+Brought it down to 1200 minutes, as predicted.
+</p></div></div>
+
+<div class="footdef"><sup><a id="fn.2" class="footnum" href="#fnr.2">2</a></sup> <div class="footpara"><p class="footpara">
 Specifically, I ran 
 </p>
 <div class="org-src-container">
@@ -670,7 +676,7 @@ were subproblems I could fan out.
 </div></div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh Berry</p>
-<p class="date">Created: 2019-07-08 Mon 23:40</p>
+<p class="date">Created: 2019-07-09 Tue 21:27</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
