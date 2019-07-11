@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-07-09 Tue 21:27 -->
+<!-- 2019-07-10 Wed 22:08 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Generating free polyominos for exact covering</title>
@@ -248,20 +248,20 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org8b2f68e">Generating "free" polyominos.</a></li>
-<li><a href="#org0c9bbec">From last time</a></li>
-<li><a href="#org0f93aee">Now, flipping.</a></li>
-<li><a href="#org823470c">Now, continuing basically from before.</a></li>
-<li><a href="#org5c61e40">With one last change</a></li>
-<li><a href="#org25c006a">And finally, the same dance as last time</a></li>
-<li><a href="#orgde7e47b">Conclusion</a></li>
+<li><a href="#orgea8800d">Generating "free" polyominos.</a></li>
+<li><a href="#orgf83c5c4">From last time</a></li>
+<li><a href="#org11b5976">Now, flipping.</a></li>
+<li><a href="#org6629453">Now, continuing basically from before.</a></li>
+<li><a href="#orgcea7c2e">With one last change</a></li>
+<li><a href="#orgf4fbe78">And finally, the same dance as last time</a></li>
+<li><a href="#org4d73006">Conclusion</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org8b2f68e" class="outline-2">
-<h2 id="org8b2f68e">Generating "free" polyominos.</h2>
-<div class="outline-text-2" id="text-org8b2f68e">
+<div id="outline-container-orgea8800d" class="outline-2">
+<h2 id="orgea8800d">Generating "free" polyominos.</h2>
+<div class="outline-text-2" id="text-orgea8800d">
 <p>
 My <a href="generating-polyominos.html">last attempt</a> at this resulted in a program that would give me all
 of the files to pipe into DLX for "one-sided" versions of polyominos.
@@ -277,9 +277,9 @@ they aren't changing.
 </div>
 </div>
 
-<div id="outline-container-org0c9bbec" class="outline-2">
-<h2 id="org0c9bbec">From last time</h2>
-<div class="outline-text-2" id="text-org0c9bbec">
+<div id="outline-container-orgf83c5c4" class="outline-2">
+<h2 id="orgf83c5c4">From last time</h2>
+<div class="outline-text-2" id="text-orgf83c5c4">
 <p>
 We'll start by simply pulling in all of the functions from last time.
 Not going to look at output from them, since I did enough of that in
@@ -353,9 +353,9 @@ the <a href="generating-polyominos.html">previous page</a>.
 </div>
 </div>
 
-<div id="outline-container-org0f93aee" class="outline-2">
-<h2 id="org0f93aee">Now, flipping.</h2>
-<div class="outline-text-2" id="text-org0f93aee">
+<div id="outline-container-org11b5976" class="outline-2">
+<h2 id="org11b5976">Now, flipping.</h2>
+<div class="outline-text-2" id="text-org11b5976">
 <p>
 With all of that, I simply need a way to flip polyominos so that I can
 get to the "other side" of them.  
@@ -404,9 +404,9 @@ XX--
 </div>
 </div>
 
-<div id="outline-container-org823470c" class="outline-2">
-<h2 id="org823470c">Now, continuing basically from before.</h2>
-<div class="outline-text-2" id="text-org823470c">
+<div id="outline-container-org6629453" class="outline-2">
+<h2 id="org6629453">Now, continuing basically from before.</h2>
+<div class="outline-text-2" id="text-org6629453">
 <div class="org-src-container">
 <pre class="src src-lisp">(<span style="color: #d98c10;">defun</span> <span style="color: #34495e; font-weight: bold;">polyomino-grow-list</span> (seeds)
   (<span style="color: #d98c10;">let</span> ((grown-values nil))
@@ -502,9 +502,9 @@ Yes, we match again.  Yay!
 </div>
 </div>
 
-<div id="outline-container-org5c61e40" class="outline-2">
-<h2 id="org5c61e40">With one last change</h2>
-<div class="outline-text-2" id="text-org5c61e40">
+<div id="outline-container-orgcea7c2e" class="outline-2">
+<h2 id="orgcea7c2e">With one last change</h2>
+<div class="outline-text-2" id="text-orgcea7c2e">
 <p>
 Before, when I generated the placements, I iterated all unique
 rotations.  Now, I need to iterate the unique rotations and flips.
@@ -572,9 +572,9 @@ XX--
 </div>
 
 
-<div id="outline-container-org25c006a" class="outline-2">
-<h2 id="org25c006a">And finally, the same dance as last time</h2>
-<div class="outline-text-2" id="text-org25c006a">
+<div id="outline-container-orgf4fbe78" class="outline-2">
+<h2 id="orgf4fbe78">And finally, the same dance as last time</h2>
+<div class="outline-text-2" id="text-orgf4fbe78">
 <p>
 Nothing changes in generating the DLX inputs.  So, just dumping them
 here again.
@@ -617,20 +617,20 @@ here again.
 </div>
 </div>
 
-<div id="outline-container-orgde7e47b" class="outline-2">
-<h2 id="orgde7e47b">Conclusion</h2>
-<div class="outline-text-2" id="text-orgde7e47b">
+<div id="outline-container-org4d73006" class="outline-2">
+<h2 id="org4d73006">Conclusion</h2>
+<div class="outline-text-2" id="text-org4d73006">
 <p>
 Not motivated enough to really dive into this.  Piping the above
 programs into the dlx algorithm from Knuth's <a href="https://www-cs-faculty.stanford.edu/~knuth/programs.html">homepage</a> takes a long
 time.  About 4000 minutes, all told.  On a whim, I retried the
 previous try's effort on the same program compiled with optimizations.
-Result went from a minute down to 19 seconds.<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup>
+Result went from a minute down to 19 seconds.
 </p>
 
 <p>
 Assuming the same benefit in time, I'm still looking at about a day's
-worth of runtime.  I think I see how I could reduce the symmetric
+worth of runtime.<sup><a id="fnr.1" class="footref" href="#fn.1">1</a></sup> I think I see how I could reduce the symmetric
 solutions.  That drops me by a factor 4 (8?).  Still has me in the
 hours for runtime, at best.
 </p>
@@ -676,7 +676,7 @@ were subproblems I could fan out.
 </div></div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh Berry</p>
-<p class="date">Created: 2019-07-09 Tue 21:27</p>
+<p class="date">Created: 2019-07-10 Wed 22:08</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

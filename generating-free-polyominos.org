@@ -303,10 +303,10 @@ Not motivated enough to really dive into this.  Piping the above
 programs into the dlx algorithm from Knuth's [[https://www-cs-faculty.stanford.edu/~knuth/programs.html][homepage]] takes a long
 time.  About 4000 minutes, all told.  On a whim, I retried the
 previous try's effort on the same program compiled with optimizations.
-Result went from a minute down to 19 seconds.[fn:2]
+Result went from a minute down to 19 seconds.
 
 Assuming the same benefit in time, I'm still looking at about a day's
-worth of runtime.  I think I see how I could reduce the symmetric
+worth of runtime.[fn:2] I think I see how I could reduce the symmetric
 solutions.  That drops me by a factor 4 (8?).  Still has me in the
 hours for runtime, at best.
 
