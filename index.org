@@ -18,6 +18,9 @@
      board with polyominos?
    - [[file:generating-free-polyominos.org][Generating Free Polyominos]]: Same as last time, just no longer
      with a tetris mindset.
+   - [[file:AmusingAlgorithm.org][Searching for an Amusing Algorithm]]: In which I explore how to
+     construct a tree given the in-order and pre-order values of it.
+
 
 * I'm probably wrong.
 

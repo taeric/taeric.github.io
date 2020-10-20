@@ -1,0 +1,301 @@
+#+title: Searching for an Amusing Algorithm
+#+OPTIONS: num:nil
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
+
+* Introduction
+
+I was asked in an interview once to reconstruct a tree given the pre-order
+and in-order traversals.  I bombed it.  I could talk through a general
+idea.  Which I'll do with some illustrations.  So, first, a tree.
+
+#+begin_src dot :cmd neato :cmdline -n -Tpng :file a-tree.png
+  digraph {
+          graph [bb="0,0,306,252"];
+          node [label="\N",
+                  shape=plaintext
+          ];
+          a	[height=0.5,
+                  pos="165,234",
+                  width=0.5];
+          b	[height=0.5,
+                  pos="99,162",
+                  width=0.5];
+          a -> b	[pos="e,107.8,180.1 126.1,215.7 122,207.73 117.05,198.1 112.51,189.26"];
+          e	[height=0.5,
+                  pos="231,162",
+                  width=0.5];
+          a -> e	[pos="e,162.2,180.1 143.9,215.7 148,207.73 152.95,198.1 157.49,189.26"];
+          c	[height=0.5,
+                  pos="57,90",
+                  width=0.5];
+          b -> c	[pos="e,44.593,108.1 81.202,143.7 72.396,135.14 61.618,124.66 51.999,115.3"];
+          d	[height=0.5,
+                  label=Λ,
+                  pos="129,90",
+                  width=0.5];
+          b -> d	[pos="e,99,108.1 99,143.7 99,135.98 99,126.71 99,118.11"];
+          j	[height=0.5,
+                  pos="17,18",
+                  width=0.5];
+          c -> j	[pos="e,27,36.104 27,71.697 27,63.983 27,54.712 27,46.112"];
+          k	[height=0.5,
+                  pos="99,18",
+                  width=0.5];
+          c -> k	[pos="e,81.407,36.104 44.798,71.697 53.604,63.135 64.382,52.656 74.001,43.304"];
+          f	[height=0.5,
+                  label=Λ,
+                  pos="201,90",
+                  width=0.5];
+          e -> f	[pos="e,171,108.1 171,143.7 171,135.98 171,126.71 171,118.11"];
+          g	[height=0.5,
+                  pos="273,90",
+                  width=0.5];
+          e -> g	[pos="e,225.41,108.1 188.8,143.7 197.6,135.14 208.38,124.66 218,115.3"];
+          h	[height=0.5,
+                  pos="237,18",
+                  width=0.5];
+          g -> h	[pos="e,215.8,36.104 234.1,71.697 230,63.728 225.05,54.1 220.51,45.264"];
+          i	[height=0.5,
+                  label=Λ,
+                  pos="309,18",
+                  width=0.5];
+          g -> i	[pos="e,270.2,36.104 251.9,71.697 256,63.728 260.95,54.1 265.49,45.264"];
+  }
+#+end_src
+
+#+RESULTS:
+[[file:a-tree.png]]
+
+For this illustration, I'm showing both child links of any node that has
+any children, with one of them going to Λ if it is a null link.  As a quick
+refresher on the standard orders you can list the nodes of a tree, this
+tree would be "ABCJKEGH" in pre-order, and "JCKBAEHG" in in-order.  (And if
+you did post-order, you would get "JKCBHGEA".)
+
+The question, then, is given two of these orders, would you have enough
+information to recreate the tree?
+
+The answer is yes, if the two orders you have ar pre-order and in-order.
+Also if you have in-order and post-order, but *not* if you have pre-order
+and post-order; unless you know the tree is "full," in which case you can
+use those two orders.  For this page, I'm only going to be looking at the
+first case.
+
+The reason it is doable from the pre-order/in-order combo is that you know
+the root of the tree from the pre-order, and if you split the in-order with
+that value, you know the nodes that make up the left and right.  From which
+you can find the pre-order of them and do this again.
+
+This makes an algorithm straight forward.  In lisp, taking liberties and
+using lists for the orders, this is as simple as this:
+
+#+begin_src lisp :exports both
+  (defstruct node value left right)
+
+  (defun make-tree-from-traversals (pre-order in-order)
+    (when pre-order
+      (let* ((root-value         (car pre-order))
+             (left-in-order      (list-before in-order root-value))
+             (right-in-order     (list-after in-order root-value))
+             (left-pre-order     (list-filter-to-same-elmts pre-order left-in-order))
+             (right-pre-order    (list-filter-to-same-elmts pre-order right-in-order)))
+        (make-node :value root-value
+                   :left (make-tree-from-traversals left-pre-order left-in-order)
+                   :right (make-tree-from-traversals right-pre-order right-in-order)))))
+
+  (defun list-after (lst i)
+    (cond ((eq i (car lst))   (cdr lst))
+          ((eq lst nil)       nil)
+          (t                  (list-after (cdr lst) i))))
+
+  (defun list-before (lst i)
+    (cond ((eq i (car lst))     nil)
+          ((eq lst nil)         nil)
+          (t                    (cons (car lst) (list-before (cdr lst) i)))))
+
+  (defun list-filter-to-same-elmts (lst elmts)
+    (loop for v in lst
+          if (find v elmts)
+            collect v))
+
+  (make-tree-from-traversals '(a b c j k e g h) '(j c k b a e h g))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+#S(NODE
+   :VALUE A
+   :LEFT #S(NODE
+            :VALUE B
+            :LEFT #S(NODE
+                     :VALUE C
+                     :LEFT #S(NODE :VALUE J :LEFT NIL :RIGHT NIL)
+                     :RIGHT #S(NODE :VALUE K :LEFT NIL :RIGHT NIL))
+            :RIGHT NIL)
+   :RIGHT #S(NODE
+             :VALUE E
+             :LEFT NIL
+             :RIGHT #S(NODE
+                       :VALUE G
+                       :LEFT #S(NODE :VALUE H :LEFT NIL :RIGHT NIL)
+                       :RIGHT NIL)))
+#+end_example
+
+Note that the pretty print of the data is enough to show the structure,
+where you can see that "e" has a nil left and "g" has a
+* What was amusing about that?
+
+But I said I bombed this?  I also titled the post as searching for an
+amusing algorithm, so?
+
+I bombed this because I had remembered reading on this exact problem in
+Knuth's Art of Computer Programming Vol 1.  I told the person interviewing
+me, but they weren't aware of any clever algorithm.  (That or they just
+wanted me to get the straight forward way done first.  A reasonable
+desire.)
+
+Regardless, I couldn't shake what I half remembered from that book.  And,
+being an interview, I also could not consult the book.  So, I kept battling
+what I thought I remembered as a straight forward iterative solution that
+made clever use of "thread" links.
+
+To make matters worse, I made the mistake of not working out the problem on
+my first read through.  I sketched it in my mind and thought I saw a way to
+make it happen.  But I did not follow through with that.
+
+Flash forward several years, and I finally had a good reason to remember
+and devote time to this.  In a book club at work, we are reading this
+section and I recalled bombing that interview.  So, I was hoping someone in
+the group would know the trick I didn't.
+
+Sadly, nope.  And consulting the book showed that I basically remembered
+all of the hint.  Only reference to the algoritm is to link the nodes as I
+said, that "it is quite amusing to construct a simple algorithm..."
+
+As of right now, I don't know what the "amusingly simple" algorithm is.
+However, I have pieced together something.  In the spirit of Polya's "use
+all of the provided data", I thought I would run with a reference in the
+text that said "In some algorithms in can be guaranteed that the root of
+any subtree always will appear in a lower memory location than the other
+nodes of the subtree."
+
+In particular, this trick, I thought, would be all that I needed so that I
+could recognize "thread" links in the tree from normal ones.  Turns out
+that this is not the full trick.
+
+Further, to work with an algorithm that I have control of things being
+lower in memory than others would be a bit of a challenge, but no reason to
+use literal memory locations.  I could just build an array and use indexes
+into the array instead of references to memory.
+
+With that, I came up with this beast:
+
+#+begin_src lisp :exports both
+  (defun create-from-traversals-iterative (pre-order in-order)
+    (let* ((n     (length pre-order))
+           (nodes (make-array n)))
+
+      ;; Crudely link everything in the two orders.  Left being next in pre-order, right in-order.
+      (loop for v in pre-order
+            for i from 0
+            do (setf (elt nodes i) (make-node :value v
+                                              :left (1+ i)
+                                              :right (index-of-preorder-for-next-in-order v
+                                                                                          pre-order
+                                                                                          in-order))))
+
+      ;;The left of the last item will be set one high, quick correction here.
+      (setf (node-left (elt nodes (1- n))) -1)
+
+      ;;Now, convert all of the index links into standard links, per inspection
+      (loop for node across nodes
+            for i from 0
+
+            do (let ((cur node)
+                     (highest i)
+                     (seen (node-right node)))
+
+                 ;;Find the "highest" node that we can find walking right.
+                 (loop while (< highest (node-right cur))
+                       do (setf  seen (min seen (node-right cur))
+                                 cur (elt nodes (node-right cur))))
+
+
+                 (cond
+
+                   ((> i seen) ;; If the root is the highest we saw, there is nothing right of this
+                               ;; node
+                    (setf (node-right node) nil))
+
+                   ((< i seen) ;; Otherwise, move the highest we saw to be right of here, removing it
+                               ;; from the left of where it is in the array.
+                    (setf (node-left (elt nodes (- seen 1)))  -1
+                          (node-right node)                   (elt nodes seen))))
+
+                 (cond
+                   ((< i (node-left node)) ;; If left is still an index, convert that to the relevant
+                                           ;; node link.
+                    (setf (node-left node) (elt nodes (node-left node))))
+
+                   ((> i (node-left node)) ;; Otherwise, set it to nil.
+                    (setf (node-left node) nil)))))
+
+      (elt nodes 0)))
+
+  (defun index-of-preorder-for-next-in-order (v pre-order in-order)
+             (let ((next-i    (1+ (position v in-order))))
+               (if (>= next-i (length in-order))
+                   -1
+                   (position (elt in-order next-i) pre-order))))
+
+  (create-from-traversals-iterative '(a b c j k e g h) '(j c k b a e h g))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+#S(NODE
+   :VALUE A
+   :LEFT #S(NODE
+            :VALUE B
+            :LEFT #S(NODE
+                     :VALUE C
+                     :LEFT #S(NODE :VALUE J :LEFT NIL :RIGHT NIL)
+                     :RIGHT #S(NODE :VALUE K :LEFT NIL :RIGHT NIL))
+            :RIGHT NIL)
+   :RIGHT #S(NODE
+             :VALUE E
+             :LEFT NIL
+             :RIGHT #S(NODE
+                       :VALUE G
+                       :LEFT #S(NODE :VALUE H :LEFT NIL :RIGHT NIL)
+                       :RIGHT NIL)))
+#+end_example
+
+As before, visual inspection shows that I do have the same tree that we
+started with.
+
+Long explanation is that once you have things linked like this, you can
+just walk to the right of the node you are at until you hit a node "higher"
+than where you started.
+
+As soon as you do that, you have walked everything to the right of where
+you are, and the "highest" one you saw is the first item to the right.
+Remove it from the left of the node above it in preorder, and attach it to
+the right of the current.  (Note that if you didn't see anything lower than
+this node, set right to nil.)
+
+This just leaves dealing with the left.  If it is still an index greater
+than where you are, set it to a reference to the correct node, otherwise
+nil.
+
+* Is there a more amusing algorithm for this?
+
+I think the only amusement I can see to that algorithm is how not easy it
+is.  In particular, I could force this to work with lisp's dynamic nature,
+but getting this in something like Java would be a lot more typing.  (I
+think it is still doable, but I'd have to have a "Reference" type that was
+either an index or a proper java reference to the next node.  Maybe?)
+
+At any rate, my question for anyone willing to stick through this with me.
+Is there a more straight forward way of doing this?  In particular, does
+anyone know what the amusing algorithm is?

@@ -2,7 +2,7 @@ html {
   background: #020;
 }
 body {
-  max-width: 50em;
+  max-width: 60em;
   padding-left: 3em;
   padding-right: 3em;
   margin: auto;
@@ -28,7 +28,7 @@ div.outline-text-2, div.outline-text-3, div.outline-text-4 {
   padding-top: 0;
 }
 .org-src-container {
-  max-width: 40em;
+  max-width: 50em;
   margin: auto;
 }
 .org-src-container .src {

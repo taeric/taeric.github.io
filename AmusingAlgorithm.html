@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2020-10-20 Tue 02:23 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Searching for an Amusing Algorithm</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Josh Berry" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="org-overrides.css" />
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Searching for an Amusing Algorithm</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgd5168e9">Introduction</a></li>
+<li><a href="#orge9e0d0a">What was amusing about that?</a></li>
+<li><a href="#org35636d2">Is there a more amusing algorithm for this?</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgd5168e9" class="outline-2">
+<h2 id="orgd5168e9">Introduction</h2>
+<div class="outline-text-2" id="text-orgd5168e9">
+<p>
+I was asked in an interview once to reconstruct a tree given the pre-order
+and in-order traversals.  I bombed it.  I could talk through a general
+idea.  Which I'll do with some illustrations.  So, first, a tree.
+</p>
+
+
+<div class="figure">
+<p><img src="a-tree.png" alt="a-tree.png" />
+</p>
+</div>
+
+<p>
+For this illustration, I'm showing both child links of any node that has
+any children, with one of them going to Λ if it is a null link.  As a quick
+refresher on the standard orders you can list the nodes of a tree, this
+tree would be "ABCJKEGH" in pre-order, and "JCKBAEHG" in in-order.  (And if
+you did post-order, you would get "JKCBHGEA".)
+</p>
+
+<p>
+The question, then, is given two of these orders, would you have enough
+information to recreate the tree?
+</p>
+
+<p>
+The answer is yes, if the two orders you have ar pre-order and in-order.
+Also if you have in-order and post-order, but <b>not</b> if you have pre-order
+and post-order; unless you know the tree is "full," in which case you can
+use those two orders.  For this page, I'm only going to be looking at the
+first case.
+</p>
+
+<p>
+The reason it is doable from the pre-order/in-order combo is that you know
+the root of the tree from the pre-order, and if you split the in-order with
+that value, you know the nodes that make up the left and right.  From which
+you can find the pre-order of them and do this again.
+</p>
+
+<p>
+This makes an algorithm straight forward.  In lisp, taking liberties and
+using lists for the orders, this is as simple as this:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #fa9a4b; font-weight: bold;">defstruct</span> <span style="color: #72aaca;">node</span> value left right)
+
+(<span style="color: #fa9a4b; font-weight: bold;">defun</span> <span style="color: #72aaca; font-weight: bold;">make-tree-from-traversals</span> (pre-order in-order)
+  (<span style="color: #fa9a4b; font-weight: bold;">when</span> pre-order
+    (<span style="color: #fa9a4b; font-weight: bold;">let*</span> ((root-value         (car pre-order))
+           (left-in-order      (list-before in-order root-value))
+           (right-in-order     (list-after in-order root-value))
+           (left-pre-order     (list-filter-to-same-elmts pre-order left-in-order))
+           (right-pre-order    (list-filter-to-same-elmts pre-order right-in-order)))
+      (make-node <span style="color: #fa9a4b; font-weight: bold;">:value</span> root-value
+                 <span style="color: #fa9a4b; font-weight: bold;">:left</span> (make-tree-from-traversals left-pre-order left-in-order)
+                 <span style="color: #fa9a4b; font-weight: bold;">:right</span> (make-tree-from-traversals right-pre-order right-in-order)))))
+
+(<span style="color: #fa9a4b; font-weight: bold;">defun</span> <span style="color: #72aaca; font-weight: bold;">list-after</span> (lst i)
+  (<span style="color: #fa9a4b; font-weight: bold;">cond</span> ((eq i (car lst))   (cdr lst))
+        ((eq lst nil)       nil)
+        (t                  (list-after (cdr lst) i))))
+
+(<span style="color: #fa9a4b; font-weight: bold;">defun</span> <span style="color: #72aaca; font-weight: bold;">list-before</span> (lst i)
+  (<span style="color: #fa9a4b; font-weight: bold;">cond</span> ((eq i (car lst))     nil)
+        ((eq lst nil)         nil)
+        (t                    (cons (car lst) (list-before (cdr lst) i)))))
+
+(<span style="color: #fa9a4b; font-weight: bold;">defun</span> <span style="color: #72aaca; font-weight: bold;">list-filter-to-same-elmts</span> (lst elmts)
+  (<span style="color: #fa9a4b; font-weight: bold;">loop</span> for v in lst
+        if (find v elmts)
+          collect v))
+
+(make-tree-from-traversals '(a b c j k e g h) '(j c k b a e h g))
+</pre>
+</div>
+
+<pre class="example">
+#S(NODE
+   :VALUE A
+   :LEFT #S(NODE
+            :VALUE B
+            :LEFT #S(NODE
+                     :VALUE C
+                     :LEFT #S(NODE :VALUE J :LEFT NIL :RIGHT NIL)
+                     :RIGHT #S(NODE :VALUE K :LEFT NIL :RIGHT NIL))
+            :RIGHT NIL)
+   :RIGHT #S(NODE
+             :VALUE E
+             :LEFT NIL
+             :RIGHT #S(NODE
+                       :VALUE G
+                       :LEFT #S(NODE :VALUE H :LEFT NIL :RIGHT NIL)
+                       :RIGHT NIL)))
+</pre>
+
+<p>
+Note that the pretty print of the data is enough to show the structure,
+where you can see that "e" has a nil left and "g" has a
+</p>
+</div>
+</div>
+<div id="outline-container-orge9e0d0a" class="outline-2">
+<h2 id="orge9e0d0a">What was amusing about that?</h2>
+<div class="outline-text-2" id="text-orge9e0d0a">
+<p>
+But I said I bombed this?  I also titled the post as searching for an
+amusing algorithm, so?
+</p>
+
+<p>
+I bombed this because I had remembered reading on this exact problem in
+Knuth's Art of Computer Programming Vol 1.  I told the person interviewing
+me, but they weren't aware of any clever algorithm.  (That or they just
+wanted me to get the straight forward way done first.  A reasonable
+desire.)
+</p>
+
+<p>
+Regardless, I couldn't shake what I half remembered from that book.  And,
+being an interview, I also could not consult the book.  So, I kept battling
+what I thought I remembered as a straight forward iterative solution that
+made clever use of "thread" links.
+</p>
+
+<p>
+To make matters worse, I made the mistake of not working out the problem on
+my first read through.  I sketched it in my mind and thought I saw a way to
+make it happen.  But I did not follow through with that.
+</p>
+
+<p>
+Flash forward several years, and I finally had a good reason to remember
+and devote time to this.  In a book club at work, we are reading this
+section and I recalled bombing that interview.  So, I was hoping someone in
+the group would know the trick I didn't.
+</p>
+
+<p>
+Sadly, nope.  And consulting the book showed that I basically remembered
+all of the hint.  Only reference to the algoritm is to link the nodes as I
+said, that "it is quite amusing to construct a simple algorithm&#x2026;"
+</p>
+
+<p>
+As of right now, I don't know what the "amusingly simple" algorithm is.
+However, I have pieced together something.  In the spirit of Polya's "use
+all of the provided data", I thought I would run with a reference in the
+text that said "In some algorithms in can be guaranteed that the root of
+any subtree always will appear in a lower memory location than the other
+nodes of the subtree."
+</p>
+
+<p>
+In particular, this trick, I thought, would be all that I needed so that I
+could recognize "thread" links in the tree from normal ones.  Turns out
+that this is not the full trick.
+</p>
+
+<p>
+Further, to work with an algorithm that I have control of things being
+lower in memory than others would be a bit of a challenge, but no reason to
+use literal memory locations.  I could just build an array and use indexes
+into the array instead of references to memory.
+</p>
+
+<p>
+With that, I came up with this beast:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #fa9a4b; font-weight: bold;">defun</span> <span style="color: #72aaca; font-weight: bold;">create-from-traversals-iterative</span> (pre-order in-order)
+  (<span style="color: #fa9a4b; font-weight: bold;">let*</span> ((n     (length pre-order))
+         (nodes (make-array n)))
+
+    <span style="color: #798188;">;; </span><span style="color: #798188;">Crudely link everything in the two orders.  Left being next in pre-order, right in-order.</span>
+    (<span style="color: #fa9a4b; font-weight: bold;">loop</span> for v in pre-order
+          for i from 0
+          do (setf (elt nodes i) (make-node <span style="color: #fa9a4b; font-weight: bold;">:value</span> v
+                                            <span style="color: #fa9a4b; font-weight: bold;">:left</span> (1+ i)
+                                            <span style="color: #fa9a4b; font-weight: bold;">:right</span> (index-of-preorder-for-next-in-order v
+                                                                                        pre-order
+                                                                                        in-order))))
+
+    <span style="color: #798188;">;;</span><span style="color: #798188;">The left of the last item will be set one high, quick correction here.</span>
+    (setf (node-left (elt nodes (1- n))) -1)
+
+    <span style="color: #798188;">;;</span><span style="color: #798188;">Now, convert all of the index links into standard links, per inspection</span>
+    (<span style="color: #fa9a4b; font-weight: bold;">loop</span> for node across nodes
+          for i from 0
+
+          do (<span style="color: #fa9a4b; font-weight: bold;">let</span> ((cur node)
+                   (highest i)
+                   (seen (node-right node)))
+
+               <span style="color: #798188;">;;</span><span style="color: #798188;">Find the "highest" node that we can find walking right.</span>
+               (<span style="color: #fa9a4b; font-weight: bold;">loop</span> while (&lt; highest (node-right cur))
+                     do (setf  seen (min seen (node-right cur))
+                               cur (elt nodes (node-right cur))))
+
+
+               (<span style="color: #fa9a4b; font-weight: bold;">cond</span>
+
+                 ((&gt; i seen) <span style="color: #798188;">;; </span><span style="color: #798188;">If the root is the highest we saw, there is nothing right of this</span>
+                             <span style="color: #798188;">;; </span><span style="color: #798188;">node</span>
+                  (setf (node-right node) nil))
+
+                 ((&lt; i seen) <span style="color: #798188;">;; </span><span style="color: #798188;">Otherwise, move the highest we saw to be right of here, removing it</span>
+                             <span style="color: #798188;">;; </span><span style="color: #798188;">from the left of where it is in the array.</span>
+                  (setf (node-left (elt nodes (- seen 1)))  -1
+                        (node-right node)                   (elt nodes seen))))
+
+               (<span style="color: #fa9a4b; font-weight: bold;">cond</span>
+                 ((&lt; i (node-left node)) <span style="color: #798188;">;; </span><span style="color: #798188;">If left is still an index, convert that to the relevant</span>
+                                         <span style="color: #798188;">;; </span><span style="color: #798188;">node link.</span>
+                  (setf (node-left node) (elt nodes (node-left node))))
+
+                 ((&gt; i (node-left node)) <span style="color: #798188;">;; </span><span style="color: #798188;">Otherwise, set it to nil.</span>
+                  (setf (node-left node) nil)))))
+
+    (elt nodes 0)))
+
+(<span style="color: #fa9a4b; font-weight: bold;">defun</span> <span style="color: #72aaca; font-weight: bold;">index-of-preorder-for-next-in-order</span> (v pre-order in-order)
+           (<span style="color: #fa9a4b; font-weight: bold;">let</span> ((next-i    (1+ (position v in-order))))
+             (<span style="color: #fa9a4b; font-weight: bold;">if</span> (&gt;= next-i (length in-order))
+                 -1
+                 (position (elt in-order next-i) pre-order))))
+
+(create-from-traversals-iterative '(a b c j k e g h) '(j c k b a e h g))
+</pre>
+</div>
+
+<pre class="example">
+#S(NODE
+   :VALUE A
+   :LEFT #S(NODE
+            :VALUE B
+            :LEFT #S(NODE
+                     :VALUE C
+                     :LEFT #S(NODE :VALUE J :LEFT NIL :RIGHT NIL)
+                     :RIGHT #S(NODE :VALUE K :LEFT NIL :RIGHT NIL))
+            :RIGHT NIL)
+   :RIGHT #S(NODE
+             :VALUE E
+             :LEFT NIL
+             :RIGHT #S(NODE
+                       :VALUE G
+                       :LEFT #S(NODE :VALUE H :LEFT NIL :RIGHT NIL)
+                       :RIGHT NIL)))
+</pre>
+
+<p>
+As before, visual inspection shows that I do have the same tree that we
+started with.
+</p>
+
+<p>
+Long explanation is that once you have things linked like this, you can
+just walk to the right of the node you are at until you hit a node "higher"
+than where you started.
+</p>
+
+<p>
+As soon as you do that, you have walked everything to the right of where
+you are, and the "highest" one you saw is the first item to the right.
+Remove it from the left of the node above it in preorder, and attach it to
+the right of the current.  (Note that if you didn't see anything lower than
+this node, set right to nil.)
+</p>
+
+<p>
+This just leaves dealing with the left.  If it is still an index greater
+than where you are, set it to a reference to the correct node, otherwise
+nil.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org35636d2" class="outline-2">
+<h2 id="org35636d2">Is there a more amusing algorithm for this?</h2>
+<div class="outline-text-2" id="text-org35636d2">
+<p>
+I think the only amusement I can see to that algorithm is how not easy it
+is.  In particular, I could force this to work with lisp's dynamic nature,
+but getting this in something like Java would be a lot more typing.  (I
+think it is still doable, but I'd have to have a "Reference" type that was
+either an index or a proper java reference to the next node.  Maybe?)
+</p>
+
+<p>
+At any rate, my question for anyone willing to stick through this with me.
+Is there a more straight forward way of doing this?  In particular, does
+anyone know what the amusing algorithm is?
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Josh Berry</p>
+<p class="date">Created: 2020-10-20 Tue 02:23</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
