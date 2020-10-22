@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-10-20 Tue 02:23 -->
+<!-- 2020-10-21 Wed 23:23 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Searching for an Amusing Algorithm</title>
@@ -248,20 +248,27 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgd5168e9">Introduction</a></li>
-<li><a href="#orge9e0d0a">What was amusing about that?</a></li>
-<li><a href="#org35636d2">Is there a more amusing algorithm for this?</a></li>
+<li><a href="#orgb63bb11">Introduction</a></li>
+<li><a href="#org3207c39">What was amusing about that?</a></li>
+<li><a href="#org1766211">But these still do many traversals, right?</a></li>
+<li><a href="#orgca97ada">Does this translate to the "iterative" approach?</a></li>
+<li><a href="#orgbd9774d">Is there a more amusing algorithm for this?</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgd5168e9" class="outline-2">
-<h2 id="orgd5168e9">Introduction</h2>
-<div class="outline-text-2" id="text-orgd5168e9">
+<div id="outline-container-orgb63bb11" class="outline-2">
+<h2 id="orgb63bb11">Introduction</h2>
+<div class="outline-text-2" id="text-orgb63bb11">
 <p>
 I was asked in an interview once to reconstruct a tree given the pre-order
 and in-order traversals.  I bombed it.  I could talk through a general
-idea.  Which I'll do with some illustrations.  So, first, a tree.
+idea.  Which I'll do with some illustrations, but I terribly bombed as I
+did not get an answer.
+</p>
+
+<p>
+So, lets do a brief descussion on it.  First, a tree.
 </p>
 
 
@@ -304,31 +311,31 @@ using lists for the orders, this is as simple as this:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #fa9a4b; font-weight: bold;">defstruct</span> <span style="color: #72aaca;">node</span> value left right)
+<pre class="src src-lisp">(<span style="color: #a020f0;">defstruct</span> <span style="color: #228b22;">node</span> value left right)
 
-(<span style="color: #fa9a4b; font-weight: bold;">defun</span> <span style="color: #72aaca; font-weight: bold;">make-tree-from-traversals</span> (pre-order in-order)
-  (<span style="color: #fa9a4b; font-weight: bold;">when</span> pre-order
-    (<span style="color: #fa9a4b; font-weight: bold;">let*</span> ((root-value         (car pre-order))
+(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">make-tree-from-traversals</span> (pre-order in-order)
+  (<span style="color: #a020f0;">when</span> pre-order
+    (<span style="color: #a020f0;">let*</span> ((root-value         (first pre-order))
            (left-in-order      (list-before in-order root-value))
            (right-in-order     (list-after in-order root-value))
            (left-pre-order     (list-filter-to-same-elmts pre-order left-in-order))
            (right-pre-order    (list-filter-to-same-elmts pre-order right-in-order)))
-      (make-node <span style="color: #fa9a4b; font-weight: bold;">:value</span> root-value
-                 <span style="color: #fa9a4b; font-weight: bold;">:left</span> (make-tree-from-traversals left-pre-order left-in-order)
-                 <span style="color: #fa9a4b; font-weight: bold;">:right</span> (make-tree-from-traversals right-pre-order right-in-order)))))
+      (make-node <span style="color: #483d8b;">:value</span> root-value
+                 <span style="color: #483d8b;">:left</span> (make-tree-from-traversals left-pre-order left-in-order)
+                 <span style="color: #483d8b;">:right</span> (make-tree-from-traversals right-pre-order right-in-order)))))
 
-(<span style="color: #fa9a4b; font-weight: bold;">defun</span> <span style="color: #72aaca; font-weight: bold;">list-after</span> (lst i)
-  (<span style="color: #fa9a4b; font-weight: bold;">cond</span> ((eq i (car lst))   (cdr lst))
-        ((eq lst nil)       nil)
-        (t                  (list-after (cdr lst) i))))
-
-(<span style="color: #fa9a4b; font-weight: bold;">defun</span> <span style="color: #72aaca; font-weight: bold;">list-before</span> (lst i)
-  (<span style="color: #fa9a4b; font-weight: bold;">cond</span> ((eq i (car lst))     nil)
+(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">list-after</span> (lst i)
+  (<span style="color: #a020f0;">cond</span> ((eq i (first lst))   (rest lst))
         ((eq lst nil)         nil)
-        (t                    (cons (car lst) (list-before (cdr lst) i)))))
+        (t                    (list-after (rest lst) i))))
 
-(<span style="color: #fa9a4b; font-weight: bold;">defun</span> <span style="color: #72aaca; font-weight: bold;">list-filter-to-same-elmts</span> (lst elmts)
-  (<span style="color: #fa9a4b; font-weight: bold;">loop</span> for v in lst
+(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">list-before</span> (lst i)
+  (<span style="color: #a020f0;">cond</span> ((eq i (first lst))     nil)
+        ((eq lst nil)           nil)
+        (t                      (cons (first lst) (list-before (rest lst) i)))))
+
+(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">list-filter-to-same-elmts</span> (lst elmts)
+  (<span style="color: #a020f0;">loop</span> for v in lst
         if (find v elmts)
           collect v))
 
@@ -361,16 +368,16 @@ where you can see that "e" has a nil left and "g" has a
 </p>
 </div>
 </div>
-<div id="outline-container-orge9e0d0a" class="outline-2">
-<h2 id="orge9e0d0a">What was amusing about that?</h2>
-<div class="outline-text-2" id="text-orge9e0d0a">
+<div id="outline-container-org3207c39" class="outline-2">
+<h2 id="org3207c39">What was amusing about that?</h2>
+<div class="outline-text-2" id="text-org3207c39">
 <p>
 But I said I bombed this?  I also titled the post as searching for an
 amusing algorithm, so?
 </p>
 
 <p>
-I bombed this because I had remembered reading on this exact problem in
+I bombed this because I had remembered reading this exact problem in
 Knuth's Art of Computer Programming Vol 1.  I told the person interviewing
 me, but they weren't aware of any clever algorithm.  (That or they just
 wanted me to get the straight forward way done first.  A reasonable
@@ -381,7 +388,8 @@ desire.)
 Regardless, I couldn't shake what I half remembered from that book.  And,
 being an interview, I also could not consult the book.  So, I kept battling
 what I thought I remembered as a straight forward iterative solution that
-made clever use of "thread" links.
+made clever use of "thread" links.  (If you don't know what a "threaded
+tree is, I highly recommend looking those up.)
 </p>
 
 <p>
@@ -394,35 +402,38 @@ make it happen.  But I did not follow through with that.
 Flash forward several years, and I finally had a good reason to remember
 and devote time to this.  In a book club at work, we are reading this
 section and I recalled bombing that interview.  So, I was hoping someone in
-the group would know the trick I didn't.
+the group would know the trick I did not.
 </p>
 
 <p>
 Sadly, nope.  And consulting the book showed that I basically remembered
-all of the hint.  Only reference to the algoritm is to link the nodes as I
-said, that "it is quite amusing to construct a simple algorithm&#x2026;"
+all of the hint.  Only reference to the algoritm is to link the nodes using
+the left link to go to the next by pre-order, and the right nodes to go to
+the next by in-order. From there, it is ostensibly "quite amusing to
+construct a simple algorithm&#x2026;"
 </p>
 
 <p>
 As of right now, I don't know what the "amusingly simple" algorithm is.
 However, I have pieced together something.  In the spirit of Polya's "use
 all of the provided data", I thought I would run with a reference in the
-text that said "In some algorithms in can be guaranteed that the root of
+text that said "In some algorithms it can be guaranteed that the root of
 any subtree always will appear in a lower memory location than the other
 nodes of the subtree."
 </p>
 
 <p>
 In particular, this trick, I thought, would be all that I needed so that I
-could recognize "thread" links in the tree from normal ones.  Turns out
-that this is not the full trick.
+could recognize "thread" links in the tree from normal ones.  If this is
+the trick, it is certainly not all of it, as I did not see any easy way to
+work with the threads.
 </p>
 
 <p>
 Further, to work with an algorithm that I have control of things being
-lower in memory than others would be a bit of a challenge, but no reason to
-use literal memory locations.  I could just build an array and use indexes
-into the array instead of references to memory.
+lower in memory than others would be a bit of a challenge.  Luckily, no
+reason to use literal memory locations.  I could just build an array and
+use indexes into the array instead of references to memory.
 </p>
 
 <p>
@@ -430,60 +441,60 @@ With that, I came up with this beast:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-lisp">(<span style="color: #fa9a4b; font-weight: bold;">defun</span> <span style="color: #72aaca; font-weight: bold;">create-from-traversals-iterative</span> (pre-order in-order)
-  (<span style="color: #fa9a4b; font-weight: bold;">let*</span> ((n     (length pre-order))
+<pre class="src src-lisp">(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">create-from-traversals-iterative</span> (pre-order in-order)
+  (<span style="color: #a020f0;">let*</span> ((n     (length pre-order))
          (nodes (make-array n)))
 
-    <span style="color: #798188;">;; </span><span style="color: #798188;">Crudely link everything in the two orders.  Left being next in pre-order, right in-order.</span>
-    (<span style="color: #fa9a4b; font-weight: bold;">loop</span> for v in pre-order
+    <span style="color: #b22222;">;; </span><span style="color: #b22222;">Crudely link everything in the two orders.  Left being next in pre-order, right in-order.</span>
+    (<span style="color: #a020f0;">loop</span> for v in pre-order
           for i from 0
-          do (setf (elt nodes i) (make-node <span style="color: #fa9a4b; font-weight: bold;">:value</span> v
-                                            <span style="color: #fa9a4b; font-weight: bold;">:left</span> (1+ i)
-                                            <span style="color: #fa9a4b; font-weight: bold;">:right</span> (index-of-preorder-for-next-in-order v
+          do (setf (elt nodes i) (make-node <span style="color: #483d8b;">:value</span> v
+                                            <span style="color: #483d8b;">:left</span> (1+ i)
+                                            <span style="color: #483d8b;">:right</span> (index-of-preorder-for-next-in-order v
                                                                                         pre-order
                                                                                         in-order))))
 
-    <span style="color: #798188;">;;</span><span style="color: #798188;">The left of the last item will be set one high, quick correction here.</span>
+    <span style="color: #b22222;">;;</span><span style="color: #b22222;">The left of the last item will be set one high, quick correction here.</span>
     (setf (node-left (elt nodes (1- n))) -1)
 
-    <span style="color: #798188;">;;</span><span style="color: #798188;">Now, convert all of the index links into standard links, per inspection</span>
-    (<span style="color: #fa9a4b; font-weight: bold;">loop</span> for node across nodes
+    <span style="color: #b22222;">;;</span><span style="color: #b22222;">Now, convert all of the index links into standard links, per inspection</span>
+    (<span style="color: #a020f0;">loop</span> for node across nodes
           for i from 0
 
-          do (<span style="color: #fa9a4b; font-weight: bold;">let</span> ((cur node)
+          do (<span style="color: #a020f0;">let</span> ((cur node)
                    (highest i)
                    (seen (node-right node)))
 
-               <span style="color: #798188;">;;</span><span style="color: #798188;">Find the "highest" node that we can find walking right.</span>
-               (<span style="color: #fa9a4b; font-weight: bold;">loop</span> while (&lt; highest (node-right cur))
+               <span style="color: #b22222;">;;</span><span style="color: #b22222;">Find the "highest" node that we can find walking right.</span>
+               (<span style="color: #a020f0;">loop</span> while (&lt; highest (node-right cur))
                      do (setf  seen (min seen (node-right cur))
                                cur (elt nodes (node-right cur))))
 
 
-               (<span style="color: #fa9a4b; font-weight: bold;">cond</span>
+               (<span style="color: #a020f0;">cond</span>
 
-                 ((&gt; i seen) <span style="color: #798188;">;; </span><span style="color: #798188;">If the root is the highest we saw, there is nothing right of this</span>
-                             <span style="color: #798188;">;; </span><span style="color: #798188;">node</span>
+                 ((&gt; i seen) <span style="color: #b22222;">;; </span><span style="color: #b22222;">If the root is the highest we saw, there is nothing right of this</span>
+                             <span style="color: #b22222;">;; </span><span style="color: #b22222;">node</span>
                   (setf (node-right node) nil))
 
-                 ((&lt; i seen) <span style="color: #798188;">;; </span><span style="color: #798188;">Otherwise, move the highest we saw to be right of here, removing it</span>
-                             <span style="color: #798188;">;; </span><span style="color: #798188;">from the left of where it is in the array.</span>
+                 ((&lt; i seen) <span style="color: #b22222;">;; </span><span style="color: #b22222;">Otherwise, move the highest we saw to be right of here, removing it</span>
+                             <span style="color: #b22222;">;; </span><span style="color: #b22222;">from the left of where it is in the array.</span>
                   (setf (node-left (elt nodes (- seen 1)))  -1
                         (node-right node)                   (elt nodes seen))))
 
-               (<span style="color: #fa9a4b; font-weight: bold;">cond</span>
-                 ((&lt; i (node-left node)) <span style="color: #798188;">;; </span><span style="color: #798188;">If left is still an index, convert that to the relevant</span>
-                                         <span style="color: #798188;">;; </span><span style="color: #798188;">node link.</span>
+               (<span style="color: #a020f0;">cond</span>
+                 ((&lt; i (node-left node)) <span style="color: #b22222;">;; </span><span style="color: #b22222;">If left is still an index, convert that to the relevant</span>
+                                         <span style="color: #b22222;">;; </span><span style="color: #b22222;">node link.</span>
                   (setf (node-left node) (elt nodes (node-left node))))
 
-                 ((&gt; i (node-left node)) <span style="color: #798188;">;; </span><span style="color: #798188;">Otherwise, set it to nil.</span>
+                 ((&gt; i (node-left node)) <span style="color: #b22222;">;; </span><span style="color: #b22222;">Otherwise, set it to nil.</span>
                   (setf (node-left node) nil)))))
 
     (elt nodes 0)))
 
-(<span style="color: #fa9a4b; font-weight: bold;">defun</span> <span style="color: #72aaca; font-weight: bold;">index-of-preorder-for-next-in-order</span> (v pre-order in-order)
-           (<span style="color: #fa9a4b; font-weight: bold;">let</span> ((next-i    (1+ (position v in-order))))
-             (<span style="color: #fa9a4b; font-weight: bold;">if</span> (&gt;= next-i (length in-order))
+(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">index-of-preorder-for-next-in-order</span> (v pre-order in-order)
+           (<span style="color: #a020f0;">let</span> ((next-i    (1+ (position v in-order))))
+             (<span style="color: #a020f0;">if</span> (&gt;= next-i (length in-order))
                  -1
                  (position (elt in-order next-i) pre-order))))
 
@@ -537,28 +548,172 @@ nil.
 </div>
 </div>
 
-<div id="outline-container-org35636d2" class="outline-2">
-<h2 id="org35636d2">Is there a more amusing algorithm for this?</h2>
-<div class="outline-text-2" id="text-org35636d2">
+<div id="outline-container-org1766211" class="outline-2">
+<h2 id="org1766211">But these still do many traversals, right?</h2>
+<div class="outline-text-2" id="text-org1766211">
 <p>
-I think the only amusement I can see to that algorithm is how not easy it
-is.  In particular, I could force this to work with lisp's dynamic nature,
-but getting this in something like Java would be a lot more typing.  (I
-think it is still doable, but I'd have to have a "Reference" type that was
-either an index or a proper java reference to the next node.  Maybe?)
+They do.  In talking about the first algorithm, a coworker suggested first
+that I stop using car/cdr, as they couldn't remember what those did.  He
+also suggested that the "filter" I did was not necessary.
+</p>
+
+<p>
+Not surprisingly, he was rignt.  I could replace those with two calls, one
+that is "keep-n" and one that is "drop-n" from the pre-order list.  These
+would either keep or drop the first "n" items from the given list.
+</p>
+
+<p>
+That leaves us with:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #a020f0;">defstruct</span> <span style="color: #228b22;">node</span> value left right)
+
+(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">make-tree-from-traversals</span> (pre-order in-order)
+  (<span style="color: #a020f0;">when</span> pre-order
+    (<span style="color: #a020f0;">let*</span> ((root-value         (first pre-order))
+           (left-in-order      (list-before in-order root-value))
+           (right-in-order     (list-after in-order root-value))
+           (left-count         (length left-in-order))
+           (left-pre-order     (keep-n (rest pre-order) left-count))
+           (right-pre-order    (drop-n (rest pre-order) left-count)))
+
+      (make-node <span style="color: #483d8b;">:value</span> root-value
+                 <span style="color: #483d8b;">:left</span> (make-tree-from-traversals left-pre-order left-in-order)
+                 <span style="color: #483d8b;">:right</span> (make-tree-from-traversals right-pre-order right-in-order)))))
+
+(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">list-after</span> (lst i)
+  (<span style="color: #a020f0;">cond</span> ((eq i (first lst))   (rest lst))
+        ((eq lst nil)         nil)
+        (t                    (list-after (rest lst) i))))
+
+(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">list-before</span> (lst i)
+  (<span style="color: #a020f0;">cond</span> ((eq i (first lst))     nil)
+        ((eq lst nil)           nil)
+        (t                      (cons (first lst) (list-before (rest lst) i)))))
+
+(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">list-filter-to-same-elmts</span> (lst elmts)
+  (<span style="color: #a020f0;">loop</span> for v in lst
+        if (find v elmts)
+          collect v))
+
+(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">drop-n</span> (lst n)
+  (<span style="color: #a020f0;">if</span> (= n 0)
+      lst
+      (drop-n (rest lst) (1- n))))
+
+(<span style="color: #a020f0;">defun</span> <span style="color: #0000ff;">keep-n</span> (lst n)
+  (<span style="color: #a020f0;">loop</span> for i from 0 below n
+        for v in lst
+        collect v))
+
+(make-tree-from-traversals '(a b c j k e g h) '(j c k b a e h g))
+</pre>
+</div>
+
+<pre class="example">
+#S(NODE
+   :VALUE A
+   :LEFT #S(NODE
+            :VALUE B
+            :LEFT #S(NODE
+                     :VALUE C
+                     :LEFT #S(NODE :VALUE J :LEFT NIL :RIGHT NIL)
+                     :RIGHT #S(NODE :VALUE K :LEFT NIL :RIGHT NIL))
+            :RIGHT NIL)
+   :RIGHT #S(NODE
+             :VALUE E
+             :LEFT NIL
+             :RIGHT #S(NODE
+                       :VALUE G
+                       :LEFT #S(NODE :VALUE H :LEFT NIL :RIGHT NIL)
+                       :RIGHT NIL)))
+</pre>
+
+
+<p>
+Which, since I'm using standard lisp lists, still involves a bit of list
+scanning, but the point is rather clear that I could optimize some around
+the calls to keep/drop-n by using a non-linked list based approach if I
+cared to.  That leaves us with just the split that we have to get the
+left/right in-order lists.  (No, I'm not interested in going down that
+optimization rabbit hole.  Indeed, at the least I could do the scan of the
+in-order list just once such that I got the before/after in one shot&#x2026;)
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgca97ada" class="outline-2">
+<h2 id="orgca97ada">Does this translate to the "iterative" approach?</h2>
+<div class="outline-text-2" id="text-orgca97ada">
+<p>
+So, can I take some of that trick into what I dubbed the iterative
+approach?  I thought so.
+</p>
+
+<p>
+First, let me acknowledge that I made no attempt at putting the nodes in
+linked order efficiently.  Specifically, I do a scan at each one to find
+what the next "in-order" node would be.
+</p>
+
+<p>
+This scan can be easily removed by just doing that in two passes.  One pass
+to build a hash of value to index, and then the next pass I could link
+everything such that finding the next nodes is just a hash lookup.
+</p>
+
+<p>
+That still leaves the "walking" of the tree to the right looking for the
+smallest element.  Is there anything I can glean by just comparing the
+current index to the index of the right value?
+</p>
+
+<p>
+I had hoped that I could use those two to see how many children were to the
+right.  But, alas, that doesn't seem so.  Consider a tree that is linked to
+the right with a fully imbalanced left tree.  In that case, the right index
+will be to the maximum index, but the true right index is to the minimum
+index.  Indeed, I can easily craft many trees where the root node has a
+left index to the second (which is always the case, of course), and a right
+index to the fourth.
+</p>
+
+<p>
+So, does it help it I not start at the root and move down.  Can I use that
+trick and move from the last element going up?  Briefly, I have not managed
+to find a trick that way, yet.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgbd9774d" class="outline-2">
+<h2 id="orgbd9774d">Is there a more amusing algorithm for this?</h2>
+<div class="outline-text-2" id="text-orgbd9774d">
+<p>
+I think the only amusement I can see to the algorithm I found is how not
+simple it is.  In particular, I could force this to work with lisp's
+dynamic nature, but getting this in something like Java would be a lot more
+typing.  (I think it is still doable, but I'd have to have a "Reference"
+type that was either an index or a proper java reference to the next node.
+Maybe?)
 </p>
 
 <p>
 At any rate, my question for anyone willing to stick through this with me.
 Is there a more straight forward way of doing this?  In particular, does
-anyone know what the amusing algorithm is?
+anyone know what the amusing algorithm is?  Going back to the "use all you
+have been given" advice.  I think I can use some of the other algorithms
+from that chapter to come up with something.  If any of those pan out, I
+will post a new page talking about it.
 </p>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh Berry</p>
-<p class="date">Created: 2020-10-20 Tue 02:23</p>
+<p class="date">Created: 2020-10-21 Wed 23:23</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
