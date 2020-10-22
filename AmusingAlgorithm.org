@@ -178,6 +178,60 @@ the left link to go to the next by pre-order, and the right nodes to go to
 the next by in-order. From there, it is ostensibly "quite amusing to
 construct a simple algorithm..."
 
+To get an idea of what that would look like for this tree, here it is drawn
+with the left links in solid, and the right links dashed.
+
+#+begin_src dot :cmd neato :cmdline -n -Tpng :file pre-order-to-left-in-order-to-right.png
+  digraph {
+          graph [bb="0,0,306,252"];
+          node [label="\N",
+                  shape=plaintext
+          ];
+          a	[height=0.5,
+                  pos="165,234",
+                  width=0.5];
+          b	[height=0.5,
+                  pos="99,162",
+                  width=0.5];
+          a -> b	[pos="e,107.8,180.1 126.1,215.7 122,207.73 117.05,198.1 112.51,189.26"];
+          e	[height=0.5,
+                  pos="231,162",
+                  width=0.5];
+          k -> e	[pos="e,162.2,180.1 143.9,215.7 148,207.73 152.95,198.1 157.49,189.26"];
+          c	[height=0.5,
+                  pos="57,90",
+                  width=0.5];
+          b -> c	[pos="e,44.593,108.1 81.202,143.7 72.396,135.14 61.618,124.66 51.999,115.3"];
+          j	[height=0.5,
+                  pos="17,18",
+                  width=0.5];
+          c -> j	[pos="e,27,36.104 27,71.697 27,63.983 27,54.712 27,46.112"];
+          k	[height=0.5,
+                  pos="99,18",
+                  width=0.5];
+          j -> k	[pos="e,81.407,36.104 44.798,71.697 53.604,63.135 64.382,52.656 74.001,43.304"];
+          g	[height=0.5,
+                  pos="273,90",
+                  width=0.5];
+          e -> g	[pos="e,225.41,108.1 188.8,143.7 197.6,135.14 208.38,124.66 218,115.3"];
+          h	[height=0.5,
+                  pos="237,18",
+                  width=0.5];
+          g -> h	[pos="e,215.8,36.104 234.1,71.697 230,63.728 225.05,54.1 220.51,45.264"];
+          j -> c  [style="dashed"]
+          c -> k  [style="dashed"]
+          k -> b  [style="dashed"]
+          b -> a  [style="dashed"]
+          a -> e  [style="dashed"]
+          e -> h  [style="dashed"]
+          h -> g  [style="dashed"]
+  }
+#+end_src
+
+#+RESULTS:
+[[file:pre-order-to-left-in-order-to-right.png]]
+
+
 As of right now, I don't know what the "amusingly simple" algorithm is.
 However, I have pieced together something.  In the spirit of Polya's "use
 all of the provided data", I thought I would run with a reference in the
