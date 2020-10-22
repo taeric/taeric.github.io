@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-10-21 Wed 23:37 -->
+<!-- 2020-10-21 Wed 23:57 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Searching for an Amusing Algorithm</title>
@@ -248,18 +248,18 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orga27a674">Introduction</a></li>
-<li><a href="#orgf1396c2">What was amusing about that?</a></li>
-<li><a href="#org241e704">But these still do many traversals, right?</a></li>
-<li><a href="#orgaa72230">Does this translate to the "iterative" approach?</a></li>
-<li><a href="#org9bf794d">Is there a more amusing algorithm for this?</a></li>
+<li><a href="#org5aed8cc">Introduction</a></li>
+<li><a href="#org8be69a4">What was amusing about that?</a></li>
+<li><a href="#org75a20ba">But these still do many traversals, right?</a></li>
+<li><a href="#org65a5b0a">Does this translate to the "iterative" approach?</a></li>
+<li><a href="#orgaeee770">Is there a more amusing algorithm for this?</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orga27a674" class="outline-2">
-<h2 id="orga27a674">Introduction</h2>
-<div class="outline-text-2" id="text-orga27a674">
+<div id="outline-container-org5aed8cc" class="outline-2">
+<h2 id="org5aed8cc">Introduction</h2>
+<div class="outline-text-2" id="text-org5aed8cc">
 <p>
 I was asked in an interview once to reconstruct a tree given the pre-order
 and in-order traversals.  I bombed it.  I could talk through a general
@@ -364,13 +364,75 @@ using lists for the orders, this is as simple as this:
 
 <p>
 Note that the pretty print of the data is enough to show the structure,
-where you can see that "e" has a nil left and "g" has a
+where you can see that "e" has a nil left and "g" has a right nil, for
+example.
 </p>
+
+<p>
+To further that this is correct, you can also just print the pre-order and
+in-order to see if they give the same values.  We can do that here:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">pre-order</span> (root)
+  (<span style="color: #5af2ee;">when</span> root
+    (format t <span style="color: #ff5f87;">"~a"</span> (node-value root))
+    (pre-order (node-left root))
+    (pre-order (node-right root))))
+
+(<span style="color: #5af2ee;">defun</span> <span style="color: #f09fff;">in-order</span> (root)
+  (<span style="color: #5af2ee;">when</span> root
+    (in-order (node-left root))
+    (format t <span style="color: #ff5f87;">"~a"</span> (node-value root))
+    (in-order (node-right root))))
+
+(format t <span style="color: #ff5f87;">"Pre-order: "</span>)
+(pre-order #S(NODE
+              <span style="color: #b2baf6;">:VALUE</span> A
+              <span style="color: #b2baf6;">:LEFT</span> #S(NODE
+                       <span style="color: #b2baf6;">:VALUE</span> B
+                       <span style="color: #b2baf6;">:LEFT</span> #S(NODE
+                                <span style="color: #b2baf6;">:VALUE</span> C
+                                <span style="color: #b2baf6;">:LEFT</span> #S(NODE <span style="color: #b2baf6;">:VALUE</span> J <span style="color: #b2baf6;">:LEFT</span> NIL <span style="color: #b2baf6;">:RIGHT</span> NIL)
+                                <span style="color: #b2baf6;">:RIGHT</span> #S(NODE <span style="color: #b2baf6;">:VALUE</span> K <span style="color: #b2baf6;">:LEFT</span> NIL <span style="color: #b2baf6;">:RIGHT</span> NIL))
+                       <span style="color: #b2baf6;">:RIGHT</span> NIL)
+              <span style="color: #b2baf6;">:RIGHT</span> #S(NODE
+                        <span style="color: #b2baf6;">:VALUE</span> E
+                        <span style="color: #b2baf6;">:LEFT</span> NIL
+                        <span style="color: #b2baf6;">:RIGHT</span> #S(NODE
+                                  <span style="color: #b2baf6;">:VALUE</span> G
+                                  <span style="color: #b2baf6;">:LEFT</span> #S(NODE <span style="color: #b2baf6;">:VALUE</span> H <span style="color: #b2baf6;">:LEFT</span> NIL <span style="color: #b2baf6;">:RIGHT</span> NIL)
+                                  <span style="color: #b2baf6;">:RIGHT</span> NIL))))
+(format t <span style="color: #ff5f87;">"~&amp;In-order:  "</span>)
+(in-order #S(NODE
+             <span style="color: #b2baf6;">:VALUE</span> A
+             <span style="color: #b2baf6;">:LEFT</span> #S(NODE
+                      <span style="color: #b2baf6;">:VALUE</span> B
+                      <span style="color: #b2baf6;">:LEFT</span> #S(NODE
+                               <span style="color: #b2baf6;">:VALUE</span> C
+                               <span style="color: #b2baf6;">:LEFT</span> #S(NODE <span style="color: #b2baf6;">:VALUE</span> J <span style="color: #b2baf6;">:LEFT</span> NIL <span style="color: #b2baf6;">:RIGHT</span> NIL)
+                               <span style="color: #b2baf6;">:RIGHT</span> #S(NODE <span style="color: #b2baf6;">:VALUE</span> K <span style="color: #b2baf6;">:LEFT</span> NIL <span style="color: #b2baf6;">:RIGHT</span> NIL))
+                      <span style="color: #b2baf6;">:RIGHT</span> NIL)
+             <span style="color: #b2baf6;">:RIGHT</span> #S(NODE
+                       <span style="color: #b2baf6;">:VALUE</span> E
+                       <span style="color: #b2baf6;">:LEFT</span> NIL
+                       <span style="color: #b2baf6;">:RIGHT</span> #S(NODE
+                                 <span style="color: #b2baf6;">:VALUE</span> G
+                                 <span style="color: #b2baf6;">:LEFT</span> #S(NODE <span style="color: #b2baf6;">:VALUE</span> H <span style="color: #b2baf6;">:LEFT</span> NIL <span style="color: #b2baf6;">:RIGHT</span> NIL)
+                                 <span style="color: #b2baf6;">:RIGHT</span> NIL))))
+</pre>
+</div>
+
+<pre class="example">
+Pre-order: ABCJKEGH
+In-order:  JCKBAEHG
+</pre>
 </div>
 </div>
-<div id="outline-container-orgf1396c2" class="outline-2">
-<h2 id="orgf1396c2">What was amusing about that?</h2>
-<div class="outline-text-2" id="text-orgf1396c2">
+
+<div id="outline-container-org8be69a4" class="outline-2">
+<h2 id="org8be69a4">What was amusing about that?</h2>
+<div class="outline-text-2" id="text-org8be69a4">
 <p>
 But I said I bombed this?  I also titled the post as searching for an
 amusing algorithm, so?
@@ -560,9 +622,9 @@ nil.
 </div>
 </div>
 
-<div id="outline-container-org241e704" class="outline-2">
-<h2 id="org241e704">But these still do many traversals, right?</h2>
-<div class="outline-text-2" id="text-org241e704">
+<div id="outline-container-org75a20ba" class="outline-2">
+<h2 id="org75a20ba">But these still do many traversals, right?</h2>
+<div class="outline-text-2" id="text-org75a20ba">
 <p>
 They do.  In talking about the first algorithm, a coworker suggested first
 that I stop using car/cdr, as they couldn't remember what those did.  He
@@ -656,9 +718,9 @@ in-order list just once such that I got the before/after in one shot&#x2026;)
 </div>
 </div>
 
-<div id="outline-container-orgaa72230" class="outline-2">
-<h2 id="orgaa72230">Does this translate to the "iterative" approach?</h2>
-<div class="outline-text-2" id="text-orgaa72230">
+<div id="outline-container-org65a5b0a" class="outline-2">
+<h2 id="org65a5b0a">Does this translate to the "iterative" approach?</h2>
+<div class="outline-text-2" id="text-org65a5b0a">
 <p>
 So, can I take some of that trick into what I dubbed the iterative
 approach?  I thought so.
@@ -700,9 +762,9 @@ to find a trick that way, yet.
 </div>
 </div>
 
-<div id="outline-container-org9bf794d" class="outline-2">
-<h2 id="org9bf794d">Is there a more amusing algorithm for this?</h2>
-<div class="outline-text-2" id="text-org9bf794d">
+<div id="outline-container-orgaeee770" class="outline-2">
+<h2 id="orgaeee770">Is there a more amusing algorithm for this?</h2>
+<div class="outline-text-2" id="text-orgaeee770">
 <p>
 I think the only amusement I can see to the algorithm I found is how not
 simple it is.  In particular, I could force this to work with lisp's
@@ -725,7 +787,7 @@ will post a new page talking about it.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh Berry</p>
-<p class="date">Created: 2020-10-21 Wed 23:37</p>
+<p class="date">Created: 2020-10-21 Wed 23:57</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

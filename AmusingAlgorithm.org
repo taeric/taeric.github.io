@@ -145,7 +145,65 @@ using lists for the orders, this is as simple as this:
 #+end_example
 
 Note that the pretty print of the data is enough to show the structure,
-where you can see that "e" has a nil left and "g" has a
+where you can see that "e" has a nil left and "g" has a right nil, for
+example.
+
+To further that this is correct, you can also just print the pre-order and
+in-order to see if they give the same values.  We can do that here:
+
+#+begin_src lisp :results output verbatim :exports both
+  (defun pre-order (root)
+    (when root
+      (format t "~a" (node-value root))
+      (pre-order (node-left root))
+      (pre-order (node-right root))))
+
+  (defun in-order (root)
+    (when root
+      (in-order (node-left root))
+      (format t "~a" (node-value root))
+      (in-order (node-right root))))
+
+  (format t "Pre-order: ")
+  (pre-order #S(NODE
+                :VALUE A
+                :LEFT #S(NODE
+                         :VALUE B
+                         :LEFT #S(NODE
+                                  :VALUE C
+                                  :LEFT #S(NODE :VALUE J :LEFT NIL :RIGHT NIL)
+                                  :RIGHT #S(NODE :VALUE K :LEFT NIL :RIGHT NIL))
+                         :RIGHT NIL)
+                :RIGHT #S(NODE
+                          :VALUE E
+                          :LEFT NIL
+                          :RIGHT #S(NODE
+                                    :VALUE G
+                                    :LEFT #S(NODE :VALUE H :LEFT NIL :RIGHT NIL)
+                                    :RIGHT NIL))))
+  (format t "~&In-order:  ")
+  (in-order #S(NODE
+               :VALUE A
+               :LEFT #S(NODE
+                        :VALUE B
+                        :LEFT #S(NODE
+                                 :VALUE C
+                                 :LEFT #S(NODE :VALUE J :LEFT NIL :RIGHT NIL)
+                                 :RIGHT #S(NODE :VALUE K :LEFT NIL :RIGHT NIL))
+                        :RIGHT NIL)
+               :RIGHT #S(NODE
+                         :VALUE E
+                         :LEFT NIL
+                         :RIGHT #S(NODE
+                                   :VALUE G
+                                   :LEFT #S(NODE :VALUE H :LEFT NIL :RIGHT NIL)
+                                   :RIGHT NIL))))
+#+end_src
+
+#+RESULTS:
+: Pre-order: ABCJKEGH
+: In-order:  JCKBAEHG
+
 * What was amusing about that?
 
 But I said I bombed this?  I also titled the post as searching for an
