@@ -19,13 +19,16 @@
              :publishing-directory "."
              :base-extension "org"
              :publishing-function org-html-publish-to-html)))
+    ;; Mathjax originally tries to use http... which I don't want.
+    (setq org-html-mathjax-options
+          '((path "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js")))
   #+END_SRC
 
   #+RESULTS:
-  | site | :base-directory | . | :publishing-directory | . | :base-extension | org | :publishing-function | org-html-publish-to-html |
+  | path | https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js |
 
 
-  With that set, you can simply call [[elisp:(org-publish-current-project)]]
+  With that set, you can simply call [[elisp:(org-publish-current-project t)]]
 
 * Styling
 

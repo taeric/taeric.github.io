@@ -33,7 +33,7 @@ coordinate.
 
 Here is the definition with three sample methods to create/copy one.
 
-#+begin_src lisp 
+#+begin_src :session polyominoes
   (defstruct coordinate (x 0 :read-only t) (y 0 :read-only t))
 
   (defun left (coordinate)
@@ -55,8 +55,8 @@ Here is the definition with three sample methods to create/copy one.
 
 And, just to show how to use this, here are some helper methods.
 
-#+begin_src lisp :exports both
-  (format nil "~{~a~%~}" 
+#+begin_src :session polyominoes :exports both
+  (format nil "~{~a~%~}"
           (list (make-coordinate :x 1)
                 #s(coordinate :x 0 :y 12)
                 (copy-coordinate #s(coordinate :x 3 :y 3))
@@ -83,7 +83,7 @@ unique coordinates to one.  (I don't have a sanity check to make sure
 it is a legal coordinate to add, though I don't think that would be
 tough here.)
 
-#+begin_src lisp
+#+begin_src :session polyominoes
   (defstruct polyomino (active-coordinates nil :read-only t))
 
   (defun polyomino-degree (polyomino)
@@ -103,7 +103,7 @@ Of course, just printing an instance of this is not that helpful.  Not
 worthless, since you can see the coordinates in a polyomino; just not
 entirely helpful.
 
-#+begin_src lisp :exports both
+#+begin_src :session polyominoes :exports both
   (let* ((a (make-polyomino))
          (b (make-polyomino :active-coordinates (list (make-coordinate))))
          (c (polyomino-add-coordinate a (make-coordinate :x 0 :y 0)))
@@ -124,7 +124,7 @@ That said, lets make something that will do that for us.  My FORMAT
 skills are less than worth talking about, but it turns out this isn't
 that tough.
 
-#+begin_src lisp :exports both 
+#+begin_src :session polyominoes :exports both
   (defun polyomino-to-string (polyomino)
     (let ((width (polyomino-degree polyomino))
           (height (polyomino-degree polyomino)))
@@ -153,7 +153,7 @@ That looks almost like what I want.  Printing about 4 spaces by 4
 spaces and letting me see things.  However, it has an obvious flaw,
 demonstrated by:
 
-#+begin_src lisp :exports both
+#+begin_src :session polyominoes :exports both
   (let* ((a (make-coordinate))
          (b (up a))
          (c (up b))
@@ -172,7 +172,7 @@ This would also prevent me from seeing that two identical shapes were
 identical, which is annoying.  Luckily, not tough.  Just need to
 normalize us to the origin.  (This was fun to work out on paper.)
 
-#+begin_src lisp :exports both
+#+begin_src :session polyominoes :exports both
   (defun polyomino-normalize (polyomino)
     (loop for coordinate in (slot-value polyomino 'active-coordinates)
        minimizing (slot-value coordinate 'x) into min-x
@@ -210,11 +210,11 @@ teach the computer that these would be the same.  Luckily, rotation is
 not that tough.  And then I'd just have to compare successive rotations
 to a collection to know if I had seen it.
 
-#+begin_src lisp :exports both 
+#+begin_src :session polyominoes :exports both
   (defun polyomino-rotate (polyomino)
     (let ((d (- (polyomino-degree polyomino) 1)))
-      (polyomino-normalize 
-       (make-polyomino :active-coordinates 
+      (polyomino-normalize
+       (make-polyomino :active-coordinates
                        (with-slots (active-coordinates) polyomino
                          (loop for coordinate in active-coordinates
                             collect (with-slots (x y) coordinate
@@ -225,8 +225,8 @@ to a collection to know if I had seen it.
          (c (up b))
          (d (left b))
          (p (make-polyomino :active-coordinates (list a b c d))))
-    (format nil "~{~a~2%~}" 
-            (list 
+    (format nil "~{~a~2%~}"
+            (list
              (polyomino-to-string (polyomino-normalize p))
              (polyomino-to-string (polyomino-rotate p))
              (polyomino-to-string (polyomino-rotate (polyomino-rotate p)))
@@ -259,12 +259,12 @@ XXX-
 
 And just to see what that looks like with a domino.
 
-#+begin_src lisp :exports both
+#+begin_src :session polyominoes :exports both
   (let* ((a (make-coordinate))
          (b (up a))
          (p (make-polyomino :active-coordinates (list a b))))
-    (format nil "~{~a~2&~}" 
-            (list 
+    (format nil "~{~a~2&~}"
+            (list
              (polyomino-to-string (polyomino-normalize p))
              (polyomino-to-string (polyomino-rotate p))
              (polyomino-to-string (polyomino-rotate (polyomino-rotate p)))
@@ -294,7 +294,7 @@ The algorithm I'm going for is ridiculously brute force.  We'll start
 with a function that will grow from a list of seed polyominos into the
 set of all polyominos that can be grown from them.
 
-#+begin_src lisp
+#+begin_src :session polyominoes
   (defun polyomino-grow-list (seeds)
     (let ((grown-values nil))
       (dolist (polyomino seeds)
@@ -328,7 +328,7 @@ And, well, did it work?  Luckily, it is pretty fast[fn:1] for up to
 degree 9.  So, checking expected values on the [[https://en.wikipedia.org/wiki/Polyomino][Polyomino]] wikipedia
 page, I see that I agree with what they have.  Yay!
 
-#+begin_src lisp :exports both
+#+begin_src :session polyominoes :exports both
   (let* ((a (list (make-polyomino :active-coordinates (list (make-coordinate)))))
          (b (polyomino-grow-list a))
          (c (polyomino-grow-list b))
@@ -354,7 +354,7 @@ Before we get to what I actually need, it isn't too late for me to
 waste some more time.  Which we will waste by visually spot checking
 some polyominos that most folks recognize.
 
-#+begin_src lisp :exports both
+#+begin_src :session polyominoes :exports both
   (let* ((monimo (make-polyomino :active-coordinates (list (make-coordinate :x 0 :y 0))))
          (dominos (polyomino-grow-list (list monimo)))
          (trominos (polyomino-grow-list dominos))
@@ -414,9 +414,9 @@ names followed by rows of active columns.
 
 * Generating the header row
 
-This is ridiculously straight forward. 
+This is ridiculously straight forward.
 
-#+begin_src lisp :exports both
+#+begin_src :session polyominoes :exports both
   (defun polyomino-dlx-headers (board-size)
     (format nil "~{~{R~aC~a~} ~}" (loop for i from 0 below board-size
        append (loop for j from 0 below board-size
@@ -426,7 +426,7 @@ This is ridiculously straight forward.
 #+end_src
 
 #+RESULTS:
-: R0C0 R0C1 R0C2 R0C3 R1C0 R1C1 R1C2 R1C3 R2C0 R2C1 R2C2 R2C3 R3C0 R3C1 R3C2 R3C3 
+: R0C0 R0C1 R0C2 R0C3 R1C0 R1C1 R1C2 R1C3 R2C0 R2C1 R2C2 R2C3 R3C0 R3C1 R3C2 R3C3
 
 * Generating a placement of a piece everywhere it fits
 
@@ -439,7 +439,7 @@ We'll start with a function to get all unique rotations.  And, because
 I'm not wasting paper, we'll look at familiar rotations of the
 tetrominos.  Yes, this is in part for me to make sure it worked. :)
 
-#+begin_src lisp :exports both
+#+begin_src :session polyominoes :exports both
     (defun polyomino-unique-rotations (p)
       (let* ((a (polyomino-rotate p))
              (b (polyomino-rotate a))
@@ -561,9 +561,9 @@ XXX-
 #+end_example
 
 From there, we have a function that will loop over what we just
-produced and keep placing it on the board.  
+produced and keep placing it on the board.
 
-#+begin_src lisp 
+#+begin_src :session polyominoes
   (defun polyomino-dlx-generate-row (p board-size)
     (format nil "~{~{~{R~aC~a ~}~}~%~}"
             (loop for c in (slot-value p 'active-coordinates)
@@ -582,7 +582,7 @@ produced and keep placing it on the board.
 And just confirming there are 12 ways to place a non-rotating domino
 on a $4\times4$ board.
 
-#+begin_src lisp :exports both 
+#+begin_src :session polyominoes :exports both
   (let* ((monimo (make-polyomino :active-coordinates (list (make-coordinate :x 0 :y 0))))
          (dominos (polyomino-grow-list (list monimo))))
     (polyomino-dlx-generate-row (elt dominos 0) 4))
@@ -590,30 +590,30 @@ on a $4\times4$ board.
 
 #+RESULTS:
 #+begin_example
-R0C0 R0C1 
-R0C1 R0C2 
-R0C2 R0C3 
-R1C0 R1C1 
-R1C1 R1C2 
-R1C2 R1C3 
-R2C0 R2C1 
-R2C1 R2C2 
-R2C2 R2C3 
-R3C0 R3C1 
-R3C1 R3C2 
-R3C2 R3C3 
+R0C0 R0C1
+R0C1 R0C2
+R0C2 R0C3
+R1C0 R1C1
+R1C1 R1C2
+R1C2 R1C3
+R2C0 R2C1
+R2C1 R2C2
+R2C2 R2C3
+R3C0 R3C1
+R3C1 R3C2
+R3C2 R3C3
 #+end_example
 
 * Bringing them together
 
-#+begin_src lisp
+#+begin_src :session polyominoes
   (defun polyomino-dlx-generate (fileprefix degree board-size)
     (let ((polyominos (list (make-polyomino :active-coordinates (list (make-coordinate :x 0 :y 0))))))
       (dotimes (i (- degree 1))
         (setf polyominos (polyomino-grow-list polyominos)))
 
       (dotimes (i (length polyominos))
-        (with-open-file (stream (format nil "~a-~a-~a.dlx" fileprefix degree i) 
+        (with-open-file (stream (format nil "~a-~a-~a.dlx" fileprefix degree i)
                                 :direction :output
                                 :if-exists :supersede
                                 :if-does-not-exist :create)

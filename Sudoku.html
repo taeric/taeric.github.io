@@ -3,23 +3,30 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
+<!-- 2021-02-05 Fri 23:50 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Solving Sudoku with Dancing Links</title>
-<!-- 2017-12-23 Sat 00:33 -->
-<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta  name="generator" content="Org-mode" />
-<meta  name="author" content="Josh Berry" />
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Josh Berry" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
-  .title  { text-align: center; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
   .todo   { font-family: monospace; color: red; }
-  .done   { color: green; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
   .tag    { background-color: #eee; font-family: monospace;
             padding: 2px; font-size: 80%; font-weight: normal; }
   .timestamp { color: #bebebe; }
   .timestamp-kwd { color: #5f9ea0; }
-  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
-  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
-  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
   .underline { text-decoration: underline; }
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
@@ -33,7 +40,7 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
+    overflow: auto;
     padding-top: 1.2em;
   }
   pre.src:before {
@@ -45,31 +52,128 @@
     padding: 3px;
     border: 1px solid black;
   }
-  pre.src:hover:before { display: inline;}
-  pre.src-sh:before    { content: 'sh'; }
-  pre.src-bash:before  { content: 'sh'; }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
   pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
-  pre.src-R:before     { content: 'R'; }
-  pre.src-perl:before  { content: 'Perl'; }
-  pre.src-java:before  { content: 'Java'; }
-  pre.src-sql:before   { content: 'SQL'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
 
   table { border-collapse:collapse; }
   caption.t-above { caption-side: top; }
   caption.t-bottom { caption-side: bottom; }
   td, th { vertical-align:top;  }
-  th.right  { text-align: center;  }
-  th.left   { text-align: center;   }
-  th.center { text-align: center; }
-  td.right  { text-align: right;  }
-  td.left   { text-align: left;   }
-  td.center { text-align: center; }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
   dt { font-weight: bold; }
-  .footpara:nth-child(2) { display: inline; }
-  .footpara { display: block; }
+  .footpara { display: inline; }
   .footdef  { margin-bottom: 1em; }
   .figure { padding: 1em; }
   .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
   .inlinetask {
     padding: 10px;
     border: 2px solid gray;
@@ -86,98 +190,55 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
 <link rel="stylesheet" type="text/css" href="org-overrides.css" />
 <link rel="stylesheet" type="text/css" href="sudokuBoards.css" />
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2013 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
 </script>
-<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js"></script>
-<script type="text/javascript">
-<!--/*--><![CDATA[/*><!--*/
+<script type="text/x-mathjax-config">
     MathJax.Hub.Config({
-        // Only one of the two following lines, depending on user settings
-        // First allows browser-native MathML display, second forces HTML/CSS
-        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
-            jax: ["input/TeX", "output/HTML-CSS"],
-        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
-                     "TeX/noUndefined.js"],
-        tex2jax: {
-            inlineMath: [ ["\\(","\\)"] ],
-            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
-            skipTags: ["script","noscript","style","textarea","pre","code"],
-            ignoreClass: "tex2jax_ignore",
-            processEscapes: false,
-            processEnvironments: true,
-            preview: "TeX"
-        },
-        showProcessingMessages: true,
-        displayAlign: "center",
-        displayIndent: "2em",
+        displayAlign: "%ALIGN",
+        displayIndent: "%INDENT",
 
-        "HTML-CSS": {
-             scale: 100,
-             availableFonts: ["STIX","TeX"],
-             preferredFont: "TeX",
-             webFont: "TeX",
-             imageFont: "TeX",
-             showMathMenu: true,
-        },
-        MMLorHTML: {
-             prefer: {
-                 MSIE:    "MML",
-                 Firefox: "MML",
-                 Opera:   "HTML",
-                 other:   "HTML"
+        "HTML-CSS": { scale: %SCALE,
+                        linebreaks: { automatic: "%LINEBREAKS" },
+                        webFont: "%FONT"
+                       },
+        SVG: {scale: %SCALE,
+              linebreaks: { automatic: "%LINEBREAKS" },
+              font: "%FONT"},
+        NativeMML: {scale: %SCALE},
+        TeX: { equationNumbers: {autoNumber: "%AUTONUMBER"},
+               MultLineWidth: "%MULTLINEWIDTH",
+               TagSide: "%TAGSIDE",
+               TagIndent: "%TAGINDENT"
              }
-        }
-    });
-/*]]>*///-->
+});
 </script>
+<script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div id="content">
@@ -186,51 +247,51 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">Introduction</a></li>
-<li><a href="#sec-2">Sudoku</a></li>
-<li><a href="#sec-3">As an exact cover problem.</a></li>
-<li><a href="#sec-4">DLX Sudoku Solver</a>
+<li><a href="#org6d25fb8">Introduction</a></li>
+<li><a href="#orgd39659f">Sudoku</a></li>
+<li><a href="#org675af9b">As an exact cover problem.</a></li>
+<li><a href="#orge4ea7ad">DLX Sudoku Solver</a>
 <ul>
-<li><a href="#sec-4-1">Outline</a></li>
-<li><a href="#sec-4-2">DLX core</a></li>
-<li><a href="#sec-4-3">Making the columns for Sudoku</a>
+<li><a href="#org04f9521">Outline</a></li>
+<li><a href="#orge25d4d9">DLX core</a></li>
+<li><a href="#org037268d">Making the columns for Sudoku</a>
 <ul>
-<li><a href="#sec-4-3-1">Outline</a></li>
-<li><a href="#sec-4-3-2">Needed variables</a></li>
-<li><a href="#sec-4-3-3">Methods to create headers and cells.</a></li>
-<li><a href="#sec-4-3-4">Initialize Data</a></li>
-<li><a href="#sec-4-3-5">Read in board data.</a></li>
-<li><a href="#sec-4-3-6">Generate Headers</a></li>
-<li><a href="#sec-4-3-7">Generate Rows</a></li>
+<li><a href="#org161cf87">Outline</a></li>
+<li><a href="#org4b1094b">Needed variables</a></li>
+<li><a href="#org582575e">Methods to create headers and cells.</a></li>
+<li><a href="#org88f63ad">Initialize Data</a></li>
+<li><a href="#org4915e46">Read in board data.</a></li>
+<li><a href="#org6e47801">Generate Headers</a></li>
+<li><a href="#orga671c4a">Generate Rows</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#sec-5">Seeing it work</a></li>
-<li><a href="#sec-6">Appendix</a>
+<li><a href="#orgb21192a">Seeing it work</a></li>
+<li><a href="#org71ca855">Appendix</a>
 <ul>
-<li><a href="#sec-6-1">Javascript used to make boards</a></li>
-<li><a href="#sec-6-2">Styles used.</a></li>
+<li><a href="#orgc187904">Javascript used to make boards</a></li>
+<li><a href="#org90222b2">Styles used.</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">Introduction</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-org6d25fb8" class="outline-2">
+<h2 id="org6d25fb8">Introduction</h2>
+<div class="outline-text-2" id="text-org6d25fb8">
 <p>
 In trying to implement Knuth's Dancing Links technique against the
-\(N\)-Queens problem, I also found that he used the DLX algorithm to
+$N$-Queens problem, I also found that he used the DLX algorithm to
 solve Sudoku puzzles for a <a href="http://spivey.oriel.ox.ac.uk/mike/comp2005/results.html">programming contest</a> in 2005.
 </p>
 </div>
 </div>
 
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">Sudoku</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-orgd39659f" class="outline-2">
+<h2 id="orgd39659f">Sudoku</h2>
+<div class="outline-text-2" id="text-orgd39659f">
 <div id="figure1" style="float:right; margin-left: 1em;">
 .2.......
 ...6....3
@@ -262,7 +323,7 @@ boards from the 2005 contest.  Such that the board above is
 represented as the following string.
 </p>
 
-<pre class="example">
+<pre class="example" id="org0147b3c">
 .2.......
 ...6....3
 .74.8....
@@ -276,9 +337,9 @@ represented as the following string.
 </div>
 </div>
 
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">As an exact cover problem.</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-org675af9b" class="outline-2">
+<h2 id="org675af9b">As an exact cover problem.</h2>
+<div class="outline-text-2" id="text-org675af9b">
 <p>
 In order to use the DLX algorithm, we must recast this problem to be
 one of selecting all rows of a matrix where there is a single \(1\)
@@ -308,13 +369,13 @@ fewer columns, though not by as large of a factor.
 </div>
 </div>
 
-<div id="outline-container-sec-4" class="outline-2">
-<h2 id="sec-4">DLX Sudoku Solver</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-orge4ea7ad" class="outline-2">
+<h2 id="orge4ea7ad">DLX Sudoku Solver</h2>
+<div class="outline-text-2" id="text-orge4ea7ad">
 <p>
 Now then, we need to briefly make a sudoku solver that can output
 solutions we can then display.  I confess I should have done the
-\(N\)-Queens solution in a more generic fashion such that I could just
+$N$-Queens solution in a more generic fashion such that I could just
 reference the dancing links algorithm.  Indeed, Knuth's
 implementation of DLX is available such that you can simply pipe it
 the columns to cover, then all of the rows.
@@ -326,17 +387,16 @@ again here.  (I may clean this up some day such that I am doing that.)
 </p>
 </div>
 
-<div id="outline-container-sec-4-1" class="outline-3">
-<h3 id="sec-4-1">Outline</h3>
-<div class="outline-text-3" id="text-4-1">
+<div id="outline-container-org04f9521" class="outline-3">
+<h3 id="org04f9521">Outline</h3>
+<div class="outline-text-3" id="text-org04f9521">
 <p>
 The basic outline of our Sudoku solver is here.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="dlx_sudoku_solver"><span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">dlxSudokuSolver</span>(<span style="color: #f6f080;">strings</span>, <span style="color: #f6f080;">showSteps</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">headers</span>, <span style="color: #f6f080;">solutions</span> = [], <span style="color: #f6f080;">O</span> = [];
+<pre class="src src-js" id="orgc0e4e4b"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">dlxSudokuSolver</span>(<span style="color: #DFAF8F;">strings</span>, <span style="color: #DFAF8F;">showSteps</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">headers</span>, <span style="color: #DFAF8F;">solutions</span> = [], <span style="color: #DFAF8F;">O</span> = [];
 
         &lt;&lt;dlx_search&gt;&gt;
 
@@ -349,48 +409,47 @@ The basic outline of our Sudoku solver is here.
 
     initializeHeaders();
     search(0);
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> solutions;
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> solutions;
 }
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-sec-4-2" class="outline-3">
-<h3 id="sec-4-2">DLX core</h3>
-<div class="outline-text-3" id="text-4-2">
+<div id="outline-container-orge25d4d9" class="outline-3">
+<h3 id="orge25d4d9">DLX core</h3>
+<div class="outline-text-3" id="text-orge25d4d9">
 <p>
 The search, covering/uncovering, and utilities code is basically
-unmodified from the code used in my <a href="DancingLinks.html">\(N\)-Queens</a> exploration.  See
+unmodified from the code used in my <a href="DancingLinks.html">$N$-Queens</a> exploration.  See
 there for more of an explanation.  I could abstract out the DLX
 portion to its own javascript function.  For now, though, this is
 just a copy paste of the previous version I used.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="dlx_search"><span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">search</span>(<span style="color: #f6f080;">k</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">c</span>, <span style="color: #f6f080;">r</span>;
-    <span style="color: #fa9a4b; font-weight: bold;">if</span> (headers.right === headers) {
+<pre class="src src-js" id="orgf066fad"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">search</span>(<span style="color: #DFAF8F;">k</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">c</span>, <span style="color: #DFAF8F;">r</span>;
+    <span style="color: #F0DFAF; font-weight: bold;">if</span> (headers.right === headers) {
         solutions.push(copySolution());
-        <span style="color: #fa9a4b; font-weight: bold;">return</span>;
+        <span style="color: #F0DFAF; font-weight: bold;">return</span>;
     }
-    <span style="color: #fa9a4b; font-weight: bold;">if</span> (showSteps) {
+    <span style="color: #F0DFAF; font-weight: bold;">if</span> (showSteps) {
         solutions.push(copySolution());
     }
     c = smallestColumn();
     cover(c);
     r = c.down;
-    <span style="color: #fa9a4b; font-weight: bold;">while</span> (r !== c) {
+    <span style="color: #F0DFAF; font-weight: bold;">while</span> (r !== c) {
         O.push(printRow(r));
         r = r.right;
-        <span style="color: #fa9a4b; font-weight: bold;">while</span> (r.col !== c) {
+        <span style="color: #F0DFAF; font-weight: bold;">while</span> (r.col !== c) {
             cover(r.col);
             r = r.right;
         }
         search(k + 1);
         r = r.left;
-        <span style="color: #fa9a4b; font-weight: bold;">while</span> (r.col !== c) {
+        <span style="color: #F0DFAF; font-weight: bold;">while</span> (r.col !== c) {
             uncover(r.col);
             r = r.left;
         }
@@ -403,14 +462,13 @@ just a copy paste of the previous version I used.
 </div>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="dlx_cover_uncover"><span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">cover</span>(<span style="color: #f6f080;">c</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">r</span> = c.down;
+<pre class="src src-js" id="org7c18226"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">cover</span>(<span style="color: #DFAF8F;">c</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">r</span> = c.down;
     c.right.left = c.left;
     c.left.right = c.right;
-    <span style="color: #fa9a4b; font-weight: bold;">while</span> (r !== c) {
+    <span style="color: #F0DFAF; font-weight: bold;">while</span> (r !== c) {
         r = r.right;
-        <span style="color: #fa9a4b; font-weight: bold;">while</span> (r.col !== c) {
+        <span style="color: #F0DFAF; font-weight: bold;">while</span> (r.col !== c) {
             r.up.down = r.down;
             r.down.up = r.up;
             r.col.size--;
@@ -420,13 +478,13 @@ just a copy paste of the previous version I used.
     }
 }
 
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">uncover</span>(<span style="color: #f6f080;">c</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">r</span> = c.up;
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">uncover</span>(<span style="color: #DFAF8F;">c</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">r</span> = c.up;
     c.right.left = c;
     c.left.right = c;
-    <span style="color: #fa9a4b; font-weight: bold;">while</span> (r !== c) {
+    <span style="color: #F0DFAF; font-weight: bold;">while</span> (r !== c) {
         r = r.left;
-        <span style="color: #fa9a4b; font-weight: bold;">while</span> (r.col !== c) {
+        <span style="color: #F0DFAF; font-weight: bold;">while</span> (r.col !== c) {
             r.up.down = r;
             r.down.up = r;
             r.col.size++;
@@ -439,41 +497,41 @@ just a copy paste of the previous version I used.
 </div>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="dlx_utilities"><span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">smallestColumn</span>() {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">h</span>, <span style="color: #f6f080;">c</span>, <span style="color: #f6f080;">s</span> = Number.MAX_VALUE;
+<pre class="src src-js" id="orgfa27422"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">smallestColumn</span>() {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">h</span>, <span style="color: #DFAF8F;">c</span>, <span style="color: #DFAF8F;">s</span> = Number.MAX_VALUE;
     h = headers.right;
-    <span style="color: #fa9a4b; font-weight: bold;">while</span> (h !== headers) {
-        <span style="color: #fa9a4b; font-weight: bold;">if</span> (h.size &lt; s) {
+    <span style="color: #F0DFAF; font-weight: bold;">while</span> (h !== headers) {
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (h.size &lt; s) {
             c = h;
             s = c.size;
         }
         h = h.right;
     }
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> c;
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> c;
 }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">printRow</span>(<span style="color: #f6f080;">r</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">s</span> = r.col.name + <span style="color: #cfe2f2;">' '</span>, <span style="color: #f6f080;">e</span> = r;
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">printRow</span>(<span style="color: #DFAF8F;">r</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">s</span> = r.col.name + <span style="color: #CC9393;">' '</span>, <span style="color: #DFAF8F;">e</span> = r;
     r = r.right;
-    <span style="color: #fa9a4b; font-weight: bold;">while</span> (r !== e) {
-        s += r.col.name + <span style="color: #cfe2f2;">' '</span>;
+    <span style="color: #F0DFAF; font-weight: bold;">while</span> (r !== e) {
+        s += r.col.name + <span style="color: #CC9393;">' '</span>;
         r = r.right;
     }
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> s;
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> s;
 }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">copySolution</span>() {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">solution</span> = [].concat(O);
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> solution;
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">copySolution</span>() {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">solution</span> = [].concat(O);
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> solution;
 }
+
 </pre>
 </div>
 </div>
 </div>
 
 
-<div id="outline-container-sec-4-3" class="outline-3">
-<h3 id="sec-4-3">Making the columns for Sudoku</h3>
-<div class="outline-text-3" id="text-4-3">
+<div id="outline-container-org037268d" class="outline-3">
+<h3 id="org037268d">Making the columns for Sudoku</h3>
+<div class="outline-text-3" id="text-org037268d">
 <p>
 Our logic for generating the columns and rows to represent the
 sudoku board is actually a bit larger than the code to do the
@@ -485,16 +543,15 @@ Regardless, I had already written this when that was evident.
 </div>
 
 
-<div id="outline-container-sec-4-3-1" class="outline-4">
-<h4 id="sec-4-3-1">Outline</h4>
-<div class="outline-text-4" id="text-4-3-1">
+<div id="outline-container-org161cf87" class="outline-4">
+<h4 id="org161cf87">Outline</h4>
+<div class="outline-text-4" id="text-org161cf87">
 <p>
 Our method, then will have the following outline.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="dlx_initialize_headers"><span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">initializeHeaders</span>() {
+<pre class="src src-js" id="orga46fef2"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">initializeHeaders</span>() {
         &lt;&lt;variables_needed_for_headers&gt;&gt;
 
         &lt;&lt;methods_to_create_headers_and_cells&gt;&gt;
@@ -512,9 +569,9 @@ Our method, then will have the following outline.
 </div>
 </div>
 
-<div id="outline-container-sec-4-3-2" class="outline-4">
-<h4 id="sec-4-3-2">Needed variables</h4>
-<div class="outline-text-4" id="text-4-3-2">
+<div id="outline-container-org4b1094b" class="outline-4">
+<h4 id="org4b1094b">Needed variables</h4>
+<div class="outline-text-4" id="text-org4b1094b">
 <p>
 Where are required variables are relatively straight forward.  For
 book keeping, we keep a tally of each digit seen in a
@@ -523,8 +580,7 @@ We will also need up to three basic index variables.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="variables_needed_for_headers"><span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">rows</span> = [],
+<pre class="src src-js" id="org1d6ee5e"><span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">rows</span> = [],
     cols = [],
     grps = [],
     positions = [],
@@ -536,40 +592,39 @@ We will also need up to three basic index variables.
 </div>
 </div>
 
-<div id="outline-container-sec-4-3-3" class="outline-4">
-<h4 id="sec-4-3-3">Methods to create headers and cells.</h4>
-<div class="outline-text-4" id="text-4-3-3">
+<div id="outline-container-org582575e" class="outline-4">
+<h4 id="org582575e">Methods to create headers and cells.</h4>
+<div class="outline-text-4" id="text-org582575e">
 <p>
 Since we don't have structs in javascript, I just use a couple of
 methods to make what we need for headers and cells.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="methods_to_create_headers_and_cells"><span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">header</span>(<span style="color: #f6f080;">name</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">h</span> = {
+<pre class="src src-js" id="orgb5594bb"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">header</span>(<span style="color: #DFAF8F;">name</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">h</span> = {
         name: name,
-        up: <span style="color: #b9d977;">null</span>,
-        down: <span style="color: #b9d977;">null</span>,
-        left: <span style="color: #b9d977;">null</span>,
-        right: <span style="color: #b9d977;">null</span>,
+        up: <span style="color: #BFEBBF;">null</span>,
+        down: <span style="color: #BFEBBF;">null</span>,
+        left: <span style="color: #BFEBBF;">null</span>,
+        right: <span style="color: #BFEBBF;">null</span>,
         size: 0
     };
     h.up = h;
     h.down = h;
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> h;
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> h;
 }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">cell</span>(<span style="color: #f6f080;">colName</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">newCell</span> = {
-        up: <span style="color: #b9d977;">null</span>,
-        down: <span style="color: #b9d977;">null</span>,
-        left: <span style="color: #b9d977;">null</span>,
-        right: <span style="color: #b9d977;">null</span>,
-        col: <span style="color: #b9d977;">null</span>
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">cell</span>(<span style="color: #DFAF8F;">colName</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">newCell</span> = {
+        up: <span style="color: #BFEBBF;">null</span>,
+        down: <span style="color: #BFEBBF;">null</span>,
+        left: <span style="color: #BFEBBF;">null</span>,
+        right: <span style="color: #BFEBBF;">null</span>,
+        col: <span style="color: #BFEBBF;">null</span>
     },
         col = rawHeaders[0];
 
-    <span style="color: #fa9a4b; font-weight: bold;">while</span> (col.name !== colName)
+    <span style="color: #F0DFAF; font-weight: bold;">while</span> (col.name !== colName)
         col = col.right;
 
     col.size++;
@@ -578,16 +633,16 @@ methods to make what we need for headers and cells.
     newCell.down.up = newCell;
     newCell.up.down = newCell;
     newCell.col = col;
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> newCell;
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> newCell;
 }
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-sec-4-3-4" class="outline-4">
-<h4 id="sec-4-3-4">Initialize Data</h4>
-<div class="outline-text-4" id="text-4-3-4">
+<div id="outline-container-org88f63ad" class="outline-4">
+<h4 id="org88f63ad">Initialize Data</h4>
+<div class="outline-text-4" id="text-org88f63ad">
 <p>
 To determine which rows and columns need covering, we will first
 mark off which rows and columns have data.  I'll begin by making
@@ -596,27 +651,27 @@ position.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="initialize_data"><span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 0; i &lt; 9; i++) {
+<pre class="src src-js" id="org225dfef"><span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; 9; i++) {
     rows[i] = [];
     cols[i] = [];
     grps[i] = [];
     positions[i] = [];
-    <span style="color: #fa9a4b; font-weight: bold;">for</span> (j = 0; j &lt; 9; j++) {
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (j = 0; j &lt; 9; j++) {
         rows[i][j] = 0;
         cols[i][j] = 0;
         grps[i][j] = 0;
         positions[i][j] = 0;
     }
 }
+
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-sec-4-3-5" class="outline-4">
-<h4 id="sec-4-3-5">Read in board data.</h4>
-<div class="outline-text-4" id="text-4-3-5">
+<div id="outline-container-org4915e46" class="outline-4">
+<h4 id="org4915e46">Read in board data.</h4>
+<div class="outline-text-4" id="text-org4915e46">
 <p>
 The only real trick going on here is that I reduce curValue by
 one.  This is as much from laziness on my part as it is anything
@@ -626,16 +681,15 @@ was already working.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="read_in_data"><span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 0; i &lt; 9; i++) {
-    <span style="color: #fa9a4b; font-weight: bold;">for</span> (j = 0; j &lt; 9; j++) {
-        <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">curValue</span> = strings[i].charAt(j);
-        <span style="color: #fa9a4b; font-weight: bold;">if</span> (curValue &amp;&amp; curValue !== <span style="color: #cfe2f2;">'.'</span>) {
+<pre class="src src-js" id="orgbfaa206"><span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; 9; i++) {
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (j = 0; j &lt; 9; j++) {
+        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">curValue</span> = strings[i].charAt(j);
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (curValue &amp;&amp; curValue !== <span style="color: #CC9393;">'.'</span>) {
             curValue--;
-            <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">g</span> = Math.floor(i/3)*3 + Math.floor(j/3);
-            <span style="color: #fa9a4b; font-weight: bold;">if</span> (rows[i][curValue]) <span style="color: #fa9a4b; font-weight: bold;">throw</span> <span style="color: #cfe2f2;">"Duplicate values in row"</span>;
-            <span style="color: #fa9a4b; font-weight: bold;">if</span> (cols[j][curValue]) <span style="color: #fa9a4b; font-weight: bold;">throw</span> <span style="color: #cfe2f2;">"Duplicate values in col"</span>;
-            <span style="color: #fa9a4b; font-weight: bold;">if</span> (grps[g][curValue]) <span style="color: #fa9a4b; font-weight: bold;">throw</span> <span style="color: #cfe2f2;">"Duplicate values in group."</span>;
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">g</span> = Math.floor(i/3)*3 + Math.floor(j/3);
+            <span style="color: #F0DFAF; font-weight: bold;">if</span> (rows[i][curValue]) <span style="color: #F0DFAF; font-weight: bold;">throw</span> <span style="color: #CC9393;">"Duplicate values in row"</span>;
+            <span style="color: #F0DFAF; font-weight: bold;">if</span> (cols[j][curValue]) <span style="color: #F0DFAF; font-weight: bold;">throw</span> <span style="color: #CC9393;">"Duplicate values in col"</span>;
+            <span style="color: #F0DFAF; font-weight: bold;">if</span> (grps[g][curValue]) <span style="color: #F0DFAF; font-weight: bold;">throw</span> <span style="color: #CC9393;">"Duplicate values in group."</span>;
             rows[i][curValue] = 1;
             cols[j][curValue] = 1;
             grps[g][curValue] = 1;
@@ -643,42 +697,42 @@ was already working.
         }
     }
 }
+
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-sec-4-3-6" class="outline-4">
-<h4 id="sec-4-3-6">Generate Headers</h4>
-<div class="outline-text-4" id="text-4-3-6">
+<div id="outline-container-org6e47801" class="outline-4">
+<h4 id="org6e47801">Generate Headers</h4>
+<div class="outline-text-4" id="text-org6e47801">
 <p>
 I do this in two passes, as it was cumbersome to do it in one.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="generate_headers">rawHeaders.push(header(<span style="color: #cfe2f2;">"root"</span>));
-<span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 0; i &lt; 9; i++) {
-    <span style="color: #fa9a4b; font-weight: bold;">for</span> (j = 0; j &lt; 9; j++) {
-        <span style="color: #fa9a4b; font-weight: bold;">if</span> (!positions[i][j]) {
-            rawHeaders.push(header(<span style="color: #cfe2f2;">"p"</span>+i.toString()+j.toString()));
+<pre class="src src-js" id="org458e039">rawHeaders.push(header(<span style="color: #CC9393;">"root"</span>));
+<span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; 9; i++) {
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (j = 0; j &lt; 9; j++) {
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (!positions[i][j]) {
+            rawHeaders.push(header(<span style="color: #CC9393;">"p"</span>+i.toString()+j.toString()));
         }
     }
 }
-<span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 0; i &lt; 9; i++) {
-    <span style="color: #fa9a4b; font-weight: bold;">for</span> (k = 0; k &lt; 9; k++) {
-        <span style="color: #fa9a4b; font-weight: bold;">if</span> (!rows[i][k])
-            rawHeaders.push(header(<span style="color: #cfe2f2;">"r"</span>+i.toString()+k.toString()));
-        <span style="color: #fa9a4b; font-weight: bold;">if</span> (!cols[i][k])
-            rawHeaders.push(header(<span style="color: #cfe2f2;">"c"</span>+i.toString()+k.toString()));
-        <span style="color: #fa9a4b; font-weight: bold;">if</span> (!grps[i][k])
-            rawHeaders.push(header(<span style="color: #cfe2f2;">"g"</span>+i.toString()+k.toString()));
+<span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; 9; i++) {
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (k = 0; k &lt; 9; k++) {
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (!rows[i][k])
+            rawHeaders.push(header(<span style="color: #CC9393;">"r"</span>+i.toString()+k.toString()));
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (!cols[i][k])
+            rawHeaders.push(header(<span style="color: #CC9393;">"c"</span>+i.toString()+k.toString()));
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (!grps[i][k])
+            rawHeaders.push(header(<span style="color: #CC9393;">"g"</span>+i.toString()+k.toString()));
     }
 }
 
-<span style="color: #798188;">//</span><span style="color: #798188;">Now, link them up.</span>
-<span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 1; i &lt; rawHeaders.length; i++) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">h</span> = rawHeaders[i];
+<span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">Now, link them up.</span>
+<span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 1; i &lt; rawHeaders.length; i++) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">h</span> = rawHeaders[i];
     h.left = rawHeaders[i-1];
     rawHeaders[i - 1].right = h;
 }
@@ -690,9 +744,9 @@ headers = rawHeaders[0];
 </div>
 </div>
 
-<div id="outline-container-sec-4-3-7" class="outline-4">
-<h4 id="sec-4-3-7">Generate Rows</h4>
-<div class="outline-text-4" id="text-4-3-7">
+<div id="outline-container-orga671c4a" class="outline-4">
+<h4 id="orga671c4a">Generate Rows</h4>
+<div class="outline-text-4" id="text-orga671c4a">
 <p>
 Similarly to the headers, I first generate all of the row cells,
 and then I link them up to their left/right values.  Is a little
@@ -700,27 +754,26 @@ trickier here, but nothing terribly fancy.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="generate_rows"><span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 0; i &lt; 9; i++) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">x</span> = Math.floor(i/3) * 3;
-    <span style="color: #fa9a4b; font-weight: bold;">for</span> (j = 0; j &lt; 9; j++) {
-        <span style="color: #fa9a4b; font-weight: bold;">if</span> (!positions[i][j]) {
-            <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">g</span> = x + Math.floor(j/3);
-            <span style="color: #fa9a4b; font-weight: bold;">for</span> (k = 0; k &lt; 9; k++) {
-                <span style="color: #fa9a4b; font-weight: bold;">if</span> (!rows[i][k] &amp;&amp; !cols[j][k] &amp;&amp; !grps[g][k]) {
-                    rawRows.push(cell(<span style="color: #cfe2f2;">"p"</span>+i.toString()+j.toString()));
-                    rawRows.push(cell(<span style="color: #cfe2f2;">"r"</span>+i.toString()+k.toString()));
-                    rawRows.push(cell(<span style="color: #cfe2f2;">"c"</span>+j.toString()+k.toString()));
-                    rawRows.push(cell(<span style="color: #cfe2f2;">"g"</span>+g.toString()+k.toString()));
+<pre class="src src-js" id="orge45dd02"><span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; 9; i++) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">x</span> = Math.floor(i/3) * 3;
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (j = 0; j &lt; 9; j++) {
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (!positions[i][j]) {
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">g</span> = x + Math.floor(j/3);
+            <span style="color: #F0DFAF; font-weight: bold;">for</span> (k = 0; k &lt; 9; k++) {
+                <span style="color: #F0DFAF; font-weight: bold;">if</span> (!rows[i][k] &amp;&amp; !cols[j][k] &amp;&amp; !grps[g][k]) {
+                    rawRows.push(cell(<span style="color: #CC9393;">"p"</span>+i.toString()+j.toString()));
+                    rawRows.push(cell(<span style="color: #CC9393;">"r"</span>+i.toString()+k.toString()));
+                    rawRows.push(cell(<span style="color: #CC9393;">"c"</span>+j.toString()+k.toString()));
+                    rawRows.push(cell(<span style="color: #CC9393;">"g"</span>+g.toString()+k.toString()));
                 }
             }
         }
     }
 }
 
-<span style="color: #798188;">//</span><span style="color: #798188;">Now, link up the rows.  (Cheating, and simply linking up all groups of 4.)</span>
-<span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 0; i &lt; rawRows.length; i+=4) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">a</span> = rawRows[i],
+<span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">Now, link up the rows.  (Cheating, and simply linking up all groups of 4.)</span>
+<span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; rawRows.length; i+=4) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">a</span> = rawRows[i],
         b = rawRows[i+1],
         c = rawRows[i+2],
         d = rawRows[i+3];
@@ -740,9 +793,9 @@ trickier here, but nothing terribly fancy.
 </div>
 </div>
 
-<div id="outline-container-sec-5" class="outline-2">
-<h2 id="sec-5">Seeing it work</h2>
-<div class="outline-text-2" id="text-5">
+<div id="outline-container-orgb21192a" class="outline-2">
+<h2 id="orgb21192a">Seeing it work</h2>
+<div class="outline-text-2" id="text-orgb21192a">
 <p>
 And, below is a quick view of the states that the algorithm looks at
 for the configuration originally given.  If you want to see it
@@ -776,146 +829,146 @@ there were no choices available.  :(
 </div>
 </div>
 
-<div id="outline-container-sec-6" class="outline-2">
-<h2 id="sec-6">Appendix</h2>
-<div class="outline-text-2" id="text-6">
-</div><div id="outline-container-sec-6-1" class="outline-3">
-<h3 id="sec-6-1">Javascript used to make boards</h3>
-<div class="outline-text-3" id="text-6-1">
+<div id="outline-container-org71ca855" class="outline-2">
+<h2 id="org71ca855">Appendix</h2>
+<div class="outline-text-2" id="text-org71ca855">
+</div>
+<div id="outline-container-orgc187904" class="outline-3">
+<h3 id="orgc187904">Javascript used to make boards</h3>
+<div class="outline-text-3" id="text-orgc187904">
 <p>
 Nothing too fancy here.  Could have pulled in a library, of course,
 though that felt slightly overkill for my purposes.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js"><span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">element</span>(<span style="color: #f6f080;">name</span>, <span style="color: #f6f080;">children</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">el</span> = document.createElement(name), <span style="color: #f6f080;">i</span>;
-    <span style="color: #fa9a4b; font-weight: bold;">if</span> (children) {
-        <span style="color: #fa9a4b; font-weight: bold;">for</span>(i = 0; i &lt; children.length; i++) {
-            <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">child</span> = children[i];
-            <span style="color: #fa9a4b; font-weight: bold;">if</span> (<span style="color: #fa9a4b; font-weight: bold;">typeof</span> child === <span style="color: #cfe2f2;">"string"</span>) {
+<pre class="src src-js"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">element</span>(<span style="color: #DFAF8F;">name</span>, <span style="color: #DFAF8F;">children</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">el</span> = document.createElement(name), <span style="color: #DFAF8F;">i</span>;
+    <span style="color: #F0DFAF; font-weight: bold;">if</span> (children) {
+        <span style="color: #F0DFAF; font-weight: bold;">for</span>(i = 0; i &lt; children.length; i++) {
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">child</span> = children[i];
+            <span style="color: #F0DFAF; font-weight: bold;">if</span> (<span style="color: #F0DFAF; font-weight: bold;">typeof</span> child === <span style="color: #CC9393;">"string"</span>) {
                 el.appendChild(document.createTextNode(child));
-            } <span style="color: #fa9a4b; font-weight: bold;">else</span> {
+            } <span style="color: #F0DFAF; font-weight: bold;">else</span> {
                 el.appendChild(child);
             }
         };
     }
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> el;
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> el;
 }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">div</span>()   { <span style="color: #fa9a4b; font-weight: bold;">return</span> element(<span style="color: #cfe2f2;">"div"</span>, <span style="color: #b9d977;">arguments</span>);   }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">table</span>() { <span style="color: #fa9a4b; font-weight: bold;">return</span> element(<span style="color: #cfe2f2;">"table"</span>, <span style="color: #b9d977;">arguments</span>); }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">tbody</span>() { <span style="color: #fa9a4b; font-weight: bold;">return</span> element(<span style="color: #cfe2f2;">"tbody"</span>, <span style="color: #b9d977;">arguments</span>); }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">tr</span>()    { <span style="color: #fa9a4b; font-weight: bold;">return</span> element(<span style="color: #cfe2f2;">"tr"</span>, <span style="color: #b9d977;">arguments</span>);    }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">td</span>()    { <span style="color: #fa9a4b; font-weight: bold;">return</span> element(<span style="color: #cfe2f2;">"td"</span>, <span style="color: #b9d977;">arguments</span>);    }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">span</span>()  { <span style="color: #fa9a4b; font-weight: bold;">return</span> element(<span style="color: #cfe2f2;">"span"</span>, <span style="color: #b9d977;">arguments</span>);  }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">withAttribute</span>(<span style="color: #f6f080;">element</span>, <span style="color: #f6f080;">attr</span>, <span style="color: #f6f080;">value</span>) {
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">div</span>()   { <span style="color: #F0DFAF; font-weight: bold;">return</span> element(<span style="color: #CC9393;">"div"</span>, <span style="color: #BFEBBF;">arguments</span>);   }
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">table</span>() { <span style="color: #F0DFAF; font-weight: bold;">return</span> element(<span style="color: #CC9393;">"table"</span>, <span style="color: #BFEBBF;">arguments</span>); }
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">tbody</span>() { <span style="color: #F0DFAF; font-weight: bold;">return</span> element(<span style="color: #CC9393;">"tbody"</span>, <span style="color: #BFEBBF;">arguments</span>); }
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">tr</span>()    { <span style="color: #F0DFAF; font-weight: bold;">return</span> element(<span style="color: #CC9393;">"tr"</span>, <span style="color: #BFEBBF;">arguments</span>);    }
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">td</span>()    { <span style="color: #F0DFAF; font-weight: bold;">return</span> element(<span style="color: #CC9393;">"td"</span>, <span style="color: #BFEBBF;">arguments</span>);    }
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">span</span>()  { <span style="color: #F0DFAF; font-weight: bold;">return</span> element(<span style="color: #CC9393;">"span"</span>, <span style="color: #BFEBBF;">arguments</span>);  }
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">withAttribute</span>(<span style="color: #DFAF8F;">element</span>, <span style="color: #DFAF8F;">attr</span>, <span style="color: #DFAF8F;">value</span>) {
     element.setAttribute(attr, value);
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> element;
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> element;
 }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">withClassname</span>(<span style="color: #f6f080;">element</span>, <span style="color: #f6f080;">cls</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> withAttribute(element, <span style="color: #cfe2f2;">"class"</span>, cls);
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">withClassname</span>(<span style="color: #DFAF8F;">element</span>, <span style="color: #DFAF8F;">cls</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> withAttribute(element, <span style="color: #CC9393;">"class"</span>, cls);
 }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">withMouseMoveListener</span>(<span style="color: #f6f080;">element</span>, <span style="color: #f6f080;">listener</span>) {
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">withMouseMoveListener</span>(<span style="color: #DFAF8F;">element</span>, <span style="color: #DFAF8F;">listener</span>) {
     element.onmouseover = listener;
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> element;
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> element;
 }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">slider</span>() {
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> withAttribute(
-        withAttribute(element(<span style="color: #cfe2f2;">"input"</span>), <span style="color: #cfe2f2;">"type"</span>, <span style="color: #cfe2f2;">"range"</span>),
-        <span style="color: #cfe2f2;">"min"</span>, <span style="color: #cfe2f2;">"0"</span>);
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">slider</span>() {
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> withAttribute(
+        withAttribute(element(<span style="color: #CC9393;">"input"</span>), <span style="color: #CC9393;">"type"</span>, <span style="color: #CC9393;">"range"</span>),
+        <span style="color: #CC9393;">"min"</span>, <span style="color: #CC9393;">"0"</span>);
 }
 
 
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">makeSudokuBoard</span>() {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">i</span>, <span style="color: #f6f080;">j</span>, <span style="color: #f6f080;">board</span> = tbody();
-    <span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 0; i &lt; 9; i++) {
-        <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">row</span> = tr();
-        <span style="color: #fa9a4b; font-weight: bold;">for</span> (j = 0; j &lt; 9; j++) {
-            <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">cell</span> = withClassname(td(), <span style="color: #cfe2f2;">"r"</span> + i + <span style="color: #cfe2f2;">" c"</span> + j + <span style="color: #cfe2f2;">" g"</span> + (Math.floor(i/3)*3 + Math.floor(j/3)));
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">makeSudokuBoard</span>() {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">i</span>, <span style="color: #DFAF8F;">j</span>, <span style="color: #DFAF8F;">board</span> = tbody();
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; 9; i++) {
+        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">row</span> = tr();
+        <span style="color: #F0DFAF; font-weight: bold;">for</span> (j = 0; j &lt; 9; j++) {
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cell</span> = withClassname(td(), <span style="color: #CC9393;">"r"</span> + i + <span style="color: #CC9393;">" c"</span> + j + <span style="color: #CC9393;">" g"</span> + (Math.floor(i/3)*3 + Math.floor(j/3)));
             row.appendChild(cell);
         }
         board.appendChild(row);
     }
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> withClassname(table(board), <span style="color: #cfe2f2;">"sudokuBoard"</span>);
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> withClassname(table(board), <span style="color: #CC9393;">"sudokuBoard"</span>);
 }
 
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">clearBoard</span>(<span style="color: #f6f080;">board</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">i</span>, <span style="color: #f6f080;">cells</span> = board.querySelectorAll(<span style="color: #cfe2f2;">"td"</span>);
-    <span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 0; i &lt; cells.length; i++) {
-        <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">cell</span> = cells[i];
-        cell.innerHTML = <span style="color: #cfe2f2;">""</span>;
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">clearBoard</span>(<span style="color: #DFAF8F;">board</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">i</span>, <span style="color: #DFAF8F;">cells</span> = board.querySelectorAll(<span style="color: #CC9393;">"td"</span>);
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; cells.length; i++) {
+        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cell</span> = cells[i];
+        cell.innerHTML = <span style="color: #CC9393;">""</span>;
     }
 
 }
 
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">setBoardFromString</span>(<span style="color: #f6f080;">board</span>, <span style="color: #f6f080;">strings</span>, <span style="color: #f6f080;">additionalStyle</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">i</span>, <span style="color: #f6f080;">j</span>;
-    <span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 0; i &lt; 9; i++) {
-        <span style="color: #fa9a4b; font-weight: bold;">for</span> (j = 0; j &lt; 9; j++) {
-            <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">curValue</span> = strings[i].charAt(j);
-            <span style="color: #fa9a4b; font-weight: bold;">if</span> (curValue &amp;&amp; curValue !== <span style="color: #cfe2f2;">'.'</span>) {
-                <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">cell</span> = board.querySelector(<span style="color: #cfe2f2;">"td.r"</span>+i+<span style="color: #cfe2f2;">".c"</span>+j);
-                cell.innerHTML = <span style="color: #cfe2f2;">""</span>;
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">setBoardFromString</span>(<span style="color: #DFAF8F;">board</span>, <span style="color: #DFAF8F;">strings</span>, <span style="color: #DFAF8F;">additionalStyle</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">i</span>, <span style="color: #DFAF8F;">j</span>;
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; 9; i++) {
+        <span style="color: #F0DFAF; font-weight: bold;">for</span> (j = 0; j &lt; 9; j++) {
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">curValue</span> = strings[i].charAt(j);
+            <span style="color: #F0DFAF; font-weight: bold;">if</span> (curValue &amp;&amp; curValue !== <span style="color: #CC9393;">'.'</span>) {
+                <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cell</span> = board.querySelector(<span style="color: #CC9393;">"td.r"</span>+i+<span style="color: #CC9393;">".c"</span>+j);
+                cell.innerHTML = <span style="color: #CC9393;">""</span>;
                 cell.appendChild(document.createTextNode(curValue));
 
-                <span style="color: #fa9a4b; font-weight: bold;">if</span> (cell.className.indexOf(additionalStyle) === -1)
-                    cell.className += <span style="color: #cfe2f2;">" "</span> + additionalStyle;
+                <span style="color: #F0DFAF; font-weight: bold;">if</span> (cell.className.indexOf(additionalStyle) === -1)
+                    cell.className += <span style="color: #CC9393;">" "</span> + additionalStyle;
             }
         }
     }
 }
 
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">parseAndReplaceWithBoard</span>(<span style="color: #f6f080;">divId</span>, <span style="color: #f6f080;">solve</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">divEl</span> = document.getElementById(divId),
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">parseAndReplaceWithBoard</span>(<span style="color: #DFAF8F;">divId</span>, <span style="color: #DFAF8F;">solve</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">divEl</span> = document.getElementById(divId),
         data = divEl.innerHTML.trim(),
         board = makeSudokuBoard(),
         solutions,
         sliderEl = slider(),
         progressHeaderEl = div();
 
-    divEl.innerHTML = <span style="color: #cfe2f2;">""</span>;
-    setBoardFromString(board, data.split(<span style="color: #cfe2f2;">"\n"</span>), <span style="color: #cfe2f2;">"given"</span>);
+    divEl.innerHTML = <span style="color: #CC9393;">""</span>;
+    setBoardFromString(board, data.split(<span style="color: #CC9393;">"\n"</span>), <span style="color: #CC9393;">"given"</span>);
 
-    <span style="color: #fa9a4b; font-weight: bold;">if</span> (solve) {
-        solutions = dlxSudokuSolver(data.split(<span style="color: #cfe2f2;">"\n"</span>), <span style="color: #b9d977;">true</span>);
-        sliderEl.setAttribute(<span style="color: #cfe2f2;">"max"</span>, solutions.length-1);
-        sliderEl.setAttribute(<span style="color: #cfe2f2;">"value"</span>, 0);
+    <span style="color: #F0DFAF; font-weight: bold;">if</span> (solve) {
+        solutions = dlxSudokuSolver(data.split(<span style="color: #CC9393;">"\n"</span>), <span style="color: #BFEBBF;">true</span>);
+        sliderEl.setAttribute(<span style="color: #CC9393;">"max"</span>, solutions.length-1);
+        sliderEl.setAttribute(<span style="color: #CC9393;">"value"</span>, 0);
         divEl.appendChild(progressHeaderEl);
         divEl.appendChild(board);
         divEl.appendChild(sliderEl);
-        progressHeaderEl.innerHTML = sliderEl.value+<span style="color: #cfe2f2;">" / "</span>+(solutions.length - 1);
-        sliderEl.oninput = <span style="color: #fa9a4b; font-weight: bold;">function</span>() {
-            progressHeaderEl.innerHTML = sliderEl.value+<span style="color: #cfe2f2;">" / "</span>+(solutions.length-1);
-            clearCells(board, <span style="color: #cfe2f2;">"solution"</span>);
-            setBoardFromString(board, toSudokuStrings(solutions[sliderEl.value]), <span style="color: #cfe2f2;">"solution"</span>);
+        progressHeaderEl.innerHTML = sliderEl.value+<span style="color: #CC9393;">" / "</span>+(solutions.length - 1);
+        sliderEl.oninput = <span style="color: #F0DFAF; font-weight: bold;">function</span>() {
+            progressHeaderEl.innerHTML = sliderEl.value+<span style="color: #CC9393;">" / "</span>+(solutions.length-1);
+            clearCells(board, <span style="color: #CC9393;">"solution"</span>);
+            setBoardFromString(board, toSudokuStrings(solutions[sliderEl.value]), <span style="color: #CC9393;">"solution"</span>);
         }
-    } <span style="color: #fa9a4b; font-weight: bold;">else</span> {
+    } <span style="color: #F0DFAF; font-weight: bold;">else</span> {
         divEl.appendChild(board);
     }
 }
 
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">clearCells</span>(<span style="color: #f6f080;">board</span>, <span style="color: #f6f080;">style</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">cells</span> = board.querySelectorAll(<span style="color: #cfe2f2;">"."</span> + style),
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">clearCells</span>(<span style="color: #DFAF8F;">board</span>, <span style="color: #DFAF8F;">style</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cells</span> = board.querySelectorAll(<span style="color: #CC9393;">"."</span> + style),
         i;
-    <span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 0; i &lt; cells.length; i++) {
-        cells[i].innerHTML = <span style="color: #cfe2f2;">""</span>;
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; cells.length; i++) {
+        cells[i].innerHTML = <span style="color: #CC9393;">""</span>;
     }
 }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">toSudokuStrings</span>(<span style="color: #f6f080;">solution</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">positions</span> = [], <span style="color: #f6f080;">i</span>, <span style="color: #f6f080;">j</span>, <span style="color: #f6f080;">k</span>, <span style="color: #f6f080;">d</span>;
-    <span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 0; i &lt; 9; i++) {
-        positions[i] = [<span style="color: #cfe2f2;">'.'</span>, <span style="color: #cfe2f2;">'.'</span>, <span style="color: #cfe2f2;">'.'</span>,<span style="color: #cfe2f2;">'.'</span>, <span style="color: #cfe2f2;">'.'</span>, <span style="color: #cfe2f2;">'.'</span>,<span style="color: #cfe2f2;">'.'</span>, <span style="color: #cfe2f2;">'.'</span>, <span style="color: #cfe2f2;">'.'</span>];
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">toSudokuStrings</span>(<span style="color: #DFAF8F;">solution</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">positions</span> = [], <span style="color: #DFAF8F;">i</span>, <span style="color: #DFAF8F;">j</span>, <span style="color: #DFAF8F;">k</span>, <span style="color: #DFAF8F;">d</span>;
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; 9; i++) {
+        positions[i] = [<span style="color: #CC9393;">'.'</span>, <span style="color: #CC9393;">'.'</span>, <span style="color: #CC9393;">'.'</span>,<span style="color: #CC9393;">'.'</span>, <span style="color: #CC9393;">'.'</span>, <span style="color: #CC9393;">'.'</span>,<span style="color: #CC9393;">'.'</span>, <span style="color: #CC9393;">'.'</span>, <span style="color: #CC9393;">'.'</span>];
     }
 
-    <span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 0; i &lt; solution.length; i++) {
-        <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">position</span> = <span style="color: #cfe2f2;">/p(\d)(\d)/</span>.exec(solution[i]);
-        d = parseInt(<span style="color: #cfe2f2;">/r\d(\d)/</span>.exec(solution[i])[1]) + 1;
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; solution.length; i++) {
+        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">position</span> = <span style="color: #CC9393;">/p(\d)(\d)/</span>.exec(solution[i]);
+        d = parseInt(<span style="color: #CC9393;">/r\d(\d)/</span>.exec(solution[i])[1]) + 1;
         j = position[1];
         k = position[2];
         positions[j][k] = d;
     }
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> positions.map(<span style="color: #fa9a4b; font-weight: bold;">function</span>(<span style="color: #f6f080;">v</span>) {<span style="color: #fa9a4b; font-weight: bold;">return</span> v.join(<span style="color: #cfe2f2;">""</span>);});;
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> positions.map(<span style="color: #F0DFAF; font-weight: bold;">function</span>(<span style="color: #DFAF8F;">v</span>) {<span style="color: #F0DFAF; font-weight: bold;">return</span> v.join(<span style="color: #CC9393;">""</span>);});;
 }
 </pre>
 </div>
@@ -929,49 +982,48 @@ though that felt slightly overkill for my purposes.
 </div>
 </div>
 
-<div id="outline-container-sec-6-2" class="outline-3">
-<h3 id="sec-6-2">Styles used.</h3>
-<div class="outline-text-3" id="text-6-2">
+<div id="outline-container-org90222b2" class="outline-3">
+<h3 id="org90222b2">Styles used.</h3>
+<div class="outline-text-3" id="text-org90222b2">
 <p>
 And, we have the following css that was used.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-css"><span style="color: #b6d877;">.sudokuBoard </span>{
-  <span style="color: #72aaca;">margin</span>: auto;
-  <span style="color: #72aaca;">background-color</span>: #FFF;
+<pre class="src src-css"><span style="color: #93E0E3;">.sudokuBoard </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">margin</span>: auto;
+  <span style="color: #F0DFAF; font-weight: bold;">background-color</span>: <span style="color: #000000; background-color: #FFF;">#FFF</span>;
 }
-<span style="color: #b6d877;">.sudokuBoard td </span>{
-  <span style="color: #72aaca;">width</span>: 20px;
-  <span style="color: #72aaca;">height</span>: 20px;
-  <span style="color: #72aaca;">border</span>: solid thin black;
-  <span style="color: #72aaca;">text-align</span>: center;
-  <span style="color: #72aaca;">line-height</span>: 20px;
-  <span style="color: #72aaca;">font-size</span>: 18px;
+<span style="color: #93E0E3;">.sudokuBoard td </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">width</span>: 20px;
+  <span style="color: #F0DFAF; font-weight: bold;">height</span>: 20px;
+  <span style="color: #F0DFAF; font-weight: bold;">border</span>: solid thin <span style="color: #ffffff; background-color: #000000;">black</span>;
+  <span style="color: #F0DFAF; font-weight: bold;">text-align</span>: center;
+  <span style="color: #F0DFAF; font-weight: bold;">line-height</span>: 20px;
+  <span style="color: #F0DFAF; font-weight: bold;">font-size</span>: 18px;
 }
-<span style="color: #b6d877;">.sudokuBoard td.c3, .sudokuBoard td.c6 </span>{
-  <span style="color: #72aaca;">border-left</span>: 3px solid black;
+<span style="color: #93E0E3;">.sudokuBoard td.c3, .sudokuBoard td.c6 </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">border-left</span>: 3px solid <span style="color: #ffffff; background-color: #000000;">black</span>;
 }
-<span style="color: #b6d877;">.sudokuBoard td.r3, .sudokuBoard td.r6 </span>{
-  <span style="color: #72aaca;">border-top</span>: 3px solid black;
-}
-
-<span style="color: #b6d877;">pre.example </span>{
-  <span style="color: #72aaca;">width</span>: 60px;
-  <span style="color: #72aaca;">background-color</span>: #EEE;
+<span style="color: #93E0E3;">.sudokuBoard td.r3, .sudokuBoard td.r6 </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">border-top</span>: 3px solid <span style="color: #ffffff; background-color: #000000;">black</span>;
 }
 
-<span style="color: #b6d877;">td.solution </span>{
-  <span style="color: #72aaca;">background-color</span>: #EEE;
+<span style="color: #93E0E3;">pre.example </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">width</span>: 60px;
+  <span style="color: #F0DFAF; font-weight: bold;">background-color</span>: <span style="color: #000000; background-color: #EEE;">#EEE</span>;
 }
-<span style="color: #b6d877;">input[type=</span><span style="color: #cfe2f2;">'range'</span><span style="color: #b6d877;">] </span>{
-  <span style="color: #72aaca; font-style: italic;">-webkit-appearance</span>: none;
-  <span style="color: #72aaca;">border-radius</span>: 5px;
-  <span style="color: #72aaca;">box-shadow</span>: inset 0 0 5px #333;
-  <span style="color: #72aaca;">background-color</span>: #999;
-  <span style="color: #72aaca;">height</span>: 10px;
-  <span style="color: #72aaca;">vertical-align</span>: middle;
+
+<span style="color: #93E0E3;">td.solution </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">background-color</span>: <span style="color: #000000; background-color: #EEE;">#EEE</span>;
+}
+<span style="color: #93E0E3;">input[type=</span><span style="color: #CC9393;">'range'</span><span style="color: #93E0E3;">] </span>{
+  <span style="color: #F0DFAF; font-weight: bold; text-decoration: underline;">-webkit-appearance</span>: none;
+  <span style="color: #F0DFAF; font-weight: bold;">border-radius</span>: 5px;
+  <span style="color: #F0DFAF; font-weight: bold;">box-shadow</span>: inset 0 0 5px <span style="color: #ffffff; background-color: #333;">#333</span>;
+  <span style="color: #F0DFAF; font-weight: bold;">background-color</span>: <span style="color: #000000; background-color: #999;">#999</span>;
+  <span style="color: #F0DFAF; font-weight: bold;">height</span>: 10px;
+  <span style="color: #F0DFAF; font-weight: bold;">vertical-align</span>: middle;
 }
 </pre>
 </div>
@@ -981,9 +1033,8 @@ And, we have the following css that was used.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh Berry</p>
-<p class="date">Created: 2017-12-23 Sat 00:33</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.2.2 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
-<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+<p class="date">Created: 2021-02-05 Fri 23:50</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
 </html>

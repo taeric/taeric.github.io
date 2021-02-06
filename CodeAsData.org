@@ -163,7 +163,7 @@ Then, the derivative function.
 #+RESULTS:
 : playing/deriv
 
-Now, lets see if it works.  
+Now, lets see if it works.
 
 #+BEGIN_SRC elisp :exports both :results verbatim
 (playing/deriv playing/body 'x)
@@ -233,7 +233,7 @@ For example:
 
 Calling this will give us the results we expect.
 
-#+BEGIN_SRC elisp :exports both 
+#+BEGIN_SRC elisp :exports both
 (mapcar #'playing/eval-function-derivative '(1 2 3 4 5 6 7 8 9 10))
 #+END_SRC
 
@@ -253,7 +253,7 @@ deriv something a little more interesting.
 
 Looking at our values now, we see:
 
-#+BEGIN_SRC elisp :exports both 
+#+BEGIN_SRC elisp :exports both
 (mapcar #'playing/eval-function-derivative-2 '(1 2 3 4 5 6 7 8 9 10))
 #+END_SRC
 
@@ -301,7 +301,7 @@ inspect and have fun with.
 
 Please don't let the hasty treatment of the SICP lectures I did above
 prevent you from reading that book.  I also got a great deal of fun
-out of watching the videos.[fn:2]  
+out of watching the videos.[fn:2]
 
 Similarly, don't get scared away from lisp just because I chose to use
 elisp.  I'll confess I just picked elisp because I didn't want to
@@ -314,4 +314,3 @@ my machine was setup.
 [fn:1] https://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-16.html#%_sec_2.3.2
 
 [fn:2] https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/video-lectures/
-  

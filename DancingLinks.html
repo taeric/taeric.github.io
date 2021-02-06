@@ -3,23 +3,30 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
+<!-- 2021-02-05 Fri 23:51 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Dancing Links in Javascript</title>
-<!-- 2017-12-23 Sat 00:33 -->
-<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta  name="generator" content="Org-mode" />
-<meta  name="author" content="Josh Berry" />
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Josh Berry" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
-  .title  { text-align: center; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
   .todo   { font-family: monospace; color: red; }
-  .done   { color: green; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
   .tag    { background-color: #eee; font-family: monospace;
             padding: 2px; font-size: 80%; font-weight: normal; }
   .timestamp { color: #bebebe; }
   .timestamp-kwd { color: #5f9ea0; }
-  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
-  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
-  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
   .underline { text-decoration: underline; }
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
@@ -33,7 +40,7 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
+    overflow: auto;
     padding-top: 1.2em;
   }
   pre.src:before {
@@ -45,31 +52,128 @@
     padding: 3px;
     border: 1px solid black;
   }
-  pre.src:hover:before { display: inline;}
-  pre.src-sh:before    { content: 'sh'; }
-  pre.src-bash:before  { content: 'sh'; }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
   pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
-  pre.src-R:before     { content: 'R'; }
-  pre.src-perl:before  { content: 'Perl'; }
-  pre.src-java:before  { content: 'Java'; }
-  pre.src-sql:before   { content: 'SQL'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
 
   table { border-collapse:collapse; }
   caption.t-above { caption-side: top; }
   caption.t-bottom { caption-side: bottom; }
   td, th { vertical-align:top;  }
-  th.right  { text-align: center;  }
-  th.left   { text-align: center;   }
-  th.center { text-align: center; }
-  td.right  { text-align: right;  }
-  td.left   { text-align: left;   }
-  td.center { text-align: center; }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
   dt { font-weight: bold; }
-  .footpara:nth-child(2) { display: inline; }
-  .footpara { display: block; }
+  .footpara { display: inline; }
   .footdef  { margin-bottom: 1em; }
   .figure { padding: 1em; }
   .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
   .inlinetask {
     padding: 10px;
     border: 2px solid gray;
@@ -86,98 +190,55 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
 <link rel="stylesheet" type="text/css" href="org-overrides.css" />
 <link rel="stylesheet" type="text/css" href="chessboards.css" />
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2013 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
 </script>
-<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js"></script>
-<script type="text/javascript">
-<!--/*--><![CDATA[/*><!--*/
+<script type="text/x-mathjax-config">
     MathJax.Hub.Config({
-        // Only one of the two following lines, depending on user settings
-        // First allows browser-native MathML display, second forces HTML/CSS
-        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
-            jax: ["input/TeX", "output/HTML-CSS"],
-        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
-                     "TeX/noUndefined.js"],
-        tex2jax: {
-            inlineMath: [ ["\\(","\\)"] ],
-            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
-            skipTags: ["script","noscript","style","textarea","pre","code"],
-            ignoreClass: "tex2jax_ignore",
-            processEscapes: false,
-            processEnvironments: true,
-            preview: "TeX"
-        },
-        showProcessingMessages: true,
-        displayAlign: "center",
-        displayIndent: "2em",
+        displayAlign: "%ALIGN",
+        displayIndent: "%INDENT",
 
-        "HTML-CSS": {
-             scale: 100,
-             availableFonts: ["STIX","TeX"],
-             preferredFont: "TeX",
-             webFont: "TeX",
-             imageFont: "TeX",
-             showMathMenu: true,
-        },
-        MMLorHTML: {
-             prefer: {
-                 MSIE:    "MML",
-                 Firefox: "MML",
-                 Opera:   "HTML",
-                 other:   "HTML"
+        "HTML-CSS": { scale: %SCALE,
+                        linebreaks: { automatic: "%LINEBREAKS" },
+                        webFont: "%FONT"
+                       },
+        SVG: {scale: %SCALE,
+              linebreaks: { automatic: "%LINEBREAKS" },
+              font: "%FONT"},
+        NativeMML: {scale: %SCALE},
+        TeX: { equationNumbers: {autoNumber: "%AUTONUMBER"},
+               MultLineWidth: "%MULTLINEWIDTH",
+               TagSide: "%TAGSIDE",
+               TagIndent: "%TAGINDENT"
              }
-        }
-    });
-/*]]>*///-->
+});
 </script>
+<script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
 <div id="content">
@@ -186,42 +247,42 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">Introduction</a></li>
-<li><a href="#sec-2">N-Queens</a>
+<li><a href="#org6eedade">Introduction</a></li>
+<li><a href="#org04e89ad">N-Queens</a>
 <ul>
-<li><a href="#sec-2-1">Basic Recursion</a></li>
-<li><a href="#sec-2-2">Dancing Links</a>
+<li><a href="#orgaa9f0aa">Basic Recursion</a></li>
+<li><a href="#org2cc3b31">Dancing Links</a>
 <ul>
-<li><a href="#sec-2-2-1">Outline</a></li>
-<li><a href="#sec-2-2-2">Search</a></li>
-<li><a href="#sec-2-2-3">Covering and Uncovering Columns</a></li>
-<li><a href="#sec-2-2-4">Utility Methods</a></li>
-<li><a href="#sec-2-2-5">Generate Headers</a></li>
-<li><a href="#sec-2-2-6">Running for small values</a></li>
+<li><a href="#orgc9ce051">Outline</a></li>
+<li><a href="#org630cbad">Search</a></li>
+<li><a href="#orgb9e4ead">Covering and Uncovering Columns</a></li>
+<li><a href="#org399fd47">Utility Methods</a></li>
+<li><a href="#org7906e17">Generate Headers</a></li>
+<li><a href="#orgb3b7a15">Running for small values</a></li>
 </ul>
 </li>
-<li><a href="#sec-2-3">Visualized</a>
+<li><a href="#org5261572">Visualized</a>
 <ul>
-<li><a href="#sec-2-3-1">Recursive solution</a></li>
-<li><a href="#sec-2-3-2">Dancing Links solution</a></li>
+<li><a href="#org16ab06c">Recursive solution</a></li>
+<li><a href="#orgd8139ba">Dancing Links solution</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#sec-3">Conclusion</a></li>
-<li><a href="#sec-4">Addendum</a></li>
-<li><a href="#sec-5">Appendix</a>
+<li><a href="#org1cccc33">Conclusion</a></li>
+<li><a href="#org323a390">Addendum</a></li>
+<li><a href="#org716f5de">Appendix</a>
 <ul>
-<li><a href="#sec-5-1">Board Highlighting</a></li>
+<li><a href="#orgc6166af">Board Highlighting</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">Introduction</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-org6eedade" class="outline-2">
+<h2 id="org6eedade">Introduction</h2>
+<div class="outline-text-2" id="text-org6eedade">
 <p>
 If you have never heard of it, <a href="http://www-cs-faculty.stanford.edu/~uno/papers/dancing-color.ps.gz">Dancing Links</a> is one of the
 techniques that Knuth describes to implement a recursive
@@ -247,9 +308,9 @@ to use the technique in another algorithm later.
 </div>
 </div>
 
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">N-Queens</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-org04e89ad" class="outline-2">
+<h2 id="org04e89ad">N-Queens</h2>
+<div class="outline-text-2" id="text-org04e89ad">
 <p>
 I'll be exploring dancing links in solving a straight forward "exact
 cover" problem.  This will be, directly, the DLX algorithm that was
@@ -257,7 +318,7 @@ used in introducing the technique.
 </p>
 
 <p>
-For those that do not know, the "\(N\)-Queens" problem is one of how
+For those that do not know, the "$N$-Queens" problem is one of how
 to place \(N\) queens that are not attacking each other on an \(N
   \times N\) chessboard.  Simply stated, we want to pick a solution
 where we have a queen in every row, column, diagonal, and reverse
@@ -279,9 +340,9 @@ starting point, remove all positions it eliminates, and repeat.
 </p>
 </div>
 
-<div id="outline-container-sec-2-1" class="outline-3">
-<h3 id="sec-2-1">Basic Recursion</h3>
-<div class="outline-text-3" id="text-2-1">
+<div id="outline-container-orgaa9f0aa" class="outline-3">
+<h3 id="orgaa9f0aa">Basic Recursion</h3>
+<div class="outline-text-3" id="text-orgaa9f0aa">
 <p>
 A ridiculously naive solution follows.  My strategy is simply to go
 as stated above.  Start by enumerating all positions on the board.
@@ -297,48 +358,47 @@ The DLX version turns out to be a lot more code.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="basic_algorithm"><span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">solveRecursively</span>(<span style="color: #f6f080;">n</span>, <span style="color: #f6f080;">showSteps</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">r</span> = n, <span style="color: #f6f080;">c</span> = n, <span style="color: #f6f080;">allPositions</span>,
+<pre class="src src-js" id="orgcfb3aea"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">solveRecursively</span>(<span style="color: #DFAF8F;">n</span>, <span style="color: #DFAF8F;">showSteps</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">r</span> = n, <span style="color: #DFAF8F;">c</span> = n, <span style="color: #DFAF8F;">allPositions</span>,
         steps = [];
 
-    <span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">initializePositions</span>() {
-        <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">i</span>, <span style="color: #f6f080;">j</span>;
+    <span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">initializePositions</span>() {
+        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">i</span>, <span style="color: #DFAF8F;">j</span>;
         allPositions = [];
-        <span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 0; i &lt; r; i++) {
-            <span style="color: #fa9a4b; font-weight: bold;">for</span> (j = 0; j &lt; c; j++) {
+        <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; r; i++) {
+            <span style="color: #F0DFAF; font-weight: bold;">for</span> (j = 0; j &lt; c; j++) {
                 allPositions.push({
                     r: i,
                     f: j,
                     a: i + j,
                     b: n - 1 - j + i,
-                    <span style="color: #798188;">//</span><span style="color: #798188;">To get our placements the same as the DLX one...</span>
-                    <span style="color: #72aaca;">toString</span>: <span style="color: #fa9a4b; font-weight: bold;">function</span>() {
-                        <span style="color: #fa9a4b; font-weight: bold;">return</span> <span style="color: #cfe2f2;">"R"</span>+<span style="color: #b9d977;">this</span>.r+<span style="color: #cfe2f2;">" F"</span>+<span style="color: #b9d977;">this</span>.f+<span style="color: #cfe2f2;">" A"</span>+<span style="color: #b9d977;">this</span>.a+<span style="color: #cfe2f2;">" B"</span>+<span style="color: #b9d977;">this</span>.b;
+                    <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">To get our placements the same as the DLX one...</span>
+                    <span style="color: #93E0E3;">toString</span>: <span style="color: #F0DFAF; font-weight: bold;">function</span>() {
+                        <span style="color: #F0DFAF; font-weight: bold;">return</span> <span style="color: #CC9393;">"R"</span>+<span style="color: #BFEBBF;">this</span>.r+<span style="color: #CC9393;">" F"</span>+<span style="color: #BFEBBF;">this</span>.f+<span style="color: #CC9393;">" A"</span>+<span style="color: #BFEBBF;">this</span>.a+<span style="color: #CC9393;">" B"</span>+<span style="color: #BFEBBF;">this</span>.b;
                     }
                 });
             }
         }
     }
 
-    <span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">placePiece</span>(<span style="color: #f6f080;">availablePositions</span>, <span style="color: #f6f080;">position</span>) {
-        <span style="color: #fa9a4b; font-weight: bold;">return</span> availablePositions.
-            filter(<span style="color: #fa9a4b; font-weight: bold;">function</span>(<span style="color: #f6f080;">v</span>) {
-                <span style="color: #fa9a4b; font-weight: bold;">return</span> v.r !== position.r &amp;&amp;
+    <span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">placePiece</span>(<span style="color: #DFAF8F;">availablePositions</span>, <span style="color: #DFAF8F;">position</span>) {
+        <span style="color: #F0DFAF; font-weight: bold;">return</span> availablePositions.
+            filter(<span style="color: #F0DFAF; font-weight: bold;">function</span>(<span style="color: #DFAF8F;">v</span>) {
+                <span style="color: #F0DFAF; font-weight: bold;">return</span> v.r !== position.r &amp;&amp;
                     v.f !== position.f &amp;&amp;
                     v.a !== position.a &amp;&amp;
                     v.b !== position.b;
             });
     }
 
-    <span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">testSolution</span>(<span style="color: #f6f080;">availablePositions</span>, <span style="color: #f6f080;">candidate</span>) {
-        <span style="color: #fa9a4b; font-weight: bold;">if</span> (showSteps)
+    <span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">testSolution</span>(<span style="color: #DFAF8F;">availablePositions</span>, <span style="color: #DFAF8F;">candidate</span>) {
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (showSteps)
             steps.push(candidate);
 
-        <span style="color: #fa9a4b; font-weight: bold;">if</span> (availablePositions.length) {
-            <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">childSolutions</span> = [];
-            <span style="color: #fa9a4b; font-weight: bold;">for</span> (<span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">p</span> = 0; p &lt; Math.min(n, availablePositions.length); p++) {
-                <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">position</span> = availablePositions[0],
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (availablePositions.length) {
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">childSolutions</span> = [];
+            <span style="color: #F0DFAF; font-weight: bold;">for</span> (<span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">p</span> = 0; p &lt; Math.min(n, availablePositions.length); p++) {
+                <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">position</span> = availablePositions[0],
                     remainingPositions = placePiece(availablePositions,
                                                     position),
                     recurseResults = testSolution(remainingPositions,
@@ -347,19 +407,20 @@ The DLX version turns out to be a lot more code.
                     availablePositions = availablePositions.slice(1);
                     childSolutions = childSolutions.concat(recurseResults);
             }
-            <span style="color: #fa9a4b; font-weight: bold;">return</span> childSolutions;
-        } <span style="color: #fa9a4b; font-weight: bold;">else</span> <span style="color: #fa9a4b; font-weight: bold;">if</span> (candidate.length === n) {
-            <span style="color: #fa9a4b; font-weight: bold;">return</span> [ candidate ];
+            <span style="color: #F0DFAF; font-weight: bold;">return</span> childSolutions;
+        } <span style="color: #F0DFAF; font-weight: bold;">else</span> <span style="color: #F0DFAF; font-weight: bold;">if</span> (candidate.length === n) {
+            <span style="color: #F0DFAF; font-weight: bold;">return</span> [ candidate ];
         }
-        <span style="color: #fa9a4b; font-weight: bold;">return</span> [];
+        <span style="color: #F0DFAF; font-weight: bold;">return</span> [];
     }
 
     initializePositions();
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">solutions</span> = testSolution(allPositions, []);
-    <span style="color: #fa9a4b; font-weight: bold;">if</span> (showSteps)
-        <span style="color: #fa9a4b; font-weight: bold;">return</span> steps;
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> solutions;
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">solutions</span> = testSolution(allPositions, []);
+    <span style="color: #F0DFAF; font-weight: bold;">if</span> (showSteps)
+        <span style="color: #F0DFAF; font-weight: bold;">return</span> steps;
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> solutions;
 }
+
 </pre>
 </div>
 
@@ -375,54 +436,54 @@ like forever.  Bumping up to 11 starts taking tens of seconds.)
 
 
 <colgroup>
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 </colgroup>
 <tbody>
 <tr>
-<td class="right">\(N\)</td>
-<td class="right">Solutions</td>
+<td class="org-right">\(N\)</td>
+<td class="org-right">Solutions</td>
 </tr>
 
 <tr>
-<td class="right">1</td>
-<td class="right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
 </tr>
 
 <tr>
-<td class="right">2</td>
-<td class="right">0</td>
+<td class="org-right">2</td>
+<td class="org-right">0</td>
 </tr>
 
 <tr>
-<td class="right">3</td>
-<td class="right">0</td>
+<td class="org-right">3</td>
+<td class="org-right">0</td>
 </tr>
 
 <tr>
-<td class="right">4</td>
-<td class="right">2</td>
+<td class="org-right">4</td>
+<td class="org-right">2</td>
 </tr>
 
 <tr>
-<td class="right">5</td>
-<td class="right">10</td>
+<td class="org-right">5</td>
+<td class="org-right">10</td>
 </tr>
 
 <tr>
-<td class="right">6</td>
-<td class="right">4</td>
+<td class="org-right">6</td>
+<td class="org-right">4</td>
 </tr>
 
 <tr>
-<td class="right">7</td>
-<td class="right">40</td>
+<td class="org-right">7</td>
+<td class="org-right">40</td>
 </tr>
 
 <tr>
-<td class="right">8</td>
-<td class="right">92</td>
+<td class="org-right">8</td>
+<td class="org-right">92</td>
 </tr>
 </tbody>
 </table>
@@ -430,9 +491,9 @@ like forever.  Bumping up to 11 starts taking tens of seconds.)
 </div>
 
 
-<div id="outline-container-sec-2-2" class="outline-3">
-<h3 id="sec-2-2">Dancing Links</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-org2cc3b31" class="outline-3">
+<h3 id="org2cc3b31">Dancing Links</h3>
+<div class="outline-text-3" id="text-org2cc3b31">
 <p>
 Now that we've looked at solving this with a naive recursive
 solution, how would this look with dancing links?  Not going to
@@ -442,7 +503,7 @@ lie, this is more involved.  Luckily, it isn't that terribly scary.
 <p>
 In fact, the actual dancing links code is rather short and not too
 terribly involved.  Because I did not bother to clean up the code
-that generates the data for the \(N\)-queens problem, this section is
+that generates the data for the $N$-queens problem, this section is
 large.
 </p>
 
@@ -452,9 +513,9 @@ tangled into a single file, peek over at <a href="./dancingLinks.js">dancingLink
 </p>
 </div>
 
-<div id="outline-container-sec-2-2-1" class="outline-4">
-<h4 id="sec-2-2-1">Outline</h4>
-<div class="outline-text-4" id="text-2-2-1">
+<div id="outline-container-orgc9ce051" class="outline-4">
+<h4 id="orgc9ce051">Outline</h4>
+<div class="outline-text-4" id="text-orgc9ce051">
 <p>
 The basic outline is to create a method that will take in the
 number of queens we want to solve, and then create the necessary
@@ -462,9 +523,8 @@ structures to make it happen.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="dlx_algorithm"><span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">solveWithDancingLinks</span>(<span style="color: #f6f080;">n</span>, <span style="color: #f6f080;">showSteps</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">headers</span>, <span style="color: #f6f080;">solutions</span> = [], <span style="color: #f6f080;">O</span> = [];
+<pre class="src src-js" id="orgd1de2c9"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">solveWithDancingLinks</span>(<span style="color: #DFAF8F;">n</span>, <span style="color: #DFAF8F;">showSteps</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">headers</span>, <span style="color: #DFAF8F;">solutions</span> = [], <span style="color: #DFAF8F;">O</span> = [];
 
     &lt;&lt;dlx_initialize_headers&gt;&gt;
 
@@ -477,16 +537,16 @@ structures to make it happen.
 
     initializeHeaders();
     search(0);
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> solutions;
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> solutions;
 }
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-sec-2-2-2" class="outline-4">
-<h4 id="sec-2-2-2">Search</h4>
-<div class="outline-text-4" id="text-2-2-2">
+<div id="outline-container-org630cbad" class="outline-4">
+<h4 id="org630cbad">Search</h4>
+<div class="outline-text-4" id="text-org630cbad">
 <p>
 We'll begin by looking at the search code.  This is fairly
 straight forward.  First, check to see if there are any columns
@@ -501,27 +561,26 @@ on it, we immediately backtrack up and try a different path.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="dlx_search"><span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">search</span>(<span style="color: #f6f080;">k</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">c</span>, <span style="color: #f6f080;">r</span>;
-    <span style="color: #fa9a4b; font-weight: bold;">if</span> (showSteps || headers.right === headers) {
+<pre class="src src-js" id="orgbec805a"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">search</span>(<span style="color: #DFAF8F;">k</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">c</span>, <span style="color: #DFAF8F;">r</span>;
+    <span style="color: #F0DFAF; font-weight: bold;">if</span> (showSteps || headers.right === headers) {
         solutions.push(copySolution());
-        <span style="color: #fa9a4b; font-weight: bold;">if</span> (headers.right == headers)
-            <span style="color: #fa9a4b; font-weight: bold;">return</span>;
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (headers.right == headers)
+            <span style="color: #F0DFAF; font-weight: bold;">return</span>;
     }
     c = smallestColumn();
     cover(c);
     r = c.down;
-    <span style="color: #fa9a4b; font-weight: bold;">while</span> (r !== c) {
+    <span style="color: #F0DFAF; font-weight: bold;">while</span> (r !== c) {
         O.push(printRow(r));
         r = r.right;
-        <span style="color: #fa9a4b; font-weight: bold;">while</span> (r.col !== c) {
+        <span style="color: #F0DFAF; font-weight: bold;">while</span> (r.col !== c) {
             cover(r.col);
             r = r.right;
         }
         search(k + 1);
         r = r.left;
-        <span style="color: #fa9a4b; font-weight: bold;">while</span> (r.col !== c) {
+        <span style="color: #F0DFAF; font-weight: bold;">while</span> (r.col !== c) {
             uncover(r.col);
             r = r.left;
         }
@@ -535,9 +594,9 @@ on it, we immediately backtrack up and try a different path.
 </div>
 </div>
 
-<div id="outline-container-sec-2-2-3" class="outline-4">
-<h4 id="sec-2-2-3">Covering and Uncovering Columns</h4>
-<div class="outline-text-4" id="text-2-2-3">
+<div id="outline-container-orgb9e4ead" class="outline-4">
+<h4 id="orgb9e4ead">Covering and Uncovering Columns</h4>
+<div class="outline-text-4" id="text-orgb9e4ead">
 <p>
 This is actually the heart of the "dancing" in the dancing links
 technique.  Not much to offer on them other than that they have to
@@ -546,14 +605,13 @@ methods are included here.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="dlx_cover_uncover"><span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">cover</span>(<span style="color: #f6f080;">c</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">r</span> = c.down;
+<pre class="src src-js" id="org39e8860"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">cover</span>(<span style="color: #DFAF8F;">c</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">r</span> = c.down;
     c.right.left = c.left;
     c.left.right = c.right;
-    <span style="color: #fa9a4b; font-weight: bold;">while</span> (r !== c) {
+    <span style="color: #F0DFAF; font-weight: bold;">while</span> (r !== c) {
         r = r.right;
-        <span style="color: #fa9a4b; font-weight: bold;">while</span> (r.col !== c) {
+        <span style="color: #F0DFAF; font-weight: bold;">while</span> (r.col !== c) {
             r.up.down = r.down;
             r.down.up = r.up;
             r.col.size--;
@@ -563,13 +621,13 @@ methods are included here.
     }
 }
 
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">uncover</span>(<span style="color: #f6f080;">c</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">r</span> = c.up;
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">uncover</span>(<span style="color: #DFAF8F;">c</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">r</span> = c.up;
     c.right.left = c;
     c.left.right = c;
-    <span style="color: #fa9a4b; font-weight: bold;">while</span> (r !== c) {
+    <span style="color: #F0DFAF; font-weight: bold;">while</span> (r !== c) {
         r = r.left;
-        <span style="color: #fa9a4b; font-weight: bold;">while</span> (r.col !== c) {
+        <span style="color: #F0DFAF; font-weight: bold;">while</span> (r.col !== c) {
             r.up.down = r;
             r.down.up = r;
             r.col.size++;
@@ -583,48 +641,48 @@ methods are included here.
 </div>
 </div>
 
-<div id="outline-container-sec-2-2-4" class="outline-4">
-<h4 id="sec-2-2-4">Utility Methods</h4>
-<div class="outline-text-4" id="text-2-2-4">
+<div id="outline-container-org399fd47" class="outline-4">
+<h4 id="org399fd47">Utility Methods</h4>
+<div class="outline-text-4" id="text-org399fd47">
 <p>
 The rest of the methods we need are fairly self explanatory.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="dlx_utilities"><span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">smallestColumn</span>() {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">h</span>, <span style="color: #f6f080;">c</span>, <span style="color: #f6f080;">s</span> = Number.MAX_VALUE;
+<pre class="src src-js" id="orgc2944e0"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">smallestColumn</span>() {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">h</span>, <span style="color: #DFAF8F;">c</span>, <span style="color: #DFAF8F;">s</span> = Number.MAX_VALUE;
     h = headers.right;
-    <span style="color: #fa9a4b; font-weight: bold;">while</span> (h !== headers) {
-        <span style="color: #fa9a4b; font-weight: bold;">if</span> (h.size &lt; s) {
+    <span style="color: #F0DFAF; font-weight: bold;">while</span> (h !== headers) {
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (h.size &lt; s) {
             c = h;
             s = c.size;
         }
         h = h.right;
     }
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> c;
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> c;
 }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">printRow</span>(<span style="color: #f6f080;">r</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">s</span> = r.col.name + <span style="color: #cfe2f2;">' '</span>, <span style="color: #f6f080;">e</span> = r;
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">printRow</span>(<span style="color: #DFAF8F;">r</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">s</span> = r.col.name + <span style="color: #CC9393;">' '</span>, <span style="color: #DFAF8F;">e</span> = r;
     r = r.right;
-    <span style="color: #fa9a4b; font-weight: bold;">while</span> (r !== e) {
-        s += r.col.name + <span style="color: #cfe2f2;">' '</span>;
+    <span style="color: #F0DFAF; font-weight: bold;">while</span> (r !== e) {
+        s += r.col.name + <span style="color: #CC9393;">' '</span>;
         r = r.right;
     }
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> s;
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> s;
 }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">copySolution</span>() {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">solution</span> = [].concat(O);
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> solution;
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">copySolution</span>() {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">solution</span> = [].concat(O);
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> solution;
 }
+
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-sec-2-2-5" class="outline-4">
-<h4 id="sec-2-2-5">Generate Headers</h4>
-<div class="outline-text-4" id="text-2-2-5">
+<div id="outline-container-org7906e17" class="outline-4">
+<h4 id="org7906e17">Generate Headers</h4>
+<div class="outline-text-4" id="text-org7906e17">
 <p>
 And now, the only part of this code that is actually specific to
 the queens problem, generating the rows and columns of our data
@@ -659,30 +717,29 @@ tricks quickly.)
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js" id="dlx_initialize_headers"><span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">initializeHeaders</span>() {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">i</span>, <span style="color: #f6f080;">j</span>, <span style="color: #f6f080;">k</span>, <span style="color: #f6f080;">rows</span>=[];
+<pre class="src src-js" id="org3bbc382"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">initializeHeaders</span>() {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">i</span>, <span style="color: #DFAF8F;">j</span>, <span style="color: #DFAF8F;">k</span>, <span style="color: #DFAF8F;">rows</span>=[];
     cols = [];
 
     headers = {
-        name: <span style="color: #cfe2f2;">'root'</span>,
-        right: <span style="color: #b9d977;">null</span>,
-        left: <span style="color: #b9d977;">null</span>,
-        up: <span style="color: #b9d977;">null</span>,
-        down: <span style="color: #b9d977;">null</span>
+        name: <span style="color: #CC9393;">'root'</span>,
+        right: <span style="color: #BFEBBF;">null</span>,
+        left: <span style="color: #BFEBBF;">null</span>,
+        up: <span style="color: #BFEBBF;">null</span>,
+        down: <span style="color: #BFEBBF;">null</span>
     };
     headers.right = headers;
     headers.left = headers;
 
-    <span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 0; i &lt; n; i++) {
-        <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">t</span> = ((i &amp; 1) ? n - 1 - i : n + i) &gt;&gt; 1;
-        <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">cur</span> = {
-            name: <span style="color: #cfe2f2;">'R'</span> + t,
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; n; i++) {
+        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">t</span> = ((i &amp; 1) ? n - 1 - i : n + i) &gt;&gt; 1;
+        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cur</span> = {
+            name: <span style="color: #CC9393;">'R'</span> + t,
             right: headers,
             left: headers.left,
             size: 0,
-            down: <span style="color: #b9d977;">null</span>,
-            up: <span style="color: #b9d977;">null</span>,
+            down: <span style="color: #BFEBBF;">null</span>,
+            up: <span style="color: #BFEBBF;">null</span>,
         };
         cols.push(cur);
         headers.left.right = cur;
@@ -691,12 +748,12 @@ tricks quickly.)
         cur.down = cur;
 
         cur = {
-            name: <span style="color: #cfe2f2;">'F'</span> + t,
+            name: <span style="color: #CC9393;">'F'</span> + t,
             right: headers,
             left: headers.left,
             size: 0,
-            down: <span style="color: #b9d977;">null</span>,
-            up: <span style="color: #b9d977;">null</span>,
+            down: <span style="color: #BFEBBF;">null</span>,
+            up: <span style="color: #BFEBBF;">null</span>,
         };
         cols.push(cur);
         headers.left.right = cur;
@@ -704,14 +761,14 @@ tricks quickly.)
         cur.up = cur;
         cur.down = cur;
     }
-    <span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 0; i &lt; 2 * n; i++) {
-            <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">cur</span> = {
-                name: <span style="color: #cfe2f2;">'A'</span> + i,
-                right: <span style="color: #b9d977;">null</span>,
-                left: <span style="color: #b9d977;">null</span>,
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; 2 * n; i++) {
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cur</span> = {
+                name: <span style="color: #CC9393;">'A'</span> + i,
+                right: <span style="color: #BFEBBF;">null</span>,
+                left: <span style="color: #BFEBBF;">null</span>,
                 size: 0,
-                up: <span style="color: #b9d977;">null</span>,
-                down: <span style="color: #b9d977;">null</span>
+                up: <span style="color: #BFEBBF;">null</span>,
+                down: <span style="color: #BFEBBF;">null</span>
             };
             cols.push(cur);
             cur.left = cur;
@@ -719,14 +776,14 @@ tricks quickly.)
             cur.up = cur;
             cur.down = cur;
     }
-    <span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 0; i &lt; 2 * n; i++) {
-            <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">cur</span> = {
-            name: <span style="color: #cfe2f2;">'B'</span> + i,
-                right: <span style="color: #b9d977;">null</span>,
-                left: <span style="color: #b9d977;">null</span>,
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; 2 * n; i++) {
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cur</span> = {
+            name: <span style="color: #CC9393;">'B'</span> + i,
+                right: <span style="color: #BFEBBF;">null</span>,
+                left: <span style="color: #BFEBBF;">null</span>,
                 size: 0,
-                up: <span style="color: #b9d977;">null</span>,
-                down: <span style="color: #b9d977;">null</span>
+                up: <span style="color: #BFEBBF;">null</span>,
+                down: <span style="color: #BFEBBF;">null</span>
             };
             cols.push(cur);
             cur.left = cur;
@@ -735,36 +792,36 @@ tricks quickly.)
             cur.down = cur;
     }
 
-    <span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 0; i &lt; n; i++) {
-        <span style="color: #fa9a4b; font-weight: bold;">for</span> (j = 0; j &lt; n; j++) {
-            <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">a</span>, <span style="color: #f6f080;">b</span>, <span style="color: #f6f080;">c</span>, <span style="color: #f6f080;">d</span>;
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; n; i++) {
+        <span style="color: #F0DFAF; font-weight: bold;">for</span> (j = 0; j &lt; n; j++) {
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">a</span>, <span style="color: #DFAF8F;">b</span>, <span style="color: #DFAF8F;">c</span>, <span style="color: #DFAF8F;">d</span>;
             a = {
-                up: <span style="color: #b9d977;">null</span>,
-                down: <span style="color: #b9d977;">null</span>,
-                left: <span style="color: #b9d977;">null</span>,
-                right: <span style="color: #b9d977;">null</span>,
-                col: <span style="color: #b9d977;">null</span>
+                up: <span style="color: #BFEBBF;">null</span>,
+                down: <span style="color: #BFEBBF;">null</span>,
+                left: <span style="color: #BFEBBF;">null</span>,
+                right: <span style="color: #BFEBBF;">null</span>,
+                col: <span style="color: #BFEBBF;">null</span>
             };
             b = {
-                up: <span style="color: #b9d977;">null</span>,
-                down: <span style="color: #b9d977;">null</span>,
-                left: <span style="color: #b9d977;">null</span>,
-                right: <span style="color: #b9d977;">null</span>,
-                col: <span style="color: #b9d977;">null</span>
+                up: <span style="color: #BFEBBF;">null</span>,
+                down: <span style="color: #BFEBBF;">null</span>,
+                left: <span style="color: #BFEBBF;">null</span>,
+                right: <span style="color: #BFEBBF;">null</span>,
+                col: <span style="color: #BFEBBF;">null</span>
             };
             c = {
-                up: <span style="color: #b9d977;">null</span>,
-                down: <span style="color: #b9d977;">null</span>,
-                left: <span style="color: #b9d977;">null</span>,
-                right: <span style="color: #b9d977;">null</span>,
-                col: <span style="color: #b9d977;">null</span>
+                up: <span style="color: #BFEBBF;">null</span>,
+                down: <span style="color: #BFEBBF;">null</span>,
+                left: <span style="color: #BFEBBF;">null</span>,
+                right: <span style="color: #BFEBBF;">null</span>,
+                col: <span style="color: #BFEBBF;">null</span>
             };
             d = {
-                up: <span style="color: #b9d977;">null</span>,
-                down: <span style="color: #b9d977;">null</span>,
-                left: <span style="color: #b9d977;">null</span>,
-                right: <span style="color: #b9d977;">null</span>,
-                col: <span style="color: #b9d977;">null</span>
+                up: <span style="color: #BFEBBF;">null</span>,
+                down: <span style="color: #BFEBBF;">null</span>,
+                left: <span style="color: #BFEBBF;">null</span>,
+                right: <span style="color: #BFEBBF;">null</span>,
+                col: <span style="color: #BFEBBF;">null</span>
             };
             a.left = d;
             a.right = b;
@@ -775,9 +832,9 @@ tricks quickly.)
             d.left = c;
             d.right = a;
 
-            <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">colIdx</span> = 0;
-            <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">aCol</span> = cols[colIdx++];
-            <span style="color: #fa9a4b; font-weight: bold;">while</span> (aCol.name !== <span style="color: #cfe2f2;">'R'</span> + i)
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">colIdx</span> = 0;
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">aCol</span> = cols[colIdx++];
+            <span style="color: #F0DFAF; font-weight: bold;">while</span> (aCol.name !== <span style="color: #CC9393;">'R'</span> + i)
                 aCol = cols[colIdx++];
             aCol.size++;
             a.col = aCol;
@@ -787,8 +844,8 @@ tricks quickly.)
             a.up.down = a;
 
             colIdx = 0;
-            <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">bCol</span> = cols[colIdx++];
-            <span style="color: #fa9a4b; font-weight: bold;">while</span> (bCol.name !== <span style="color: #cfe2f2;">'F'</span> + j) {
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">bCol</span> = cols[colIdx++];
+            <span style="color: #F0DFAF; font-weight: bold;">while</span> (bCol.name !== <span style="color: #CC9393;">'F'</span> + j) {
                 bCol = cols[colIdx++];
             }
             bCol.size++;
@@ -799,8 +856,8 @@ tricks quickly.)
             b.up.down = b;
 
             colIdx = 0;
-            <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">cCol</span> = cols[colIdx++];
-            <span style="color: #fa9a4b; font-weight: bold;">while</span> (cCol.name !== <span style="color: #cfe2f2;">'A'</span> + (j + i))
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cCol</span> = cols[colIdx++];
+            <span style="color: #F0DFAF; font-weight: bold;">while</span> (cCol.name !== <span style="color: #CC9393;">'A'</span> + (j + i))
                 cCol = cols[colIdx++];
             cCol.size++;
             c.col = cCol;
@@ -810,8 +867,8 @@ tricks quickly.)
             c.up.down = c;
 
             colIdx = 0;
-            <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">dCol</span> = cols[colIdx++];
-            <span style="color: #fa9a4b; font-weight: bold;">while</span> (dCol.name !== <span style="color: #cfe2f2;">'B'</span> + (n - 1 - j + i))
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">dCol</span> = cols[colIdx++];
+            <span style="color: #F0DFAF; font-weight: bold;">while</span> (dCol.name !== <span style="color: #CC9393;">'B'</span> + (n - 1 - j + i))
                 dCol = cols[colIdx++];
             dCol.size++;
             d.col = dCol;
@@ -822,8 +879,8 @@ tricks quickly.)
         }
     }
     headers = headers.right;
-    <span style="color: #fa9a4b; font-weight: bold;">while</span> (headers.down) {
-        <span style="color: #fa9a4b; font-weight: bold;">if</span> (headers.size === 0) {
+    <span style="color: #F0DFAF; font-weight: bold;">while</span> (headers.down) {
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (headers.size === 0) {
             headers.left.right = headers.right;
             headers.right.left = headers.left;
         }
@@ -835,9 +892,9 @@ tricks quickly.)
 </div>
 </div>
 
-<div id="outline-container-sec-2-2-6" class="outline-4">
-<h4 id="sec-2-2-6">Running for small values</h4>
-<div class="outline-text-4" id="text-2-2-6">
+<div id="outline-container-orgb3b7a15" class="outline-4">
+<h4 id="orgb3b7a15">Running for small values</h4>
+<div class="outline-text-4" id="text-orgb3b7a15">
 <p>
 And finally, we run for some quick examples to see what we can
 see.  I'm willing to show quite a few more results for this case,
@@ -848,79 +905,79 @@ as they go <b>much</b> faster than the recursive solution I created.
 
 
 <colgroup>
-<col  class="right" />
+<col  class="org-right" />
 
-<col  class="right" />
+<col  class="org-right" />
 </colgroup>
 <tbody>
 <tr>
-<td class="right">\(N\)</td>
-<td class="right">Solutions</td>
+<td class="org-right">\(N\)</td>
+<td class="org-right">Solutions</td>
 </tr>
 
 <tr>
-<td class="right">1</td>
-<td class="right">1</td>
+<td class="org-right">1</td>
+<td class="org-right">1</td>
 </tr>
 
 <tr>
-<td class="right">2</td>
-<td class="right">0</td>
+<td class="org-right">2</td>
+<td class="org-right">0</td>
 </tr>
 
 <tr>
-<td class="right">3</td>
-<td class="right">0</td>
+<td class="org-right">3</td>
+<td class="org-right">0</td>
 </tr>
 
 <tr>
-<td class="right">4</td>
-<td class="right">2</td>
+<td class="org-right">4</td>
+<td class="org-right">2</td>
 </tr>
 
 <tr>
-<td class="right">5</td>
-<td class="right">10</td>
+<td class="org-right">5</td>
+<td class="org-right">10</td>
 </tr>
 
 <tr>
-<td class="right">6</td>
-<td class="right">4</td>
+<td class="org-right">6</td>
+<td class="org-right">4</td>
 </tr>
 
 <tr>
-<td class="right">7</td>
-<td class="right">40</td>
+<td class="org-right">7</td>
+<td class="org-right">40</td>
 </tr>
 
 <tr>
-<td class="right">8</td>
-<td class="right">92</td>
+<td class="org-right">8</td>
+<td class="org-right">92</td>
 </tr>
 
 <tr>
-<td class="right">9</td>
-<td class="right">352</td>
+<td class="org-right">9</td>
+<td class="org-right">352</td>
 </tr>
 
 <tr>
-<td class="right">10</td>
-<td class="right">724</td>
+<td class="org-right">10</td>
+<td class="org-right">724</td>
 </tr>
 
 <tr>
-<td class="right">11</td>
-<td class="right">2680</td>
+<td class="org-right">11</td>
+<td class="org-right">2680</td>
 </tr>
 
 <tr>
-<td class="right">12</td>
-<td class="right">14200</td>
+<td class="org-right">12</td>
+<td class="org-right">14200</td>
 </tr>
 
 <tr>
-<td class="right">13</td>
-<td class="right">73712</td>
+<td class="org-right">13</td>
+<td class="org-right">73712</td>
 </tr>
 </tbody>
 </table>
@@ -929,9 +986,9 @@ as they go <b>much</b> faster than the recursive solution I created.
 </div>
 
 
-<div id="outline-container-sec-2-3" class="outline-3">
-<h3 id="sec-2-3">Visualized</h3>
-<div class="outline-text-3" id="text-2-3">
+<div id="outline-container-org5261572" class="outline-3">
+<h3 id="org5261572">Visualized</h3>
+<div class="outline-text-3" id="text-org5261572">
 <p>
 I had originally thought to run some fairly sophisticated
 visualizations of these two algorithms.  Truth to tell, I just
@@ -946,7 +1003,6 @@ some larger visualizations, simply run:
 </p>
 
 <div class="org-src-container">
-
 <pre class="src src-js">document.body.appendChild(makeVisualization(N, solveWithDancingLinks));
 </pre>
 </div>
@@ -957,9 +1013,9 @@ To see the boards that the recursive solution inspects, use
 </p>
 </div>
 
-<div id="outline-container-sec-2-3-1" class="outline-4">
-<h4 id="sec-2-3-1">Recursive solution</h4>
-<div class="outline-text-4" id="text-2-3-1">
+<div id="outline-container-org16ab06c" class="outline-4">
+<h4 id="org16ab06c">Recursive solution</h4>
+<div class="outline-text-4" id="text-org16ab06c">
 <p>
 First thing I was curious on was if I could get a good grasp on
 the speed difference at a lower value of \(N\).  Sure enough, there
@@ -984,9 +1040,9 @@ forward left to right, top to bottom method of placing pieces.
 <div id="recursiveVisualizations"></div>
 </div>
 </div>
-<div id="outline-container-sec-2-3-2" class="outline-4">
-<h4 id="sec-2-3-2">Dancing Links solution</h4>
-<div class="outline-text-4" id="text-2-3-2">
+<div id="outline-container-orgd8139ba" class="outline-4">
+<h4 id="orgd8139ba">Dancing Links solution</h4>
+<div class="outline-text-4" id="text-orgd8139ba">
 <p>
 Contrast the previous behavior with the dancing links technique.
 Here, the ordering heuristic of Knuth's accounts for starting on
@@ -1014,9 +1070,9 @@ place.
 </div>
 
 
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">Conclusion</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-org1cccc33" class="outline-2">
+<h2 id="org1cccc33">Conclusion</h2>
+<div class="outline-text-2" id="text-org1cccc33">
 <p>
 After all of that, what is the reason to use the "dancing links"
 technique?  Mainly for speed.  It seems to be a classic case study
@@ -1049,9 +1105,9 @@ structures.  At least the simple ones.
 </div>
 </div>
 
-<div id="outline-container-sec-4" class="outline-2">
-<h2 id="sec-4">Addendum</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-org323a390" class="outline-2">
+<h2 id="org323a390">Addendum</h2>
+<div class="outline-text-2" id="text-org323a390">
 <p>
 I should also put a big plug in to the literate programming ideas,
 again.  To note, this document is not just excerpts of the code, but
@@ -1079,12 +1135,13 @@ the programming sections.
 </div>
 </div>
 
-<div id="outline-container-sec-5" class="outline-2">
-<h2 id="sec-5">Appendix</h2>
-<div class="outline-text-2" id="text-5">
-</div><div id="outline-container-sec-5-1" class="outline-3">
-<h3 id="sec-5-1">Board Highlighting</h3>
-<div class="outline-text-3" id="text-5-1">
+<div id="outline-container-org716f5de" class="outline-2">
+<h2 id="org716f5de">Appendix</h2>
+<div class="outline-text-2" id="text-org716f5de">
+</div>
+<div id="outline-container-orgc6166af" class="outline-3">
+<h3 id="orgc6166af">Board Highlighting</h3>
+<div class="outline-text-3" id="text-orgc6166af">
 <p>
 The code I'm using for the board highlighting is here.  I really
 just needed a few things.  Probably could have just pulled in a
@@ -1094,154 +1151,153 @@ while on the train.)
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-js"><span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">element</span>(<span style="color: #f6f080;">name</span>, <span style="color: #f6f080;">children</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">el</span> = document.createElement(name), <span style="color: #f6f080;">i</span>;
-    <span style="color: #fa9a4b; font-weight: bold;">if</span> (children) {
-        <span style="color: #fa9a4b; font-weight: bold;">for</span>(i = 0; i &lt; children.length; i++) {
-            <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">child</span> = children[i];
-            <span style="color: #fa9a4b; font-weight: bold;">if</span> (<span style="color: #fa9a4b; font-weight: bold;">typeof</span> child === <span style="color: #cfe2f2;">"string"</span>) {
+<pre class="src src-js"><span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">element</span>(<span style="color: #DFAF8F;">name</span>, <span style="color: #DFAF8F;">children</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">el</span> = document.createElement(name), <span style="color: #DFAF8F;">i</span>;
+    <span style="color: #F0DFAF; font-weight: bold;">if</span> (children) {
+        <span style="color: #F0DFAF; font-weight: bold;">for</span>(i = 0; i &lt; children.length; i++) {
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">child</span> = children[i];
+            <span style="color: #F0DFAF; font-weight: bold;">if</span> (<span style="color: #F0DFAF; font-weight: bold;">typeof</span> child === <span style="color: #CC9393;">"string"</span>) {
                 el.appendChild(document.createTextNode(child));
-            } <span style="color: #fa9a4b; font-weight: bold;">else</span> {
+            } <span style="color: #F0DFAF; font-weight: bold;">else</span> {
                 el.appendChild(child);
             }
         };
     }
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> el;
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> el;
 }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">div</span>()   { <span style="color: #fa9a4b; font-weight: bold;">return</span> element(<span style="color: #cfe2f2;">"div"</span>, <span style="color: #b9d977;">arguments</span>);   }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">table</span>() { <span style="color: #fa9a4b; font-weight: bold;">return</span> element(<span style="color: #cfe2f2;">"table"</span>, <span style="color: #b9d977;">arguments</span>); }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">tbody</span>() { <span style="color: #fa9a4b; font-weight: bold;">return</span> element(<span style="color: #cfe2f2;">"tbody"</span>, <span style="color: #b9d977;">arguments</span>); }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">tr</span>()    { <span style="color: #fa9a4b; font-weight: bold;">return</span> element(<span style="color: #cfe2f2;">"tr"</span>, <span style="color: #b9d977;">arguments</span>);    }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">td</span>()    { <span style="color: #fa9a4b; font-weight: bold;">return</span> element(<span style="color: #cfe2f2;">"td"</span>, <span style="color: #b9d977;">arguments</span>);    }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">span</span>()  { <span style="color: #fa9a4b; font-weight: bold;">return</span> element(<span style="color: #cfe2f2;">"span"</span>, <span style="color: #b9d977;">arguments</span>);  }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">withAttribute</span>(<span style="color: #f6f080;">element</span>, <span style="color: #f6f080;">attr</span>, <span style="color: #f6f080;">value</span>) {
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">div</span>()   { <span style="color: #F0DFAF; font-weight: bold;">return</span> element(<span style="color: #CC9393;">"div"</span>, <span style="color: #BFEBBF;">arguments</span>);   }
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">table</span>() { <span style="color: #F0DFAF; font-weight: bold;">return</span> element(<span style="color: #CC9393;">"table"</span>, <span style="color: #BFEBBF;">arguments</span>); }
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">tbody</span>() { <span style="color: #F0DFAF; font-weight: bold;">return</span> element(<span style="color: #CC9393;">"tbody"</span>, <span style="color: #BFEBBF;">arguments</span>); }
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">tr</span>()    { <span style="color: #F0DFAF; font-weight: bold;">return</span> element(<span style="color: #CC9393;">"tr"</span>, <span style="color: #BFEBBF;">arguments</span>);    }
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">td</span>()    { <span style="color: #F0DFAF; font-weight: bold;">return</span> element(<span style="color: #CC9393;">"td"</span>, <span style="color: #BFEBBF;">arguments</span>);    }
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">span</span>()  { <span style="color: #F0DFAF; font-weight: bold;">return</span> element(<span style="color: #CC9393;">"span"</span>, <span style="color: #BFEBBF;">arguments</span>);  }
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">withAttribute</span>(<span style="color: #DFAF8F;">element</span>, <span style="color: #DFAF8F;">attr</span>, <span style="color: #DFAF8F;">value</span>) {
     element.setAttribute(attr, value);
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> element;
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> element;
 }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">withClassname</span>(<span style="color: #f6f080;">element</span>, <span style="color: #f6f080;">cls</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> withAttribute(element, <span style="color: #cfe2f2;">"class"</span>, cls);
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">withClassname</span>(<span style="color: #DFAF8F;">element</span>, <span style="color: #DFAF8F;">cls</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> withAttribute(element, <span style="color: #CC9393;">"class"</span>, cls);
 }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">withMouseMoveListener</span>(<span style="color: #f6f080;">element</span>, <span style="color: #f6f080;">listener</span>) {
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">withMouseMoveListener</span>(<span style="color: #DFAF8F;">element</span>, <span style="color: #DFAF8F;">listener</span>) {
     element.onmouseover = listener;
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> element;
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> element;
 }
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">slider</span>() {
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> withAttribute(
-        withAttribute(element(<span style="color: #cfe2f2;">"input"</span>), <span style="color: #cfe2f2;">"type"</span>, <span style="color: #cfe2f2;">"range"</span>),
-        <span style="color: #cfe2f2;">"min"</span>, <span style="color: #cfe2f2;">"0"</span>);
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">slider</span>() {
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> withAttribute(
+        withAttribute(element(<span style="color: #CC9393;">"input"</span>), <span style="color: #CC9393;">"type"</span>, <span style="color: #CC9393;">"range"</span>),
+        <span style="color: #CC9393;">"min"</span>, <span style="color: #CC9393;">"0"</span>);
 }
 
 
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">makeVisualization</span>(<span style="color: #f6f080;">n</span>, <span style="color: #f6f080;">method</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">board</span> = makeBoard(n),
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">makeVisualization</span>(<span style="color: #DFAF8F;">n</span>, <span style="color: #DFAF8F;">method</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">board</span> = makeBoard(n),
         input = slider(),
         curState = span(),
-        states = method(n, <span style="color: #b9d977;">true</span>);
+        states = method(n, <span style="color: #BFEBBF;">true</span>);
 
-    input.setAttribute(<span style="color: #cfe2f2;">"max"</span>, states.length - 1);
-    curState.innerHTML = <span style="color: #cfe2f2;">"0 / "</span> + (states.length - 1);
+    input.setAttribute(<span style="color: #CC9393;">"max"</span>, states.length - 1);
+    curState.innerHTML = <span style="color: #CC9393;">"0 / "</span> + (states.length - 1);
     input.value = 0;
-    input.oninput = <span style="color: #fa9a4b; font-weight: bold;">function</span> () {
-        curState.innerHTML = input.value + <span style="color: #cfe2f2;">" / "</span> + (states.length - 1);
+    input.oninput = <span style="color: #F0DFAF; font-weight: bold;">function</span> () {
+        curState.innerHTML = input.value + <span style="color: #CC9393;">" / "</span> + (states.length - 1);
         clearQueens(board);
-        states[input.value].forEach(<span style="color: #fa9a4b; font-weight: bold;">function</span> (<span style="color: #f6f080;">s</span>) {
-            placeQueen(board, <span style="color: #cfe2f2;">"."</span>+s.toString().trim().replace(<span style="color: #cfe2f2;">/ /</span>g, <span style="color: #cfe2f2;">'.'</span>));
+        states[input.value].forEach(<span style="color: #F0DFAF; font-weight: bold;">function</span> (<span style="color: #DFAF8F;">s</span>) {
+            placeQueen(board, <span style="color: #CC9393;">"."</span>+s.toString().trim().replace(<span style="color: #CC9393;">/ /</span>g, <span style="color: #CC9393;">'.'</span>));
         });
     }
 
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> withClassname(div(curState, board, input), <span style="color: #cfe2f2;">"visualization"</span>);
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> withClassname(div(curState, board, input), <span style="color: #CC9393;">"visualization"</span>);
 }
 
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">makeBoard</span>(<span style="color: #f6f080;">n</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">r</span> = n, <span style="color: #f6f080;">c</span> = n;
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">rows</span> = tbody();
-    <span style="color: #fa9a4b; font-weight: bold;">for</span> (<span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">i</span> = 0; i &lt; r; i++) {
-        <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">row</span> = tr();
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">makeBoard</span>(<span style="color: #DFAF8F;">n</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">r</span> = n, <span style="color: #DFAF8F;">c</span> = n;
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">rows</span> = tbody();
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (<span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">i</span> = 0; i &lt; r; i++) {
+        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">row</span> = tr();
         rows.appendChild(row);
-        <span style="color: #fa9a4b; font-weight: bold;">for</span> (<span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">j</span> = 0; j &lt; c; j++) {
-            <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">cell</span> = td();
-            <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">cls</span> = <span style="color: #cfe2f2;">""</span>;
-            cls += <span style="color: #cfe2f2;">" R"</span>+i;
-            cls += <span style="color: #cfe2f2;">" F"</span>+j;
-            cls += <span style="color: #cfe2f2;">" A"</span>+ (i + j);
-            cls += <span style="color: #cfe2f2;">" B"</span>+ (n - 1 - j + i);
-            cell.setAttribute(<span style="color: #cfe2f2;">"class"</span>, cls.trim());
+        <span style="color: #F0DFAF; font-weight: bold;">for</span> (<span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">j</span> = 0; j &lt; c; j++) {
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cell</span> = td();
+            <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cls</span> = <span style="color: #CC9393;">""</span>;
+            cls += <span style="color: #CC9393;">" R"</span>+i;
+            cls += <span style="color: #CC9393;">" F"</span>+j;
+            cls += <span style="color: #CC9393;">" A"</span>+ (i + j);
+            cls += <span style="color: #CC9393;">" B"</span>+ (n - 1 - j + i);
+            cell.setAttribute(<span style="color: #CC9393;">"class"</span>, cls.trim());
             row.appendChild(cell);
         }
     }
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> withMouseMoveListener(withClassname(table(rows),
-                                               <span style="color: #cfe2f2;">"chessboard"</span>),
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> withMouseMoveListener(withClassname(table(rows),
+                                               <span style="color: #CC9393;">"chessboard"</span>),
                                  hoverListener);
 }
 
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">clearHighlight</span>(<span style="color: #f6f080;">board</span>, <span style="color: #f6f080;">cls</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">i</span>, <span style="color: #f6f080;">cells</span> = board.querySelectorAll(<span style="color: #cfe2f2;">'.'</span>+cls);
-    <span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 0; i &lt; cells.length; i++) {
-        <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">cell</span> = cells[i];
-        cell.setAttribute(<span style="color: #cfe2f2;">"class"</span>,
-                          cell.getAttribute(<span style="color: #cfe2f2;">"class"</span>)
-                          .replace(<span style="color: #fa9a4b; font-weight: bold;">new</span> <span style="color: #72aaca;">RegExp</span>(cls, <span style="color: #cfe2f2;">'g'</span>), <span style="color: #cfe2f2;">""</span>).trim());
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">clearHighlight</span>(<span style="color: #DFAF8F;">board</span>, <span style="color: #DFAF8F;">cls</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">i</span>, <span style="color: #DFAF8F;">cells</span> = board.querySelectorAll(<span style="color: #CC9393;">'.'</span>+cls);
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; cells.length; i++) {
+        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cell</span> = cells[i];
+        cell.setAttribute(<span style="color: #CC9393;">"class"</span>,
+                          cell.getAttribute(<span style="color: #CC9393;">"class"</span>)
+                          .replace(<span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">RegExp</span>(cls, <span style="color: #CC9393;">'g'</span>), <span style="color: #CC9393;">""</span>).trim());
 
     };
 
 }
 
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">getAttackingClasses</span>(<span style="color: #f6f080;">cls</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">if</span> (! cls)
-        <span style="color: #fa9a4b; font-weight: bold;">return</span> <span style="color: #b9d977;">null</span>;
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">getAttackingClasses</span>(<span style="color: #DFAF8F;">cls</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">if</span> (! cls)
+        <span style="color: #F0DFAF; font-weight: bold;">return</span> <span style="color: #BFEBBF;">null</span>;
 
-    cls = cls.replace(<span style="color: #cfe2f2;">/.*(R.*B\d+).*/</span>, <span style="color: #cfe2f2;">"$1"</span>);
-    cls = cls.replace(<span style="color: #cfe2f2;">/((R|F|A|B)\d+)/</span>g, <span style="color: #cfe2f2;">".$1"</span>);
-    cls = cls.replace(<span style="color: #cfe2f2;">/ /</span>g, <span style="color: #cfe2f2;">","</span>);
-    <span style="color: #fa9a4b; font-weight: bold;">return</span> cls
+    cls = cls.replace(<span style="color: #CC9393;">/.*(R.*B\d+).*/</span>, <span style="color: #CC9393;">"$1"</span>);
+    cls = cls.replace(<span style="color: #CC9393;">/((R|F|A|B)\d+)/</span>g, <span style="color: #CC9393;">".$1"</span>);
+    cls = cls.replace(<span style="color: #CC9393;">/ /</span>g, <span style="color: #CC9393;">","</span>);
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> cls
 }
 
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">highlight</span>(<span style="color: #f6f080;">parent</span>, <span style="color: #f6f080;">cls</span>, <span style="color: #f6f080;">highlightCls</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">if</span> (! highlightCls)
-        highlightCls = <span style="color: #cfe2f2;">"highlight"</span>;
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">i</span>, <span style="color: #f6f080;">cells</span> = parent.querySelectorAll(cls);
-    <span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 0; i &lt; cells.length; i++) {
-        <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">cell</span> = cells[i],
-            curCls = cell.getAttribute(<span style="color: #cfe2f2;">"class"</span>);
-        <span style="color: #fa9a4b; font-weight: bold;">if</span> (curCls.indexOf(highlightCls) === -1) {
-            cell.setAttribute(<span style="color: #cfe2f2;">"class"</span>,
-                              curCls + <span style="color: #cfe2f2;">" "</span> + highlightCls);
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">highlight</span>(<span style="color: #DFAF8F;">parent</span>, <span style="color: #DFAF8F;">cls</span>, <span style="color: #DFAF8F;">highlightCls</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">if</span> (! highlightCls)
+        highlightCls = <span style="color: #CC9393;">"highlight"</span>;
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">i</span>, <span style="color: #DFAF8F;">cells</span> = parent.querySelectorAll(cls);
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; cells.length; i++) {
+        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">cell</span> = cells[i],
+            curCls = cell.getAttribute(<span style="color: #CC9393;">"class"</span>);
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (curCls.indexOf(highlightCls) === -1) {
+            cell.setAttribute(<span style="color: #CC9393;">"class"</span>,
+                              curCls + <span style="color: #CC9393;">" "</span> + highlightCls);
         }
     }
 }
 
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">hoverListener</span>(<span style="color: #f6f080;">e</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">if</span> (e.target.tagName === <span style="color: #cfe2f2;">'TD'</span> &amp;&amp;
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">hoverListener</span>(<span style="color: #DFAF8F;">e</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">if</span> (e.target.tagName === <span style="color: #CC9393;">'TD'</span> &amp;&amp;
         e.target
         .parentElement
         .parentElement
-        .parentElement.getAttribute(<span style="color: #cfe2f2;">"class"</span>) === <span style="color: #cfe2f2;">"chessboard"</span>) {
-        <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">rows</span> = e.target.parentElement.parentElement;
-        clearHighlight(rows, <span style="color: #cfe2f2;">'highlight'</span>);
-        <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">toggleCls</span> = getAttackingClasses(e.target.getAttribute(<span style="color: #cfe2f2;">"class"</span>));
-        <span style="color: #fa9a4b; font-weight: bold;">if</span> (toggleCls) {
+        .parentElement.getAttribute(<span style="color: #CC9393;">"class"</span>) === <span style="color: #CC9393;">"chessboard"</span>) {
+        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">rows</span> = e.target.parentElement.parentElement;
+        clearHighlight(rows, <span style="color: #CC9393;">'highlight'</span>);
+        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">toggleCls</span> = getAttackingClasses(e.target.getAttribute(<span style="color: #CC9393;">"class"</span>));
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (toggleCls) {
             highlight(rows, toggleCls);
         }
     }
 }
 
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">placeQueen</span>(<span style="color: #f6f080;">board</span>, <span style="color: #f6f080;">posSelector</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">position</span> = board.querySelector(posSelector);
-    <span style="color: #798188;">//</span><span style="color: #798188;">Yes, this is the unicode for the queen symbol...</span>
-    position.appendChild(document.createTextNode(<span style="color: #cfe2f2;">"\u2655"</span>));
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">highlightCls</span> = getAttackingClasses(position.getAttribute(<span style="color: #cfe2f2;">"class"</span>));
-    highlight(board, highlightCls, <span style="color: #cfe2f2;">'attacked'</span>);
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">placeQueen</span>(<span style="color: #DFAF8F;">board</span>, <span style="color: #DFAF8F;">posSelector</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">position</span> = board.querySelector(posSelector);
+    <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">Yes, this is the unicode for the queen symbol...</span>
+    position.appendChild(document.createTextNode(<span style="color: #CC9393;">"\u2655"</span>));
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">highlightCls</span> = getAttackingClasses(position.getAttribute(<span style="color: #CC9393;">"class"</span>));
+    highlight(board, highlightCls, <span style="color: #CC9393;">'attacked'</span>);
 }
 
-<span style="color: #fa9a4b; font-weight: bold;">function</span> <span style="color: #72aaca;">clearQueens</span>(<span style="color: #f6f080;">board</span>) {
-    <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">i</span>, <span style="color: #f6f080;">cells</span> = board.querySelectorAll(<span style="color: #cfe2f2;">"td"</span>);
-    <span style="color: #fa9a4b; font-weight: bold;">for</span> (i = 0; i &lt; cells.length; i++) {
-        <span style="color: #fa9a4b; font-weight: bold;">var</span> <span style="color: #f6f080;">td</span> = cells[i];
-        <span style="color: #fa9a4b; font-weight: bold;">if</span> (td.firstChild)
+<span style="color: #F0DFAF; font-weight: bold;">function</span> <span style="color: #93E0E3;">clearQueens</span>(<span style="color: #DFAF8F;">board</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">i</span>, <span style="color: #DFAF8F;">cells</span> = board.querySelectorAll(<span style="color: #CC9393;">"td"</span>);
+    <span style="color: #F0DFAF; font-weight: bold;">for</span> (i = 0; i &lt; cells.length; i++) {
+        <span style="color: #F0DFAF; font-weight: bold;">var</span> <span style="color: #DFAF8F;">td</span> = cells[i];
+        <span style="color: #F0DFAF; font-weight: bold;">if</span> (td.firstChild)
             td.removeChild(td.firstChild);
     };
-    clearHighlight(board, <span style="color: #cfe2f2;">'attacked'</span>);
+    clearHighlight(board, <span style="color: #CC9393;">'attacked'</span>);
 }
 </pre>
 </div>
@@ -1252,38 +1308,37 @@ Additionally, I used the following css.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-css"><span style="color: #b6d877;">div.visualization </span>{
-  <span style="color: #72aaca;">text-align</span>: center;
+<pre class="src src-css"><span style="color: #93E0E3;">div.visualization </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">text-align</span>: center;
 }
 
-<span style="color: #b6d877;">table.chessboard </span>{
-  <span style="color: #72aaca;">margin</span>: auto;
-  <span style="color: #72aaca;">margin-bottom</span>: 1em;
+<span style="color: #93E0E3;">table.chessboard </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">margin</span>: auto;
+  <span style="color: #F0DFAF; font-weight: bold;">margin-bottom</span>: 1em;
 }
-<span style="color: #b6d877;">table.chessboard td </span>{
-  <span style="color: #72aaca;">width</span>: 1em;
-  <span style="color: #72aaca;">height</span>: 1em;
-  <span style="color: #72aaca;">font-size</span>: 1em;
-  <span style="color: #72aaca;">line-height</span>: 1em;
-  <span style="color: #72aaca;">border</span>: solid thin black;
+<span style="color: #93E0E3;">table.chessboard td </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">width</span>: 1em;
+  <span style="color: #F0DFAF; font-weight: bold;">height</span>: 1em;
+  <span style="color: #F0DFAF; font-weight: bold;">font-size</span>: 1em;
+  <span style="color: #F0DFAF; font-weight: bold;">line-height</span>: 1em;
+  <span style="color: #F0DFAF; font-weight: bold;">border</span>: solid thin <span style="color: #ffffff; background-color: #000000;">black</span>;
 }
-<span style="color: #b6d877;">.highlight </span>{
-  <span style="color: #72aaca;">background-color</span>: #FAA;
+<span style="color: #93E0E3;">.highlight </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">background-color</span>: <span style="color: #000000; background-color: #FAA;">#FAA</span>;
 }
-<span style="color: #b6d877;">.attacked </span>{
-  <span style="color: #72aaca;">background-color</span>: #F66;
+<span style="color: #93E0E3;">.attacked </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">background-color</span>: <span style="color: #ffffff; background-color: #F66;">#F66</span>;
 }
-<span style="color: #b6d877;">.solution </span>{
-  <span style="color: #72aaca;">background-color</span>: grey;
+<span style="color: #93E0E3;">.solution </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">background-color</span>: <span style="color: #ffffff; background-color: #808080;">grey</span>;
 }
-<span style="color: #b6d877;">input[type=</span><span style="color: #cfe2f2;">'range'</span><span style="color: #b6d877;">] </span>{
-  <span style="color: #72aaca; font-style: italic;">-webkit-appearance</span>: none;
-  <span style="color: #72aaca;">border-radius</span>: 5px;
-  <span style="color: #72aaca;">box-shadow</span>: inset 0 0 5px #333;
-  <span style="color: #72aaca;">background-color</span>: #999;
-  <span style="color: #72aaca;">height</span>: 10px;
-  <span style="color: #72aaca;">vertical-align</span>: middle;
+<span style="color: #93E0E3;">input[type=</span><span style="color: #CC9393;">'range'</span><span style="color: #93E0E3;">] </span>{
+  <span style="color: #F0DFAF; font-weight: bold; text-decoration: underline;">-webkit-appearance</span>: none;
+  <span style="color: #F0DFAF; font-weight: bold;">border-radius</span>: 5px;
+  <span style="color: #F0DFAF; font-weight: bold;">box-shadow</span>: inset 0 0 5px <span style="color: #ffffff; background-color: #333;">#333</span>;
+  <span style="color: #F0DFAF; font-weight: bold;">background-color</span>: <span style="color: #000000; background-color: #999;">#999</span>;
+  <span style="color: #F0DFAF; font-weight: bold;">height</span>: 10px;
+  <span style="color: #F0DFAF; font-weight: bold;">vertical-align</span>: middle;
 }
 </pre>
 </div>
@@ -1301,9 +1356,8 @@ Additionally, I used the following css.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh Berry</p>
-<p class="date">Created: 2017-12-23 Sat 00:33</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.2.2 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
-<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+<p class="date">Created: 2021-02-05 Fri 23:51</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
 </html>

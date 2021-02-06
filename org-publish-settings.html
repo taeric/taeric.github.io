@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-10-20 Tue 02:10 -->
+<!-- 2021-02-05 Fri 23:51 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>My Site Configuration</title>
@@ -40,7 +40,7 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
+    overflow: auto;
     padding-top: 1.2em;
   }
   pre.src:before {
@@ -52,7 +52,7 @@
     padding: 3px;
     border: 1px solid black;
   }
-  pre.src:hover:before { display: inline;}
+  pre.src:hover:before { display: inline; margin-top: 14px;}
   /* Languages per Org manual */
   pre.src-asymptote:before { content: 'Asymptote'; }
   pre.src-awk:before { content: 'Awk'; }
@@ -194,50 +194,26 @@
   /*]]>*/-->
 </style>
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2020 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 </head>
 <body>
@@ -280,18 +256,21 @@ it a name
 </p>
 
 <div class="org-src-container">
-<pre class="src src-elisp">(setq org-publish-project-alist
-      '(("site"
-         :base-directory "."
-         :publishing-directory "."
-         :base-extension "org"
-         :publishing-function org-html-publish-to-html)))
+<pre class="src src-elisp">(<span style="color: #F0DFAF; font-weight: bold;">setq</span> org-publish-project-alist
+      '((<span style="color: #CC9393;">"site"</span>
+         <span style="color: #DCDCCC; font-weight: bold;">:base-directory</span> <span style="color: #CC9393;">"."</span>
+         <span style="color: #DCDCCC; font-weight: bold;">:publishing-directory</span> <span style="color: #CC9393;">"."</span>
+         <span style="color: #DCDCCC; font-weight: bold;">:base-extension</span> <span style="color: #CC9393;">"org"</span>
+         <span style="color: #DCDCCC; font-weight: bold;">:publishing-function</span> org-html-publish-to-html)))
+<span style="color: #5F7F5F;">;; </span><span style="color: #7F9F7F;">Mathjax originally tries to use http... which I don't want.</span>
+(<span style="color: #F0DFAF; font-weight: bold;">setq</span> org-html-mathjax-options
+      '((path <span style="color: #CC9393;">"https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"</span>)))
 </pre>
 </div>
 
 
 <p>
-With that set, you can simply call <a href="(org-publish-current-project)">(org-publish-current-project)</a>
+With that set, you can simply call <a href="(org-publish-current-project t)">(org-publish-current-project t)</a>
 </p>
 </div>
 </div>
@@ -316,46 +295,46 @@ contents.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-css">html {
-  background: #020;
+<pre class="src src-css"><span style="color: #93E0E3;">html </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">background</span>: <span style="color: #ffffff; background-color: #020;">#020</span>;
 }
-body {
-  max-width: 50em;
-  padding-left: 3em;
-  padding-right: 3em;
-  margin: auto;
-  border: solid thin black;
-  background-color: #DDD;
-}
-
-h1.title {
-  text-align: left;
-  padding: 1ex;
+<span style="color: #93E0E3;">body </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">max-width</span>: 60em;
+  <span style="color: #F0DFAF; font-weight: bold;">padding-left</span>: 3em;
+  <span style="color: #F0DFAF; font-weight: bold;">padding-right</span>: 3em;
+  <span style="color: #F0DFAF; font-weight: bold;">margin</span>: auto;
+  <span style="color: #F0DFAF; font-weight: bold;">border</span>: solid thin <span style="color: #ffffff; background-color: #000000;">black</span>;
+  <span style="color: #F0DFAF; font-weight: bold;">background-color</span>: <span style="color: #000000; background-color: #DDD;">#DDD</span>;
 }
 
-h1, h2, h3, h4 {
-  margin-bottom: 1ex;
+<span style="color: #93E0E3;">h1.title </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">text-align</span>: left;
+  <span style="color: #F0DFAF; font-weight: bold;">padding</span>: 1ex;
 }
 
-p {
-  margin-top: 0;
+<span style="color: #93E0E3;">h1, h2, h3, h4 </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">margin-bottom</span>: 1ex;
 }
 
-div.outline-text-2, div.outline-text-3, div.outline-text-4 {
-  padding: 1em;
-  padding-top: 0;
+<span style="color: #93E0E3;">p </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">margin-top</span>: 0;
 }
-.org-src-container {
-  max-width: 40em;
-  margin: auto;
+
+<span style="color: #93E0E3;">div.outline-text-2, div.outline-text-3, div.outline-text-4 </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">padding</span>: 1em;
+  <span style="color: #F0DFAF; font-weight: bold;">padding-top</span>: 0;
 }
-.org-src-container .src {
-  color: #EEE;
-  background-color: #222;
-  overflow: auto;
+<span style="color: #93E0E3;">.org-src-container </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">max-width</span>: 50em;
+  <span style="color: #F0DFAF; font-weight: bold;">margin</span>: auto;
 }
-#table-of-contents {
-  display: none;
+<span style="color: #93E0E3;">.org-src-container .src </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">color</span>: <span style="color: #000000; background-color: #EEE;">#EEE</span>;
+  <span style="color: #F0DFAF; font-weight: bold;">background-color</span>: <span style="color: #ffffff; background-color: #222;">#222</span>;
+  <span style="color: #F0DFAF; font-weight: bold;">overflow</span>: auto;
+}
+<span style="color: #93E0E3;">#table-of-contents </span>{
+  <span style="color: #F0DFAF; font-weight: bold;">display</span>: none;
 }
 
 </pre>
@@ -382,8 +361,8 @@ do&#x2026; but I don't know if I will.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh Berry</p>
-<p class="date">Created: 2020-10-20 Tue 02:10</p>
-<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+<p class="date">Created: 2021-02-05 Fri 23:51</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
 </html>

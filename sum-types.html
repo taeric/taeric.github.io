@@ -3,23 +3,30 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
+<!-- 2021-02-05 Fri 23:51 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Exhaustive Sum Types in Java with a Visitor</title>
-<!-- 2017-12-23 Sat 00:28 -->
-<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta  name="generator" content="Org-mode" />
-<meta  name="author" content="Josh Berry" />
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Josh Berry" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
-  .title  { text-align: center; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
   .todo   { font-family: monospace; color: red; }
-  .done   { color: green; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
   .tag    { background-color: #eee; font-family: monospace;
             padding: 2px; font-size: 80%; font-weight: normal; }
   .timestamp { color: #bebebe; }
   .timestamp-kwd { color: #5f9ea0; }
-  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
-  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
-  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
   .underline { text-decoration: underline; }
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
@@ -33,7 +40,7 @@
   }
   pre.src {
     position: relative;
-    overflow: visible;
+    overflow: auto;
     padding-top: 1.2em;
   }
   pre.src:before {
@@ -45,31 +52,128 @@
     padding: 3px;
     border: 1px solid black;
   }
-  pre.src:hover:before { display: inline;}
-  pre.src-sh:before    { content: 'sh'; }
-  pre.src-bash:before  { content: 'sh'; }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
   pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
-  pre.src-R:before     { content: 'R'; }
-  pre.src-perl:before  { content: 'Perl'; }
-  pre.src-java:before  { content: 'Java'; }
-  pre.src-sql:before   { content: 'SQL'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
 
   table { border-collapse:collapse; }
   caption.t-above { caption-side: top; }
   caption.t-bottom { caption-side: bottom; }
   td, th { vertical-align:top;  }
-  th.right  { text-align: center;  }
-  th.left   { text-align: center;   }
-  th.center { text-align: center; }
-  td.right  { text-align: right;  }
-  td.left   { text-align: left;   }
-  td.center { text-align: center; }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
   dt { font-weight: bold; }
-  .footpara:nth-child(2) { display: inline; }
-  .footpara { display: block; }
+  .footpara { display: inline; }
   .footdef  { margin-bottom: 1em; }
   .figure { padding: 1em; }
   .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
   .inlinetask {
     padding: 10px;
     border: 2px solid gray;
@@ -86,54 +190,31 @@
     { font-size: 10px; font-weight: bold; white-space: nowrap; }
   .org-info-js_search-highlight
     { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
   /*]]>*/-->
 </style>
 <link rel="stylesheet" type="text/css" href="org-overrides.css" />
 <script type="text/javascript">
-/*
-@licstart  The following is the entire license notice for the
-JavaScript code in this tag.
-
-Copyright (C) 2012-2013 Free Software Foundation, Inc.
-
-The JavaScript code in this tag is free software: you can
-redistribute it and/or modify it under the terms of the GNU
-General Public License (GNU GPL) as published by the Free Software
-Foundation, either version 3 of the License, or (at your option)
-any later version.  The code is distributed WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
-
-As additional permission under GNU GPL version 3 section 7, you
-may distribute non-source (e.g., minimized or compacted) forms of
-that code without the copy of the GNU GPL normally required by
-section 4, provided you include this license notice and a URL
-through which recipients can access the Corresponding Source.
-
-
-@licend  The above is the entire license notice
-for the JavaScript code in this tag.
-*/
+// @license magnet:?xt=urn:btih:e95b018ef3580986a04669f1b5879592219e2a7a&dn=public-domain.txt Public Domain
 <!--/*--><![CDATA[/*><!--*/
- function CodeHighlightOn(elem, id)
- {
-   var target = document.getElementById(id);
-   if(null != target) {
-     elem.cacheClassElem = elem.className;
-     elem.cacheClassTarget = target.className;
-     target.className = "code-highlighted";
-     elem.className   = "code-highlighted";
-   }
- }
- function CodeHighlightOff(elem, id)
- {
-   var target = document.getElementById(id);
-   if(elem.cacheClassElem)
-     elem.className = elem.cacheClassElem;
-   if(elem.cacheClassTarget)
-     target.className = elem.cacheClassTarget;
- }
-/*]]>*///-->
+     function CodeHighlightOn(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.add("code-highlighted");
+         target.classList.add("code-highlighted");
+       }
+     }
+     function CodeHighlightOff(elem, id)
+     {
+       var target = document.getElementById(id);
+       if(null != target) {
+         elem.classList.remove("code-highlighted");
+         target.classList.remove("code-highlighted");
+       }
+     }
+    /*]]>*///-->
+// @license-end
 </script>
 </head>
 <body>
@@ -143,16 +224,16 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#sec-1">What?</a></li>
-<li><a href="#sec-2">A Sum type.</a></li>
-<li><a href="#sec-3">Using a Visitor.  Also, please don't really do this.</a></li>
+<li><a href="#orgd1f2266">What?</a></li>
+<li><a href="#orgdc86c9f">A Sum type.</a></li>
+<li><a href="#orgdfa31b7">Using a Visitor.  Also, please don't really do this.</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-sec-1" class="outline-2">
-<h2 id="sec-1">What?</h2>
-<div class="outline-text-2" id="text-1">
+<div id="outline-container-orgd1f2266" class="outline-2">
+<h2 id="orgd1f2266">What?</h2>
+<div class="outline-text-2" id="text-orgd1f2266">
 <p>
 Simply stated, I have heard it said that java could not provide
 exhaustive coverage of sum types because it lacks pattern matching.
@@ -163,9 +244,9 @@ not be dealt with
 </div>
 </div>
 
-<div id="outline-container-sec-2" class="outline-2">
-<h2 id="sec-2">A Sum type.</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-orgdc86c9f" class="outline-2">
+<h2 id="orgdc86c9f">A Sum type.</h2>
+<div class="outline-text-2" id="text-orgdc86c9f">
 <p>
 I'm not going to provide too much in the way of explanation on what
 sum types are.  In large part because I would probably make a
@@ -179,9 +260,9 @@ Optional type that everyone knows and loves.  Right?
 </div>
 </div>
 
-<div id="outline-container-sec-3" class="outline-2">
-<h2 id="sec-3">Using a Visitor.  Also, please don't really do this.</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-orgdfa31b7" class="outline-2">
+<h2 id="orgdfa31b7">Using a Visitor.  Also, please don't really do this.</h2>
+<div class="outline-text-2" id="text-orgdfa31b7">
 <p>
 If we are willing to go through some extra hurdles in providing a
 visitor next to our Option type, we can provide a way where you can
@@ -190,41 +271,40 @@ compiler to help.
 </p>
 
 <div class="org-src-container">
-
-<pre class="src src-java"><span style="color: #fa9a4b; font-weight: bold;">public</span> <span style="color: #fa9a4b; font-weight: bold;">abstract</span> <span style="color: #fa9a4b; font-weight: bold;">class</span> <span style="color: #72aaca;">Option</span>&lt;<span style="color: #72aaca;">A</span>&gt; {
-    <span style="color: #fa9a4b; font-weight: bold;">public</span> &lt;<span style="color: #72aaca;">B</span>&gt; <span style="color: #72aaca;">B</span> <span style="color: #72aaca;">MATCH</span>(<span style="color: #72aaca;">Visitor</span>&lt;<span style="color: #72aaca;">A</span>, <span style="color: #72aaca;">B</span>&gt; <span style="color: #f6f080;">visitor</span>) {
-        <span style="color: #fa9a4b; font-weight: bold;">return</span> <span style="color: #fa9a4b; font-weight: bold;">this</span>.acceptVisitor(visitor);
+<pre class="src src-java"><span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">abstract</span> <span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Option</span>&lt;<span style="color: #7CB8BB;">A</span>&gt; {
+    <span style="color: #F0DFAF; font-weight: bold;">public</span> &lt;<span style="color: #7CB8BB;">B</span>&gt; <span style="color: #7CB8BB;">B</span> <span style="color: #93E0E3;">MATCH</span>(<span style="color: #7CB8BB;">Visitor</span>&lt;<span style="color: #7CB8BB;">A</span>, <span style="color: #7CB8BB;">B</span>&gt; <span style="color: #DFAF8F;">visitor</span>) {
+        <span style="color: #F0DFAF; font-weight: bold;">return</span> <span style="color: #F0DFAF; font-weight: bold;">this</span>.acceptVisitor(visitor);
     }
 
-    <span style="color: #fa9a4b; font-weight: bold;">abstract</span> &lt;<span style="color: #72aaca;">B</span>&gt; <span style="color: #72aaca;">B</span> <span style="color: #72aaca;">acceptVisitor</span>(<span style="color: #72aaca;">Visitor</span>&lt;<span style="color: #72aaca;">A</span>, <span style="color: #72aaca;">B</span>&gt; <span style="color: #f6f080;">visitor</span>);
+    <span style="color: #F0DFAF; font-weight: bold;">abstract</span> &lt;<span style="color: #7CB8BB;">B</span>&gt; <span style="color: #7CB8BB;">B</span> <span style="color: #93E0E3;">acceptVisitor</span>(<span style="color: #7CB8BB;">Visitor</span>&lt;<span style="color: #7CB8BB;">A</span>, <span style="color: #7CB8BB;">B</span>&gt; <span style="color: #DFAF8F;">visitor</span>);
 
-    <span style="color: #fa9a4b; font-weight: bold;">public</span> <span style="color: #fa9a4b; font-weight: bold;">static</span> &lt;<span style="color: #72aaca;">A</span>&gt; <span style="color: #72aaca;">Option</span>&lt;<span style="color: #72aaca;">A</span>&gt; <span style="color: #72aaca;">some</span>(<span style="color: #72aaca;">A</span> <span style="color: #f6f080;">value</span>) {
-        <span style="color: #fa9a4b; font-weight: bold;">return</span> <span style="color: #fa9a4b; font-weight: bold;">new</span> <span style="color: #72aaca;">Some</span>&lt;<span style="color: #72aaca;">A</span>&gt;(value);
+    <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">static</span> &lt;<span style="color: #7CB8BB;">A</span>&gt; <span style="color: #7CB8BB;">Option</span>&lt;<span style="color: #7CB8BB;">A</span>&gt; <span style="color: #93E0E3;">some</span>(<span style="color: #7CB8BB;">A</span> <span style="color: #DFAF8F;">value</span>) {
+        <span style="color: #F0DFAF; font-weight: bold;">return</span> <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Some</span>&lt;<span style="color: #7CB8BB;">A</span>&gt;(value);
     }
 
-    <span style="color: #fa9a4b; font-weight: bold;">public</span> <span style="color: #fa9a4b; font-weight: bold;">static</span> &lt;<span style="color: #72aaca;">A</span>&gt; <span style="color: #72aaca;">Option</span>&lt;<span style="color: #72aaca;">A</span>&gt; <span style="color: #72aaca;">none</span>() {
-        <span style="color: #fa9a4b; font-weight: bold;">return</span> <span style="color: #fa9a4b; font-weight: bold;">new</span> <span style="color: #72aaca;">None</span>&lt;<span style="color: #72aaca;">A</span>&gt;();
+    <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">static</span> &lt;<span style="color: #7CB8BB;">A</span>&gt; <span style="color: #7CB8BB;">Option</span>&lt;<span style="color: #7CB8BB;">A</span>&gt; <span style="color: #93E0E3;">none</span>() {
+        <span style="color: #F0DFAF; font-weight: bold;">return</span> <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">None</span>&lt;<span style="color: #7CB8BB;">A</span>&gt;();
     }
 
-    <span style="color: #fa9a4b; font-weight: bold;">private</span> <span style="color: #fa9a4b; font-weight: bold;">static</span> <span style="color: #fa9a4b; font-weight: bold;">final</span> <span style="color: #fa9a4b; font-weight: bold;">class</span> <span style="color: #72aaca;">Some</span>&lt;<span style="color: #72aaca;">A</span>&gt; <span style="color: #fa9a4b; font-weight: bold;">extends</span> <span style="color: #72aaca;">Option</span>&lt;<span style="color: #72aaca;">A</span>&gt; {
-        <span style="color: #fa9a4b; font-weight: bold;">private</span> <span style="color: #fa9a4b; font-weight: bold;">final</span> <span style="color: #72aaca;">A</span> <span style="color: #f6f080;">value</span>;
-        <span style="color: #fa9a4b; font-weight: bold;">private</span> <span style="color: #72aaca;">Some</span>(<span style="color: #72aaca;">A</span> <span style="color: #f6f080;">value</span>) {
-            <span style="color: #fa9a4b; font-weight: bold;">this</span>.value = value;
+    <span style="color: #F0DFAF; font-weight: bold;">private</span> <span style="color: #F0DFAF; font-weight: bold;">static</span> <span style="color: #F0DFAF; font-weight: bold;">final</span> <span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Some</span>&lt;<span style="color: #7CB8BB;">A</span>&gt; <span style="color: #F0DFAF; font-weight: bold;">extends</span> <span style="color: #7CB8BB;">Option</span>&lt;<span style="color: #7CB8BB;">A</span>&gt; {
+        <span style="color: #F0DFAF; font-weight: bold;">private</span> <span style="color: #F0DFAF; font-weight: bold;">final</span> <span style="color: #7CB8BB;">A</span> <span style="color: #DFAF8F;">value</span>;
+        <span style="color: #F0DFAF; font-weight: bold;">private</span> Some(<span style="color: #7CB8BB;">A</span> <span style="color: #DFAF8F;">value</span>) {
+            <span style="color: #F0DFAF; font-weight: bold;">this</span>.value = value;
         }
-        &lt;<span style="color: #72aaca;">B</span>&gt; B acceptVisitor(Visitor&lt;<span style="color: #72aaca;">A</span>, B&gt; visitor) {
-            <span style="color: #fa9a4b; font-weight: bold;">return</span> <span style="color: #b9d977;">visitor</span>.SOME(<span style="color: #fa9a4b; font-weight: bold;">this</span>.value);
-        }
-    }
-
-    <span style="color: #fa9a4b; font-weight: bold;">private</span> <span style="color: #fa9a4b; font-weight: bold;">static</span> <span style="color: #fa9a4b; font-weight: bold;">final</span> <span style="color: #fa9a4b; font-weight: bold;">class</span> <span style="color: #72aaca;">None</span>&lt;<span style="color: #72aaca;">A</span>&gt; <span style="color: #fa9a4b; font-weight: bold;">extends</span> <span style="color: #72aaca;">Option</span>&lt;<span style="color: #72aaca;">A</span>&gt; {
-        &lt;<span style="color: #72aaca;">B</span>&gt; B acceptVisitor(Visitor&lt;<span style="color: #72aaca;">A</span>, B&gt; visitor) {
-            <span style="color: #fa9a4b; font-weight: bold;">return</span> <span style="color: #b9d977;">visitor</span>.NONE();
+        &lt;<span style="color: #7CB8BB;">B</span>&gt; B acceptVisitor(Visitor&lt;<span style="color: #7CB8BB;">A</span>, B&gt; visitor) {
+            <span style="color: #F0DFAF; font-weight: bold;">return</span> <span style="color: #BFEBBF;">visitor</span>.SOME(<span style="color: #F0DFAF; font-weight: bold;">this</span>.value);
         }
     }
 
-    <span style="color: #fa9a4b; font-weight: bold;">public</span> <span style="color: #fa9a4b; font-weight: bold;">static</span> <span style="color: #fa9a4b; font-weight: bold;">abstract</span> <span style="color: #fa9a4b; font-weight: bold;">class</span> <span style="color: #72aaca;">Visitor</span>&lt;<span style="color: #72aaca;">A</span>, <span style="color: #72aaca;">B</span>&gt; {
-        <span style="color: #fa9a4b; font-weight: bold;">public</span> <span style="color: #fa9a4b; font-weight: bold;">abstract</span> <span style="color: #72aaca;">B</span> <span style="color: #72aaca;">SOME</span>(<span style="color: #72aaca;">A</span> <span style="color: #f6f080;">value</span>);
-        <span style="color: #fa9a4b; font-weight: bold;">public</span> <span style="color: #fa9a4b; font-weight: bold;">abstract</span> <span style="color: #72aaca;">B</span> <span style="color: #72aaca;">NONE</span>();
+    <span style="color: #F0DFAF; font-weight: bold;">private</span> <span style="color: #F0DFAF; font-weight: bold;">static</span> <span style="color: #F0DFAF; font-weight: bold;">final</span> <span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">None</span>&lt;<span style="color: #7CB8BB;">A</span>&gt; <span style="color: #F0DFAF; font-weight: bold;">extends</span> <span style="color: #7CB8BB;">Option</span>&lt;<span style="color: #7CB8BB;">A</span>&gt; {
+        &lt;<span style="color: #7CB8BB;">B</span>&gt; B acceptVisitor(Visitor&lt;<span style="color: #7CB8BB;">A</span>, B&gt; visitor) {
+            <span style="color: #F0DFAF; font-weight: bold;">return</span> <span style="color: #BFEBBF;">visitor</span>.NONE();
+        }
+    }
+
+    <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">static</span> <span style="color: #F0DFAF; font-weight: bold;">abstract</span> <span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Visitor</span>&lt;<span style="color: #7CB8BB;">A</span>, <span style="color: #7CB8BB;">B</span>&gt; {
+        <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">abstract</span> <span style="color: #7CB8BB;">B</span> <span style="color: #93E0E3;">SOME</span>(<span style="color: #7CB8BB;">A</span> <span style="color: #DFAF8F;">value</span>);
+        <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">abstract</span> <span style="color: #7CB8BB;">B</span> <span style="color: #93E0E3;">NONE</span>();
     }
 }
 </pre>
@@ -237,36 +317,35 @@ you cover all types of the sum value are covered by the visitor methods.
 </p>
 
 <div class="org-src-container">
+<pre class="src src-java"><span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">OptionExample</span> {
+    <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">static</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">main</span>(<span style="color: #7CB8BB;">String</span> <span style="color: #DFAF8F;">args</span>[]) {
+        <span style="color: #7CB8BB;">Option</span>&lt;<span style="color: #7CB8BB;">String</span>&gt; <span style="color: #DFAF8F;">example</span>;
 
-<pre class="src src-java"><span style="color: #fa9a4b; font-weight: bold;">public</span> <span style="color: #fa9a4b; font-weight: bold;">class</span> <span style="color: #72aaca;">OptionExample</span> {
-    <span style="color: #fa9a4b; font-weight: bold;">public</span> <span style="color: #fa9a4b; font-weight: bold;">static</span> <span style="color: #72aaca;">void</span> <span style="color: #72aaca;">main</span>(<span style="color: #72aaca;">String</span> <span style="color: #f6f080;">args</span>[]) {
-        <span style="color: #72aaca;">Option</span>&lt;<span style="color: #72aaca;">String</span>&gt; <span style="color: #f6f080;">example</span>;
+        example = Option.some(<span style="color: #CC9393;">"Hello World"</span>);
 
-        example = Option.some(<span style="color: #cfe2f2;">"Hello World"</span>);
-
-        <span style="color: #72aaca;">Integer</span> <span style="color: #f6f080;">result</span> = <span style="color: #b9d977;">example</span>.MATCH(<span style="color: #fa9a4b; font-weight: bold;">new</span> <span style="color: #b9d977;">Option</span>.<span style="color: #72aaca;">Visitor</span>&lt;<span style="color: #72aaca;">String</span>, <span style="color: #72aaca;">Integer</span>&gt;() {
-                <span style="color: #fa9a4b; font-weight: bold;">public</span> <span style="color: #72aaca;">Integer</span> <span style="color: #72aaca;">SOME</span>(<span style="color: #72aaca;">String</span> <span style="color: #f6f080;">value</span>) {
-                    <span style="color: #fa9a4b; font-weight: bold;">return</span> value.length();
+        <span style="color: #7CB8BB;">Integer</span> <span style="color: #DFAF8F;">result</span> = <span style="color: #BFEBBF;">example</span>.MATCH(<span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #BFEBBF;">Option</span>.<span style="color: #7CB8BB;">Visitor</span>&lt;<span style="color: #7CB8BB;">String</span>, <span style="color: #7CB8BB;">Integer</span>&gt;() {
+                <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Integer</span> <span style="color: #93E0E3;">SOME</span>(<span style="color: #7CB8BB;">String</span> <span style="color: #DFAF8F;">value</span>) {
+                    <span style="color: #F0DFAF; font-weight: bold;">return</span> value.length();
                 }
-                <span style="color: #fa9a4b; font-weight: bold;">public</span> <span style="color: #72aaca;">Integer</span> <span style="color: #72aaca;">NONE</span>() {
-                    <span style="color: #fa9a4b; font-weight: bold;">return</span> 0;
+                <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Integer</span> <span style="color: #93E0E3;">NONE</span>() {
+                    <span style="color: #F0DFAF; font-weight: bold;">return</span> 0;
                 }
             });
 
-        System.out.println(<span style="color: #cfe2f2;">"We saw "</span> + result + <span style="color: #cfe2f2;">" characters."</span>);
+        System.out.println(<span style="color: #CC9393;">"We saw "</span> + result + <span style="color: #CC9393;">" characters."</span>);
 
         example = Option.none();
 
-        result = <span style="color: #b9d977;">example</span>.MATCH(<span style="color: #fa9a4b; font-weight: bold;">new</span> <span style="color: #b9d977;">Option</span>.<span style="color: #72aaca;">Visitor</span>&lt;<span style="color: #72aaca;">String</span>, <span style="color: #72aaca;">Integer</span>&gt;() {
-                <span style="color: #fa9a4b; font-weight: bold;">public</span> <span style="color: #72aaca;">Integer</span> <span style="color: #72aaca;">SOME</span>(<span style="color: #72aaca;">String</span> <span style="color: #f6f080;">value</span>) {
-                    <span style="color: #fa9a4b; font-weight: bold;">return</span> value.length();
+        result = <span style="color: #BFEBBF;">example</span>.MATCH(<span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #BFEBBF;">Option</span>.<span style="color: #7CB8BB;">Visitor</span>&lt;<span style="color: #7CB8BB;">String</span>, <span style="color: #7CB8BB;">Integer</span>&gt;() {
+                <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Integer</span> <span style="color: #93E0E3;">SOME</span>(<span style="color: #7CB8BB;">String</span> <span style="color: #DFAF8F;">value</span>) {
+                    <span style="color: #F0DFAF; font-weight: bold;">return</span> value.length();
                 }
-                <span style="color: #fa9a4b; font-weight: bold;">public</span> <span style="color: #72aaca;">Integer</span> <span style="color: #72aaca;">NONE</span>() {
-                    <span style="color: #fa9a4b; font-weight: bold;">return</span> 0;
+                <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Integer</span> <span style="color: #93E0E3;">NONE</span>() {
+                    <span style="color: #F0DFAF; font-weight: bold;">return</span> 0;
                 }
             });
 
-        System.out.println(<span style="color: #cfe2f2;">"We saw "</span> + result + <span style="color: #cfe2f2;">" characters."</span>);
+        System.out.println(<span style="color: #CC9393;">"We saw "</span> + result + <span style="color: #CC9393;">" characters."</span>);
 
     }
 }
@@ -302,9 +381,8 @@ quite clearly supported.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh Berry</p>
-<p class="date">Created: 2017-12-23 Sat 00:28</p>
-<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 25.2.2 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
-<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+<p class="date">Created: 2021-02-05 Fri 23:51</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
 </html>

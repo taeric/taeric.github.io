@@ -9,7 +9,7 @@
 I have to confess that I never really had a good mental model for how
 to solve a Rubik's Cube.  I am able to manipulate one into a solved
 position, but only because I practiced the moves listed in [[https://smile.amazon.com/Winning-Ways-Your-Mathematical-Plays/dp/1568811446][Winning
-Ways for Your Mathematical Plays, Volume 4]].  
+Ways for Your Mathematical Plays, Volume 4]].
 
 To that end, I have tried to figure out just how I would find my own
 algorithm.  Best approach I ever came up with was what I suspect I was
@@ -23,7 +23,7 @@ easily enough.
 The question that comes to mind, however, is just how to encode the
 moves and the state of the board.  I could model the cube where I keep
 track of each piece and how it is currently configured.  However, that
-feels like it is more effort than I would care for.  
+feels like it is more effort than I would care for.
 
 Instead, I think if you treated each "face" of the cube as a number,
 then the current state is just a permutation of the numbers; with each
@@ -51,7 +51,7 @@ this is equivalent to changing the numbers easily enough.
 Our html for this sequence, then, is a simple set of divs for each
 number.  We go ahead and add a class for the color of the solved cube.
 
-#+BEGIN_SRC html 
+#+BEGIN_SRC html
   <div class="cube">
     <div class="face face1  green  ">1</div>
     <div class="face face2  green  ">2</div>
@@ -110,7 +110,7 @@ number.  We go ahead and add a class for the color of the solved cube.
   </div>
 #+END_SRC
 
-Styled with some no frills css: 
+Styled with some no frills css:
 
 #+BEGIN_SRC css :tangle cube-styles.css  :comments link
     .cube {
@@ -198,7 +198,7 @@ Styled with some no frills css:
 
 And we get:
 
-#+BEGIN_HTML
+#+BEGIN_EXPORT HTML
   <div class="cube">
     <div class="face face1  green  ">1</div>
     <div class="face face2  green  ">2</div>
@@ -255,7 +255,7 @@ And we get:
     <div class="face face53 yellow ">53</div>
     <div class="face face54 yellow ">54</div>
   </div>
-#+END_HTML
+#+END_EXPORT
 
 First, yes, these both would be trivial using loops.  Not really the
 point of what I'm looking for right now, though; so moving on.
@@ -277,7 +277,7 @@ to 1, we would have the rotation of the right face as $R' = (12\ 48\
 
 Not so quickly applying $R'$ to the initial board by hand, we get:
 
-#+BEGIN_HTML
+#+BEGIN_EXPORT HTML
   <div class="cube">
     <div class="face face1  green ">1</div>
     <div class="face face2  green ">2</div>
@@ -334,7 +334,7 @@ Not so quickly applying $R'$ to the initial board by hand, we get:
     <div class="face face53 yellow  ">53</div>
     <div class="face face54 red ">54</div>
   </div>
-#+END_HTML
+#+END_EXPORT
 
 So, comfortingly, this confirms that the permutation at least leaves
 the board as we desired.  However, this is just a single permutation.
@@ -384,7 +384,7 @@ worth holding onto.
                                                            colors[Math.floor(i / 9)])),
                                          "class",
                                          "face face" + (i + 1)));
-                                         
+
       }
       return cube;
   }
@@ -656,18 +656,18 @@ date.
       display: inline-block;
       width: 45px;
       margin: auto;
-  } 
+  }
 #+END_SRC
 
 With all of that done, lets wire it up and see what we can play with.
 
-#+BEGIN_HTML
+#+BEGIN_EXPORT HTML
 <div class="playground"></div>
 <script>
 appendMoveListToCssSelector(".playground");
 appendCubeToCssSelector(".playground");
 </script>
-#+END_HTML
+#+END_EXPORT
 
 * Till next time.
 
