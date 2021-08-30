@@ -19,7 +19,7 @@ We'll start by simply pulling in all of the functions from last time.
 Not going to look at output from them, since I did enough of that in
 the [[file:generating-polyominos.org][previous page]].
 
-#+begin_src :session free-polyominoes
+#+begin_src lisp :session free-polyominoes
   (defstruct coordinate (x 0 :read-only t) (y 0 :read-only t))
 
   (defun left (coordinate)
@@ -105,7 +105,7 @@ get to the "other side" of them.
 
 And, just to make sure it turns a "s" piece into an "z" piece.
 
-#+begin_src :session free-polyominoes :exports both
+#+begin_src lisp :session free-polyominoes :exports both
   (let* ((a (make-coordinate))
          (b (up a))
          (c (left b))
@@ -134,7 +134,7 @@ XX--
 
 * Now, continuing basically from before.
 
-#+begin_src :session free-polyominoes
+#+begin_src lisp :session free-polyominoes
   (defun polyomino-grow-list (seeds)
     (let ((grown-values nil))
       (dolist (polyomino seeds)
@@ -171,7 +171,7 @@ XX--
 So, was that all it took?  This time comparing to the "Total" count on the
 [[https://en.wikipedia.org/wiki/Polyomino][Polyomino]] wikipedia page.
 
-#+begin_src :session free-polyominoes :exports both
+#+begin_src lisp :session free-polyominoes :exports both
   (let* ((a (list (make-polyomino :active-coordinates (list (make-coordinate)))))
          (b (polyomino-grow-list a))
          (c (polyomino-grow-list b))
@@ -195,7 +195,7 @@ Yes, we match again.  Yay!
 Before, when I generated the placements, I iterated all unique
 rotations.  Now, I need to iterate the unique rotations and flips.
 
-#+begin_src :session free-polyominoes
+#+begin_src lisp :session free-polyominoes
       (defun polyomino-unique-placements (p)
         (let* ((a (polyomino-rotate p))
                (b (polyomino-rotate a))
@@ -220,7 +220,7 @@ rotations.  Now, I need to iterate the unique rotations and flips.
 
 And, just to see how this treats an "s" piece:
 
-#+begin_src :session free-polyominoes :exports both
+#+begin_src lisp :session free-polyominoes :exports both
   (let* ((a (make-coordinate))
          (b (up a))
          (c (left b))
@@ -260,7 +260,7 @@ XX--
 Nothing changes in generating the DLX inputs.  So, just dumping them
 here again.
 
-#+begin_src :session free-polyominoes
+#+begin_src lisp :session free-polyominoes
   (defun polyomino-dlx-headers (board-size)
     (format nil "~{~{R~aC~a~} ~}" (loop for i from 0 below board-size
        append (loop for j from 0 below board-size
@@ -328,6 +328,8 @@ Brought it down to 1200 minutes, as predicted.
 #+begin_src shell
 time $(find . -name '*.dlx' | grep "dlx" | xargs -P4 -n1 -I file sh -c './dlx < "file"')
 #+end_src
+
+#+RESULTS:
 
 So, yes, I got some use of my multiple cores.  But only while there
 were subproblems I could fan out.
