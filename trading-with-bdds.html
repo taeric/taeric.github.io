@@ -1,0 +1,1202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-12-21 Wed 14:52 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&lrm;</title>
+<meta name="author" content="Josh Berry" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '%MULTLINEWIDTH'
+      },
+      tags: '%TAGS',
+      tagSide: '%TAGSIDE',
+      tagIndent: '%TAGINDENT'
+    },
+    chtml: {
+      scale: %SCALE,
+      displayAlign: '%ALIGN',
+      displayIndent: '%INDENT'
+    },
+    svg: {
+      scale: %SCALE,
+      displayAlign: '%ALIGN',
+      displayIndent: '%INDENT'
+    },
+    output: {
+      font: '%FONT',
+      displayOverflow: '%OVERFLOW'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org154f8c8">1. Introduction</a></li>
+<li><a href="#org5bb0a9c">2. Loading market data.</a></li>
+<li><a href="#org7aed637">3. Building a BDD</a></li>
+<li><a href="#org4eabd6d">4. How many solutions?</a></li>
+<li><a href="#org017ef0b">5. Finding the optimal solution</a></li>
+<li><a href="#orge1f7760">6. Trying it on just 4 days, first</a></li>
+<li><a href="#org8e3244d">7. Back to the full market data</a></li>
+<li><a href="#orgc6efe88">8. Looking at the solutions a bit more.</a></li>
+<li><a href="#org282bd97">9. Thanks for reading!</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org154f8c8" class="outline-2">
+<h2 id="org154f8c8"><span class="section-number-2">1.</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+At work, we had a fun "hackathon" where we looked at finding the "best"
+buy/sell strategy in a stock history.  Not shockingly, finding the single
+best option was easy.  Extending to find the best \(N\) trades expectedly
+slowed down everyone.  I know that I am terrible at dynamic programming
+techniques, so I mostly sat that one out.  I did give it a try later, but
+didn't come up with anything of note.  (And I was shown a leetcode writeup
+on the normal methods for doing this.)
+</p>
+
+<p>
+Someone else on the team, though, did this using a MIP formulation that
+performed rather well.  More, an amusing aspect of the formulation made me
+think about this in terms of another data structure I have yet to use.
+</p>
+
+<p>
+Specifically, the thing I noticed was that the MIP formulation treated
+buying and selling as two distinct things.  Whereas before, I lumped them
+together and then had to deal with overlapping intervals, the MIP
+formulation just put them together and then had another constraint that the
+sum of buys was always greater than the sum of sells.
+</p>
+
+<p>
+That got me thinking that maybe this would work in a Binary Decision
+Diagram (BDD).  And since I've never actually managed to use one of those,
+I thought I would find out.  (It also helped that I was going in for a
+medical procedure and could only think on the idea.)
+</p>
+
+<p>
+Briefly, a binary decision diagram is a DAG that goes across yes/no
+decision variables and either ends in True or False.  Where you can exit
+early in the decisions at any time.  In general, the size of a BDD can get
+silly large, such that there are variants that are mostly false that deal
+with some common problems.
+</p>
+
+<p>
+My first attempt to build a diagram for this was not promising, as over
+just 4 days, I was looking to have 28 nodes in the diagram already.
+However, playing with it for a bit, I realized that I would only need 15
+total nodes for 4 days.  Even better, I realized this grew rather slowly
+for each added day, such that I only need \(2.5N\) total nodes over \(N\) days
+of possible trades.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5bb0a9c" class="outline-2">
+<h2 id="org5bb0a9c"><span class="section-number-2">2.</span> Loading market data.</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+So, lets get to coding.  We'll need the market data loaded up.  Just
+pulling that into a global.  For this experiment, I loaded up
+<a href="https://www.wsj.com/market-data/quotes/index/DJIA/historical-prices">https://www.wsj.com/market-data/quotes/index/DJIA/historical-prices</a> back
+to 1980.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">defstruct</span> <span style="color: #6ae4b9;">market-info</span> date open high low close)
+
+(<span style="color: #b6a0ff;">defvar</span> <span style="color: #00d3d0;">*market-values*</span> (reverse
+                         (<span style="color: #b6a0ff;">with-open-file</span> (in <span style="color: #79a8ff;">"~/Downloads/HistoricalPrices.csv"</span>)
+                          (read-line in) <span style="color: #a8a8a8; font-style: italic;">;; </span><span style="color: #a8a8a8; font-style: italic;">Just skipping the header</span>
+                          <span style="color: #a8a8a8; font-style: italic;">;; </span><span style="color: #a8a8a8; font-style: italic;">And some shenanigans to read in the data.</span>
+                          <span style="color: #a8a8a8; font-style: italic;">;; </span><span style="color: #a8a8a8; font-style: italic;">Clearly, don't do this anywhere other than</span>
+                          <span style="color: #a8a8a8; font-style: italic;">;; </span><span style="color: #a8a8a8; font-style: italic;">toys...</span>
+                          (<span style="color: #b6a0ff;">let</span> ((*readtable* (copy-readtable nil)))
+                            (set-syntax-from-char #\, #\ )
+                            (<span style="color: #b6a0ff;">loop</span> for date = (read in nil)
+                                  for open = (read in nil)
+                                  for high = (read in nil)
+                                  for low = (read in nil)
+                                  for close = (read in nil)
+
+                                  while date collect (make-market-info <span style="color: #f78fe7;">:date</span> (string date)
+                                                                       <span style="color: #f78fe7;">:open</span> open
+                                                                       <span style="color: #f78fe7;">:high</span> high
+                                                                       <span style="color: #f78fe7;">:low</span> low
+                                                                       <span style="color: #f78fe7;">:close</span> close))))))
+
+(length *market-values*)
+</pre>
+</div>
+
+<pre class="example">
+10652
+</pre>
+
+
+<p>
+Taking a brief look, we see the min/max of this dataset as:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">loop</span> for market-value in *market-values*
+      minimize (market-info-close market-value) into min
+      maximize (market-info-close market-value) into max
+      finally (<span style="color: #b6a0ff;">return</span> (list min max)))
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">776.91</td>
+<td class="org-right">36799.65</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+With luck, we can force our algorithm to find these values later.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7aed637" class="outline-2">
+<h2 id="org7aed637"><span class="section-number-2">3.</span> Building a BDD</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+So, again, what is a BDD?  Simply stated, it is a graph of nodes
+representing choice variables, where each choice is true/false, so the out
+degree of each node is 2.  The out links are "hi" and "lo" branch where
+"hi" would be what you do if the referenced variable is true, and "lo"
+false.  (You may be asking why I'm using hi/lo and a few other choices.
+That is lifted straight from Knuth's Art of Computer Programming.  Lifting
+a bit directly, as I have not built an intuition for any of this, yet.)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">defstruct</span> <span style="color: #6ae4b9;">bdd-node</span> v lo hi aux)
+</pre>
+</div>
+
+<p>
+And then building our diagram of choices looks rather involved, but it is
+somewhat easily stated.  I have a boolean variable for whether to buy and
+sell on each day except the first and the last, as you can only buy or sell
+on that day.  I order the variables such that the odd variables are to buy
+on a given day, and even are to sell on a given day.
+</p>
+
+<p>
+For example, if we wanted to look for the best strategy over 4 days, we
+would have 6 variables.  Variable 1 is to buy on the first day, variable 2
+is to sell on the next day, with variable 3 to buy on that day, etc.
+</p>
+
+<p>
+With that, we have a decision diagram that looks roughly like:
+</p>
+
+
+<div id="orgc79772a" class="figure">
+<p><img src="example-bdd.png" alt="example-bdd.png" />
+</p>
+</div>
+
+<p>
+To read this, nodes are named for the variable they represent.  I have them
+arranged in 3 general columns, where the first column indicates that there
+is not at open trade, the second column is that there is an open trade, and
+the last is for when a cooldown to not allow a buy immediately after a
+sell.  (This is needed so that you do not sell and buy on the same day.)
+Following a route through this diagram is to start on the first variable,
+and either take the solid path for "true" on that variable, or the dotted
+for "false."  If you ever hit the bottom node, you did something that is
+not allowed.  (So, sell before you have bought, for example.)
+</p>
+
+<p>
+The super nice thing about this formulation, is that every added day just
+adds another two "layers" to this diagram.  We just have to make sure that
+the last day hooks up to the "true" and "false" nodes in the diagram
+correctly.  Easy peasy.
+</p>
+
+<p>
+For reasons of "I'm going to naively follow some algorithms from the book,"
+I am going to store all of the decision nodes in an array where the links
+are indexes into the array.  And the root of the BDD will be the high end
+of the array.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">defun</span> <span style="color: #feacd0;">make-trading-bdd</span> (num-days)
+  <span style="color: #b0d6f5; font-style: italic;">"Will create and return an array of bdd-nodes for trading over a given</span>
+<span style="color: #b0d6f5; font-style: italic;">number of days."</span>
+
+  (<span style="color: #b6a0ff;">let*</span> ((num-variables (+ (* 2 (- num-days 2)) 2))
+         (num-nodes     (* 5/2 num-variables))
+         (bdd-nodes     (make-array num-nodes <span style="color: #f78fe7;">:element-type</span> 'bdd-node <span style="color: #f78fe7;">:initial-element</span> (make-bdd-node))))
+
+    <span style="color: #a8a8a8; font-style: italic;">;;</span><span style="color: #a8a8a8; font-style: italic;">Root of the bdd is the only "level" with a single node.</span>
+    <span style="color: #a8a8a8; font-style: italic;">;;</span><span style="color: #a8a8a8; font-style: italic;">And the bottom are the two sinks</span>
+    (<span style="color: #b6a0ff;">let</span> ((root (1- num-nodes)))
+      (setf (elt bdd-nodes root) (make-bdd-node <span style="color: #f78fe7;">:v</span> 1
+                                                <span style="color: #f78fe7;">:hi</span> (- root 2)
+                                                <span style="color: #f78fe7;">:lo</span> (- root 1))
+            (elt bdd-nodes 1)    (make-bdd-node <span style="color: #f78fe7;">:v</span> (1+ num-variables)
+                                                <span style="color: #f78fe7;">:lo</span> 1
+                                                <span style="color: #f78fe7;">:hi</span> 1)
+            (elt bdd-nodes 0)    (make-bdd-node <span style="color: #f78fe7;">:v</span> (1+ num-variables)
+                                                <span style="color: #f78fe7;">:lo</span> 0
+                                                <span style="color: #f78fe7;">:hi</span> 0)))
+
+    (<span style="color: #b6a0ff;">loop</span> with i = (- (length bdd-nodes) 2)
+          for v from 2 to num-variables
+
+          if (evenp v)
+            do (setf (elt bdd-nodes i)      (make-bdd-node <span style="color: #f78fe7;">:v</span> v
+                                                           <span style="color: #f78fe7;">:lo</span> (max (- i 2) 1)
+                                                           <span style="color: #f78fe7;">:hi</span> 0)
+                     (elt bdd-nodes (1- i)) (make-bdd-node <span style="color: #f78fe7;">:v</span> v
+                                                           <span style="color: #f78fe7;">:lo</span> (- i 3)
+                                                           <span style="color: #f78fe7;">:hi</span> (max (- i 4) 1))
+                     i                        (- i 2))
+          else
+            do (setf (elt bdd-nodes i)       (make-bdd-node <span style="color: #f78fe7;">:v</span> v
+                                                            <span style="color: #f78fe7;">:lo</span> (- i 3)
+                                                            <span style="color: #f78fe7;">:hi</span> (- i 4))
+                     (elt bdd-nodes (- i 1)) (make-bdd-node <span style="color: #f78fe7;">:v</span> v
+                                                            <span style="color: #f78fe7;">:lo</span> (- i 4)
+                                                            <span style="color: #f78fe7;">:hi</span> 0)
+                     (elt bdd-nodes (- i 2)) (make-bdd-node <span style="color: #f78fe7;">:v</span> v
+                                                            <span style="color: #f78fe7;">:lo</span> (- i 3)
+                                                            <span style="color: #f78fe7;">:hi</span> 0)
+                     i                         (- i 3)))
+
+    <span style="color: #a8a8a8; font-style: italic;">;; </span><span style="color: #a8a8a8; font-style: italic;">With some fixup on the end.</span>
+    (setf (bdd-node-hi (elt bdd-nodes 3)) 0)
+
+    bdd-nodes))
+</pre>
+</div>
+
+<pre class="example">
+MAKE-TRADING-BDD
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org4eabd6d" class="outline-2">
+<h2 id="org4eabd6d"><span class="section-number-2">4.</span> How many solutions?</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+So, that was far more dense than I'd appreciate in production code.  Did it
+work?
+</p>
+
+<p>
+First, we need some algorithms this enables.  For the first of those, lets
+see if we can annotate the tree with how many solutions there are to it.
+(The book uses an extra array `c` for this, but I'm just storing those
+values attached to the instructions in `aux` for now.)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">defun</span> <span style="color: #feacd0;">count-solutions</span> (bdd-nodes)
+  (setf (bdd-node-aux (elt bdd-nodes 0)) 0
+        (bdd-node-aux (elt bdd-nodes 1)) 1)
+
+  (<span style="color: #b6a0ff;">loop</span> for k from 2 below (length bdd-nodes)
+        do (<span style="color: #b6a0ff;">let</span> ((l (bdd-node-lo (elt bdd-nodes k)))
+                 (h (bdd-node-hi (elt bdd-nodes k)))
+                 (v (bdd-node-v  (elt bdd-nodes k))))
+             (setf (bdd-node-aux (elt bdd-nodes k)) (+ (* (expt 2 (- (bdd-node-v (elt bdd-nodes l)) v 1)) (bdd-node-aux (elt bdd-nodes l)))
+                                                       (* (expt 2 (- (bdd-node-v (elt bdd-nodes h)) v 1)) (bdd-node-aux (elt bdd-nodes h)))))))
+
+  (* (expt 2 (1- (bdd-node-v (elt bdd-nodes (1- (length bdd-nodes)))))) (bdd-node-aux (elt bdd-nodes (1- (length bdd-nodes))))))
+
+<span style="color: #a8a8a8; font-style: italic;">;; </span><span style="color: #a8a8a8; font-style: italic;">Lets look at the general growth of this.  (Is a very obvious pattern...)</span>
+(list (list 2 (count-solutions (make-trading-bdd 2)))
+      (list 3 (count-solutions (make-trading-bdd 3)))
+      (list 4 (count-solutions (make-trading-bdd 4)))
+      (list 5 (count-solutions (make-trading-bdd 5)))
+      (list 6 (count-solutions (make-trading-bdd 6)))
+      (list 7 (count-solutions (make-trading-bdd 7)))
+      (list 8 (count-solutions (make-trading-bdd 8)))
+      <span style="color: #a8a8a8; font-style: italic;">;; </span><span style="color: #a8a8a8; font-style: italic;">And for the last value, going to just look at size of the answer</span>
+      (list (length *market-values*) (log (count-solutions (make-trading-bdd (length *market-values*))) 10)))
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">2</td>
+</tr>
+
+<tr>
+<td class="org-right">3</td>
+<td class="org-right">4</td>
+</tr>
+
+<tr>
+<td class="org-right">4</td>
+<td class="org-right">8</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-right">16</td>
+</tr>
+
+<tr>
+<td class="org-right">6</td>
+<td class="org-right">32</td>
+</tr>
+
+<tr>
+<td class="org-right">7</td>
+<td class="org-right">64</td>
+</tr>
+
+<tr>
+<td class="org-right">8</td>
+<td class="org-right">128</td>
+</tr>
+
+<tr>
+<td class="org-right">10652</td>
+<td class="org-right">3206.2705</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+That last value is the size of the search space for optimal trading over
+\(10,652\) days.  I didn't expect this to be a power of two, but I see no
+reason not to trust it.  And, it is a heck of a number.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org017ef0b" class="outline-2">
+<h2 id="org017ef0b"><span class="section-number-2">5.</span> Finding the optimal solution</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Ok, that is fun to consider.  But, can we find the optimal solution?  Not
+shockingly, the answer is yes.  The book mentions that "we can solve the
+linear Boolean programming problem" for this.  That being "Find \(x\) such
+that \(w_1x_1 + \ldots + w_nx_n\) is maximum, subject to \(f(x_1,\ldots,x_n)\).
+</p>
+
+<p>
+And it goes to give the general algorithm for doing that as the following.
+(Note that this is largely transcribed from source, and I haven't built the
+understanding of the code that is needed to make it presentable, yet.)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">defun</span> <span style="color: #feacd0;">maximal-cost-solution</span> (bdd-nodes weights)
+  (<span style="color: #b6a0ff;">let*</span> ((s (length bdd-nodes))
+       (n (1- (bdd-node-v (elt bdd-nodes 0)))) <span style="color: #a8a8a8; font-style: italic;">;;</span><span style="color: #a8a8a8; font-style: italic;">Taking advantage of the sentinel on the false sink to know "n"</span>
+       (m (make-array (1+ s)))
+       (x (make-array n))
+       (at (make-array (1+ s)))
+       (W (make-array (+ 2 n))))                 <span style="color: #a8a8a8; font-style: italic;">;; </span><span style="color: #a8a8a8; font-style: italic;">Something about 1 based indexing...</span>
+  (setf (elt W 0) nil)
+  (setf (elt W (1+ n)) 0)
+  (<span style="color: #b6a0ff;">loop</span> for j from n downto 1
+        do (setf (elt W j) (+ (elt W (1+ j)) (max (elt weights (1- j)) 0))))
+
+  (setf (elt m 1) 0)
+  (<span style="color: #b6a0ff;">loop</span> for k from 2 below s
+        do (<span style="color: #b6a0ff;">let*</span> ((cur-node (elt bdd-nodes k))
+                  (v (bdd-node-v cur-node))
+                  (l (bdd-node-lo cur-node))
+                  (h (bdd-node-hi cur-node))
+                  (mt 0)) <span style="color: #a8a8a8; font-style: italic;">;tmp m</span>
+             (setf (elt at k) 0)
+
+             (<span style="color: #b6a0ff;">unless</span> (= l 0)
+               (setf (elt m k) (+ (elt m l)
+                                  (elt W (1+ v))
+                                  (- (elt W (bdd-node-v (elt bdd-nodes l)))))))
+             (<span style="color: #b6a0ff;">unless</span> (= h 0)
+               (setf mt (+ (elt m h)
+                           (elt W (1+ v))
+                           (- (elt W (bdd-node-v (elt bdd-nodes h))))
+                           (elt weights (1- v))))
+
+               (<span style="color: #b6a0ff;">when</span> (or (= l 0) (&gt; mt (elt m k)))
+                         (setf (elt m k) mt
+                               (elt at k) 1)))))
+
+  (<span style="color: #b6a0ff;">loop</span> with j = 0
+        with k = (1- s)
+
+        if (= j n)
+          return x
+
+        if (&lt; j (- (bdd-node-v (elt bdd-nodes k)) 1))
+          do (setf j              (1+ j)
+                   (elt x (1- j)) (<span style="color: #b6a0ff;">if</span> (&gt; (elt weights (1- j)) 0) 1 0))
+
+        if (&gt; k 1)
+          do (setf j              (1+ j)
+                   (elt x (1- j)) (elt at k)
+                   k              (<span style="color: #b6a0ff;">if</span> (= (elt at k) 0) (bdd-node-lo (elt bdd-nodes k))
+                                      (bdd-node-hi (elt bdd-nodes k)))))))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge1f7760" class="outline-2">
+<h2 id="orge1f7760"><span class="section-number-2">6.</span> Trying it on just 4 days, first</h2>
+<div class="outline-text-2" id="text-6">
+<p>
+We will need a weight vector for how much we value a buy/sell.  For the
+larger trading question, we will build up something big.  To build some
+confidence that we can trust this algorithm, though, lets look at just the
+4 day idea.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">let*</span> ((bdd-nodes (make-trading-bdd 4))
+       (weights   #(1 2 3 4 5 6))
+       (solution  (maximal-cost-solution bdd-nodes weights)))
+
+  (<span style="color: #b6a0ff;">loop</span> for p across weights
+        for v across solution
+        if (= v 1)
+          sum p into profit
+        sum v into trades
+        finally (<span style="color: #b6a0ff;">return</span> (list (/ trades 2) profit))))
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">2</td>
+<td class="org-right">14</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Of course, would be nicer to have a better idea of why that picked 2 trades
+and how it got to 14 profit.  So, lets look closer at the "solution" we are
+creating.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">let*</span> ((bdd-nodes (make-trading-bdd 4))
+       (weights   #(1 2 3 4 5 6))
+       (solution  (maximal-cost-solution bdd-nodes weights)))
+
+  (<span style="color: #b6a0ff;">loop</span> for i from 1
+        for p across weights
+        for v across solution
+
+        if (= v 1)
+          do (format t <span style="color: #79a8ff;">"Day ~a, ~a for ~a.~&amp;"</span> (<span style="color: #b6a0ff;">if</span> (evenp i) (1+ (/ i 2)) (/ (1+ i) 2)) (<span style="color: #b6a0ff;">if</span> (evenp i) <span style="color: #79a8ff;">"Sell"</span> <span style="color: #79a8ff;">"Buy"</span>) p)))
+</pre>
+</div>
+
+<pre class="example">
+Day 1, Buy for 1.
+Day 2, Sell for 2.
+Day 3, Buy for 5.
+Day 4, Sell for 6.
+</pre>
+
+
+<p>
+Ok, that is good.  And it makes it obvious that I should have negative
+costs in there, as the days that you buy are not cash positive.  Oops.
+</p>
+
+<p>
+So, let us consider what our options are across 4 days.  We can:
+</p>
+
+<ol class="org-ol">
+<li>buy, pass, pass, sell</li>
+<li>buy, pass, sell, pass</li>
+<li>buy, sell, pass, pass</li>
+<li>buy, sell, buy, sell</li>
+<li>pass, buy, pass, sell</li>
+<li>pass, buy, sell, pass</li>
+<li>pass, pass, buy, sell</li>
+<li>pass, pass, pass, pass</li>
+</ol>
+
+<p>
+And this matches the count of possible solutions across 4 days that we
+calculated earlier, so can we force each of these options?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">loop</span> for weights in (list #(-1 0 -1 0 -1 0)
+                           #(-1 0 -2 0 -2 2)
+                           #(-1 0 -2 2 -2 0)
+                           #(-1 2 -1 0 -1 0)
+                           #(-1 2 -1 0 -1 2)
+                           #(-1 0 -1 2 -1 0)
+                           #(-2 0 -1 0 -2 2)
+                           #(-1 0 -2 0 -1 2))
+
+      do (format t <span style="color: #79a8ff;">"Looking at ~a: ~&amp;"</span> weights)
+      do (<span style="color: #b6a0ff;">let*</span> ((bdd-nodes (make-trading-bdd 4))
+                (solution  (maximal-cost-solution bdd-nodes weights)))
+
+           (<span style="color: #b6a0ff;">loop</span> for i from 1
+                 for p across weights
+                 for v across solution
+
+                 if (= v 1)
+                   do (format t <span style="color: #79a8ff;">"             Day ~a, ~a for ~a.~&amp;"</span> (<span style="color: #b6a0ff;">if</span> (evenp i) (1+ (/ i 2)) (/ (1+ i) 2)) (<span style="color: #b6a0ff;">if</span> (evenp i) <span style="color: #79a8ff;">"Sell"</span> <span style="color: #79a8ff;">"Buy"</span>) p))))
+</pre>
+</div>
+
+<pre class="example" id="orga4a8851">
+Looking at #(-1 0 -1 0 -1 0):
+Looking at #(-1 0 -2 0 -2 2):
+             Day 1, Buy for -1.
+             Day 4, Sell for 2.
+Looking at #(-1 0 -2 2 -2 0):
+             Day 1, Buy for -1.
+             Day 3, Sell for 2.
+Looking at #(-1 2 -1 0 -1 0):
+             Day 1, Buy for -1.
+             Day 2, Sell for 2.
+Looking at #(-1 2 -1 0 -1 2):
+             Day 1, Buy for -1.
+             Day 2, Sell for 2.
+             Day 3, Buy for -1.
+             Day 4, Sell for 2.
+Looking at #(-1 0 -1 2 -1 0):
+             Day 2, Buy for -1.
+             Day 3, Sell for 2.
+Looking at #(-2 0 -1 0 -2 2):
+             Day 2, Buy for -1.
+             Day 4, Sell for 2.
+Looking at #(-1 0 -2 0 -1 2):
+             Day 3, Buy for -1.
+             Day 4, Sell for 2.
+</pre>
+
+<p>
+Rather dense reading there; but, matches expectations.  Yay!
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8e3244d" class="outline-2">
+<h2 id="org8e3244d"><span class="section-number-2">7.</span> Back to the full market data</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+Now, to build up the weights for the giant solution.  For the odd
+variables, that is spending the money of the close for the relevant day.
+For the even values, it is gaining the value for the close for the relevant
+day.  (Minus transaction costs, that we default to 0 on all values.)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">defun</span> <span style="color: #feacd0;">make-trade-weights</span> (market-values <span style="color: #6ae4b9;">&amp;optional</span> (transaction-cost 0))
+  (<span style="color: #b6a0ff;">let*</span> ((num-variables     (+ (* 2 (- (length market-values) 2)) 2))
+         (weights           (make-array num-variables)))
+    <span style="color: #a8a8a8; font-style: italic;">;;</span><span style="color: #a8a8a8; font-style: italic;">First and last are alone, so setting them alone.</span>
+    (setf (elt weights 0)                  (- (- (market-info-close (elt market-values 0))) transaction-cost))
+    (setf (elt weights (1- num-variables)) (- (market-info-close (car (last market-values))) transaction-cost))
+
+    <span style="color: #a8a8a8; font-style: italic;">;;</span><span style="color: #a8a8a8; font-style: italic;">Rest of the days are used for a buy and a sell</span>
+    (<span style="color: #b6a0ff;">loop</span> for day in (cdr (butlast market-values))
+          for i from 1 by 2
+          do (setf (elt weights i)      (- (market-info-close day) transaction-cost)
+                   (elt weights (1+ i)) (- (- (market-info-close day)) transaction-cost)))
+    weights))
+</pre>
+</div>
+
+<p>
+So, now that we have all of this, what is our answer?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">let*</span> ((bdd-nodes (make-trading-bdd (length *market-values*)))
+       (weights   (make-trade-weights *market-values*))
+       (solution  (maximal-cost-solution bdd-nodes weights)))
+
+  (<span style="color: #b6a0ff;">loop</span> for p across weights
+        for v across solution
+        if (= v 1)
+          sum p into profit
+        sum v into trades
+        finally (<span style="color: #b6a0ff;">return</span> (format nil <span style="color: #79a8ff;">"~:d trades for a profit of ~~~:d."</span> (/ trades 2) (truncate profit)))))
+</pre>
+</div>
+
+<pre class="example">
+2,714 trades for a profit of ~427,741.
+</pre>
+
+
+<p>
+And, how long did that take?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">let</span> ((*TRACE-OUTPUT* *STANDARD-OUTPUT*))
+  (time (<span style="color: #b6a0ff;">let*</span> ((bdd-nodes (make-trading-bdd (length *market-values*)))
+               (weights   (make-trade-weights *market-values*))
+               (solution  (maximal-cost-solution bdd-nodes weights)))
+
+          (<span style="color: #b6a0ff;">loop</span> for p across weights
+                for v across solution
+                if (= v 1)
+                  sum p into profit
+                sum v into trades
+                finally (<span style="color: #b6a0ff;">return</span> (format nil <span style="color: #79a8ff;">"~:d trades for a profit of ~~~:d."</span> (/ trades 2) (truncate profit)))))))
+</pre>
+</div>
+
+<pre class="example">
+Evaluation took:
+  0.004 seconds of real time
+  0.005063 seconds of total run time (0.005002 user, 0.000061 system)
+  125.00% CPU
+  19,200,488 processor cycles
+  4,506,768 bytes consed
+
+</pre>
+
+
+<p>
+So, yeah, fast and only about 4 megs of data generated.  I personally feel
+this is insane and I was not expecting it to work.  Is fast enough that I
+confess I'm not sure I trust it.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc6efe88" class="outline-2">
+<h2 id="orgc6efe88"><span class="section-number-2">8.</span> Looking at the solutions a bit more.</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+As we noted at the start, the min/max spread of this is roughly \(36000.00\).
+Such that, if the transaction cost was near that, we should be able to
+force a single buy/sell.  Lets see what we can do there.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">let*</span> ((bdd-nodes (make-trading-bdd (length *market-values*)))
+       (weights   (make-trade-weights *market-values* (/ 36000 2)))
+       (solution  (maximal-cost-solution bdd-nodes weights)))
+
+  (<span style="color: #b6a0ff;">loop</span> for p across weights
+        for v across solution
+        if (= v 1)
+          sum p into profit
+        sum v into trades
+        finally (<span style="color: #b6a0ff;">return</span> (format nil <span style="color: #79a8ff;">"~:d trade for a profit of ~~~:d."</span> (/ trades 2) (truncate profit)))))
+</pre>
+</div>
+
+<pre class="example">
+1 trade for a profit of ~22.
+</pre>
+
+
+<p>
+And what day does that have us buying/selling?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">let*</span> ((transaction-cost (/ 36000 2))
+       (bdd-nodes (make-trading-bdd (length *market-values*)))
+       (weights   (make-trade-weights *market-values* transaction-cost))
+       (solution  (maximal-cost-solution bdd-nodes weights)))
+
+  (<span style="color: #b6a0ff;">loop</span> for i from 1
+        for p across weights
+        for v across solution
+
+        if (= v 1)
+          do (format t <span style="color: #79a8ff;">"Day ~a, ~a for ~a.~&amp;"</span> (<span style="color: #b6a0ff;">if</span> (evenp i) (1+ (/ i 2)) (/ (1+ i) 2)) (<span style="color: #b6a0ff;">if</span> (evenp i) <span style="color: #79a8ff;">"Sell"</span> <span style="color: #79a8ff;">"Buy"</span>) (+ transaction-cost p))))
+</pre>
+</div>
+
+<pre class="example">
+Day 492, Buy for -776.91016.
+Day 10425, Sell for 36799.65.
+</pre>
+
+
+<p>
+And this matches what we saw for the min/max of the closing value.  So, I
+am starting to trust this more.
+</p>
+
+<p>
+How easy is it to manipulate the result we are getting to constrict the
+number of trades?  Seems within reason that I could easily get ballpark
+number of optimal trades with a growing transaction cost.  That is, I
+almost certainly can't target a specific N, but I can treat the transaction
+cost as a lever to dial up and down the number of trades.
+</p>
+
+<p>
+At the small level, this looks like:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">loop</span> for transaction-cost from 0 to 10 by 1
+      collect (<span style="color: #b6a0ff;">let*</span> ((bdd-nodes (make-trading-bdd (length *market-values*)))
+                     (weights   (make-trade-weights *market-values* transaction-cost))
+                     (solution  (maximal-cost-solution bdd-nodes weights)))
+
+                (<span style="color: #b6a0ff;">loop</span> for p across weights
+                      for v across solution
+                      if (= v 1)
+                        sum p into profit
+                      sum v into trades
+                      finally (<span style="color: #b6a0ff;">return</span> (list (format nil <span style="color: #79a8ff;">"A transaction cost of ~:d results in ~:d trades for a profit of ~~~:d."</span>
+                                                    (truncate transaction-cost)
+                                                    (/ trades 2)
+                                                    (truncate profit)))))))
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">A transaction cost of 0 results in 2,714 trades for a profit of ~427,741.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 1 results in 2,564 trades for a profit of ~422,492.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 2 results in 2,424 trades for a profit of ~417,521.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 3 results in 2,296 trades for a profit of ~412,839.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 4 results in 2,172 trades for a profit of ~408,372.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 5 results in 2,085 trades for a profit of ~404,181.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 6 results in 2,018 trades for a profit of ~400,096.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 7 results in 1,954 trades for a profit of ~396,129.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 8 results in 1,886 trades for a profit of ~392,340.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 9 results in 1,817 trades for a profit of ~388,645.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 10 results in 1,747 trades for a profit of ~385,091.</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+And to get an idea at the large level, it looks like:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">loop</span> for transaction-cost from 0 to 5500 by 250
+      collect (<span style="color: #b6a0ff;">let*</span> ((bdd-nodes (make-trading-bdd (length *market-values*)))
+                     (weights   (make-trade-weights *market-values* transaction-cost))
+                     (solution  (maximal-cost-solution bdd-nodes weights)))
+
+                (<span style="color: #b6a0ff;">loop</span> for p across weights
+                      for v across solution
+                      if (= v 1)
+                        sum p into profit
+                      sum v into trades
+                      finally (<span style="color: #b6a0ff;">return</span> (list (format nil <span style="color: #79a8ff;">"A transaction cost of ~:d results in ~:d trades for a profit of ~~~:d."</span>
+                                                    (truncate transaction-cost)
+                                                    (/ trades 2)
+                                                    (truncate profit)))))))
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">A transaction cost of 0 results in 2,714 trades for a profit of ~427,741.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 250 results in 168 trades for a profit of ~150,320.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 500 results in 62 trades for a profit of ~99,116.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 750 results in 32 trades for a profit of ~77,099.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 1,000 results in 17 trades for a profit of ~64,798.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 1,250 results in 12 trades for a profit of ~57,510.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 1,500 results in 8 trades for a profit of ~53,038.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 1,750 results in 7 trades for a profit of ~49,457.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 2,000 results in 7 trades for a profit of ~45,957.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 2,250 results in 5 trades for a profit of ~42,757.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 2,500 results in 5 trades for a profit of ~40,255.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 2,750 results in 4 trades for a profit of ~38,220.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 3,000 results in 3 trades for a profit of ~36,599.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 3,250 results in 3 trades for a profit of ~35,099.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 3,500 results in 3 trades for a profit of ~33,597.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 3,750 results in 3 trades for a profit of ~32,099.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 4,000 results in 2 trades for a profit of ~30,982.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 4,250 results in 2 trades for a profit of ~29,982.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 4,500 results in 2 trades for a profit of ~28,979.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 4,750 results in 2 trades for a profit of ~27,981.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 5,000 results in 2 trades for a profit of ~26,982.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 5,250 results in 2 trades for a profit of ~25,981.</td>
+</tr>
+
+<tr>
+<td class="org-left">A transaction cost of 5,500 results in 1 trades for a profit of ~25,022.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div id="outline-container-org282bd97" class="outline-2">
+<h2 id="org282bd97"><span class="section-number-2">9.</span> Thanks for reading!</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+For those that stuck with this, thanks for reading!  I had more than a
+little fun actually using a BDD.  I'm looking forward to finding out how or
+what I did incorrectly in my first stab at it.
+</p>
+
+<p>
+Finally, please don't let my abuse of either Common Lisp or Knuth's
+algorithms turn you off from trying either.  Knuth's work, in particular,
+has turned to the exploration of a lot of puzzles in fun ways that are much
+more approachable than you probably think.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Josh Berry</p>
+<p class="date">Created: 2022-12-21 Wed 14:52</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

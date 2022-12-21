@@ -20,6 +20,8 @@
      with a tetris mindset.
    - [[file:AmusingAlgorithm.org][Searching for an Amusing Algorithm]]: In which I explore how to
      construct a tree given the in-order and pre-order values of it.
+   - [[file:trading-with-bdds.org][Trading with BDDs]]: In which I almost certainly butcher my first
+     attempt at using a binary decision diagram
 
 
 * I'm probably wrong.
