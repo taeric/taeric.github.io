@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-12-21 Wed 14:52 -->
+<!-- 2022-12-21 Wed 15:15 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>&lrm;</title>
+<title>Trading with BDDs</title>
 <meta name="author" content="Josh Berry" />
 <meta name="generator" content="Org Mode" />
 <style>
@@ -193,6 +193,7 @@
     { background-color: #ffff00; color: #000000; font-weight: bold; }
   .org-svg { }
 </style>
+<link rel="stylesheet" type="text/css" href="org-overrides.css" />
 <script>
   window.MathJax = {
     tex: {
@@ -228,25 +229,27 @@
 </head>
 <body>
 <div id="content" class="content">
+<h1 class="title">Trading with BDDs</h1>
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org154f8c8">1. Introduction</a></li>
-<li><a href="#org5bb0a9c">2. Loading market data.</a></li>
-<li><a href="#org7aed637">3. Building a BDD</a></li>
-<li><a href="#org4eabd6d">4. How many solutions?</a></li>
-<li><a href="#org017ef0b">5. Finding the optimal solution</a></li>
-<li><a href="#orge1f7760">6. Trying it on just 4 days, first</a></li>
-<li><a href="#org8e3244d">7. Back to the full market data</a></li>
-<li><a href="#orgc6efe88">8. Looking at the solutions a bit more.</a></li>
-<li><a href="#org282bd97">9. Thanks for reading!</a></li>
+<li><a href="#orgd3dc523">Introduction</a></li>
+<li><a href="#org7adebdc">Loading market data.</a></li>
+<li><a href="#org7e80b1b">Building a BDD</a></li>
+<li><a href="#orgf1d2bfa">How many solutions?</a></li>
+<li><a href="#org70f3a36">Finding the optimal solution</a></li>
+<li><a href="#org8ed7bc4">Trying it on just 4 days, first</a></li>
+<li><a href="#org7b546e0">Back to the full market data</a></li>
+<li><a href="#org7aefb01">Looking at the solutions a bit more.</a></li>
+<li><a href="#org03068e8">Thanks for reading!</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org154f8c8" class="outline-2">
-<h2 id="org154f8c8"><span class="section-number-2">1.</span> Introduction</h2>
-<div class="outline-text-2" id="text-1">
+
+<div id="outline-container-orgd3dc523" class="outline-2">
+<h2 id="orgd3dc523">Introduction</h2>
+<div class="outline-text-2" id="text-orgd3dc523">
 <p>
 At work, we had a fun "hackathon" where we looked at finding the "best"
 buy/sell strategy in a stock history.  Not shockingly, finding the single
@@ -297,9 +300,9 @@ of possible trades.
 </div>
 </div>
 
-<div id="outline-container-org5bb0a9c" class="outline-2">
-<h2 id="org5bb0a9c"><span class="section-number-2">2.</span> Loading market data.</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-org7adebdc" class="outline-2">
+<h2 id="org7adebdc">Loading market data.</h2>
+<div class="outline-text-2" id="text-org7adebdc">
 <p>
 So, lets get to coding.  We'll need the market data loaded up.  Just
 pulling that into a global.  For this experiment, I loaded up
@@ -373,9 +376,9 @@ With luck, we can force our algorithm to find these values later.
 </div>
 </div>
 
-<div id="outline-container-org7aed637" class="outline-2">
-<h2 id="org7aed637"><span class="section-number-2">3.</span> Building a BDD</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-org7e80b1b" class="outline-2">
+<h2 id="org7e80b1b">Building a BDD</h2>
+<div class="outline-text-2" id="text-org7e80b1b">
 <p>
 So, again, what is a BDD?  Simply stated, it is a graph of nodes
 representing choice variables, where each choice is true/false, so the out
@@ -410,7 +413,7 @@ With that, we have a decision diagram that looks roughly like:
 </p>
 
 
-<div id="orgc79772a" class="figure">
+<div id="orga6990b3" class="figure">
 <p><img src="example-bdd.png" alt="example-bdd.png" />
 </p>
 </div>
@@ -499,9 +502,9 @@ MAKE-TRADING-BDD
 </div>
 </div>
 
-<div id="outline-container-org4eabd6d" class="outline-2">
-<h2 id="org4eabd6d"><span class="section-number-2">4.</span> How many solutions?</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-orgf1d2bfa" class="outline-2">
+<h2 id="orgf1d2bfa">How many solutions?</h2>
+<div class="outline-text-2" id="text-orgf1d2bfa">
 <p>
 So, that was far more dense than I'd appreciate in production code.  Did it
 work?
@@ -600,9 +603,9 @@ reason not to trust it.  And, it is a heck of a number.
 </div>
 </div>
 
-<div id="outline-container-org017ef0b" class="outline-2">
-<h2 id="org017ef0b"><span class="section-number-2">5.</span> Finding the optimal solution</h2>
-<div class="outline-text-2" id="text-5">
+<div id="outline-container-org70f3a36" class="outline-2">
+<h2 id="org70f3a36">Finding the optimal solution</h2>
+<div class="outline-text-2" id="text-org70f3a36">
 <p>
 Ok, that is fun to consider.  But, can we find the optimal solution?  Not
 shockingly, the answer is yes.  The book mentions that "we can solve the
@@ -672,9 +675,9 @@ understanding of the code that is needed to make it presentable, yet.)
 </div>
 </div>
 
-<div id="outline-container-orge1f7760" class="outline-2">
-<h2 id="orge1f7760"><span class="section-number-2">6.</span> Trying it on just 4 days, first</h2>
-<div class="outline-text-2" id="text-6">
+<div id="outline-container-org8ed7bc4" class="outline-2">
+<h2 id="org8ed7bc4">Trying it on just 4 days, first</h2>
+<div class="outline-text-2" id="text-org8ed7bc4">
 <p>
 We will need a weight vector for how much we value a buy/sell.  For the
 larger trading question, we will build up something big.  To build some
@@ -788,7 +791,7 @@ calculated earlier, so can we force each of these options?
 </pre>
 </div>
 
-<pre class="example" id="orga4a8851">
+<pre class="example" id="org5043c82">
 Looking at #(-1 0 -1 0 -1 0):
 Looking at #(-1 0 -2 0 -2 2):
              Day 1, Buy for -1.
@@ -821,9 +824,9 @@ Rather dense reading there; but, matches expectations.  Yay!
 </div>
 </div>
 
-<div id="outline-container-org8e3244d" class="outline-2">
-<h2 id="org8e3244d"><span class="section-number-2">7.</span> Back to the full market data</h2>
-<div class="outline-text-2" id="text-7">
+<div id="outline-container-org7b546e0" class="outline-2">
+<h2 id="org7b546e0">Back to the full market data</h2>
+<div class="outline-text-2" id="text-org7b546e0">
 <p>
 Now, to build up the weights for the giant solution.  For the odd
 variables, that is spending the money of the close for the relevant day.
@@ -909,9 +912,9 @@ confess I'm not sure I trust it.
 </div>
 </div>
 
-<div id="outline-container-orgc6efe88" class="outline-2">
-<h2 id="orgc6efe88"><span class="section-number-2">8.</span> Looking at the solutions a bit more.</h2>
-<div class="outline-text-2" id="text-8">
+<div id="outline-container-org7aefb01" class="outline-2">
+<h2 id="org7aefb01">Looking at the solutions a bit more.</h2>
+<div class="outline-text-2" id="text-org7aefb01">
 <p>
 As we noted at the start, the min/max spread of this is roughly \(36000.00\).
 Such that, if the transaction cost was near that, we should be able to
@@ -1175,9 +1178,9 @@ And to get an idea at the large level, it looks like:
 </div>
 </div>
 
-<div id="outline-container-org282bd97" class="outline-2">
-<h2 id="org282bd97"><span class="section-number-2">9.</span> Thanks for reading!</h2>
-<div class="outline-text-2" id="text-9">
+<div id="outline-container-org03068e8" class="outline-2">
+<h2 id="org03068e8">Thanks for reading!</h2>
+<div class="outline-text-2" id="text-org03068e8">
 <p>
 For those that stuck with this, thanks for reading!  I had more than a
 little fun actually using a BDD.  I'm looking forward to finding out how or
@@ -1195,7 +1198,7 @@ more approachable than you probably think.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh Berry</p>
-<p class="date">Created: 2022-12-21 Wed 14:52</p>
+<p class="date">Created: 2022-12-21 Wed 15:15</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

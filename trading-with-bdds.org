@@ -1,3 +1,7 @@
+#+TITLE: Trading with BDDs
+#+OPTIONS: num:nil
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
+
 * Introduction
 
 At work, we had a fun "hackathon" where we looked at finding the "best"
