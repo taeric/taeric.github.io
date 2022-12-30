@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-12-21 Wed 15:15 -->
+<!-- 2022-12-30 Fri 10:07 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Trading with BDDs</title>
@@ -198,25 +198,25 @@
   window.MathJax = {
     tex: {
       ams: {
-        multlineWidth: '%MULTLINEWIDTH'
+        multlineWidth: '85%'
       },
-      tags: '%TAGS',
-      tagSide: '%TAGSIDE',
-      tagIndent: '%TAGINDENT'
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
     },
     chtml: {
-      scale: %SCALE,
-      displayAlign: '%ALIGN',
-      displayIndent: '%INDENT'
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
     },
     svg: {
-      scale: %SCALE,
-      displayAlign: '%ALIGN',
-      displayIndent: '%INDENT'
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
     },
     output: {
-      font: '%FONT',
-      displayOverflow: '%OVERFLOW'
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
     }
   };
 </script>
@@ -234,22 +234,27 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd3dc523">Introduction</a></li>
-<li><a href="#org7adebdc">Loading market data.</a></li>
-<li><a href="#org7e80b1b">Building a BDD</a></li>
-<li><a href="#orgf1d2bfa">How many solutions?</a></li>
-<li><a href="#org70f3a36">Finding the optimal solution</a></li>
-<li><a href="#org8ed7bc4">Trying it on just 4 days, first</a></li>
-<li><a href="#org7b546e0">Back to the full market data</a></li>
-<li><a href="#org7aefb01">Looking at the solutions a bit more.</a></li>
-<li><a href="#org03068e8">Thanks for reading!</a></li>
+<li><a href="#orgfe9bba8">Introduction</a></li>
+<li><a href="#org8f7ac81">Wait, is this really a "trading strategy?"</a></li>
+<li><a href="#orgca348f3">So, what was the non-DP solution?</a></li>
+<li><a href="#org469b235">Enter Binary Decision Diagrams</a></li>
+<li><a href="#org44173ef">Loading market data.</a></li>
+<li><a href="#org166fa8f">Building a BDD</a></li>
+<li><a href="#orga7d833f">How many solutions?</a></li>
+<li><a href="#org3ae8e79">Finding the optimal solution</a></li>
+<li><a href="#org1f96eb4">Trying it on just 4 days, first</a></li>
+<li><a href="#org0bd458d">Back to the full market data</a></li>
+<li><a href="#orgedca070">Looking at the solutions a bit more.</a></li>
+<li><a href="#org13a74d9">Can we restrict this to \(N\) trades?</a></li>
+<li><a href="#orgef00432">Thanks for reading!</a></li>
+<li><a href="#orgf2be00f">(Why Common Lisp?  And why the single letter variables?)</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgd3dc523" class="outline-2">
-<h2 id="orgd3dc523">Introduction</h2>
-<div class="outline-text-2" id="text-orgd3dc523">
+<div id="outline-container-orgfe9bba8" class="outline-2">
+<h2 id="orgfe9bba8">Introduction</h2>
+<div class="outline-text-2" id="text-orgfe9bba8">
 <p>
 At work, we had a fun "hackathon" where we looked at finding the "best"
 buy/sell strategy in a stock history.  Not shockingly, finding the single
@@ -259,11 +264,50 @@ techniques, so I mostly sat that one out.  I did give it a try later, but
 didn't come up with anything of note.  (And I was shown a leetcode writeup
 on the normal methods for doing this.)
 </p>
+</div>
+</div>
+
+<div id="outline-container-org8f7ac81" class="outline-2">
+<h2 id="org8f7ac81">Wait, is this really a "trading strategy?"</h2>
+<div class="outline-text-2" id="text-org8f7ac81">
+<p>
+By far the biggest feedback I got was around whether or not this is a
+legitimate trading strategy.  For that, I can only apologize for not making
+it clear that this is a toy problem that I think used to be popular in
+interviews.  The framing I heard is mirrored by many problems on leetcode.
+For example, <a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/">Best Time to Buy and Sell Stock</a>, and I think many iterations
+of that general problem.
+</p>
 
 <p>
-Someone else on the team, though, did this using a MIP formulation that
-performed rather well.  More, an amusing aspect of the formulation made me
-think about this in terms of another data structure I have yet to use.
+Bluntly answered, I don't think this can be seen as a legit strategy.  And
+I am not familiar with leetcode, so if I have that linked incorrectly,
+please try searching.  If there is a better framing that makes it clear
+this is a toy, please share it.
+</p>
+
+<p>
+Similar to a lot of folks, I think, I am not a fan of questions like this
+for interviews.  It always feels that the kind of code that you are aiming
+for is very unrealistic to the code that it takes to solve these questions.
+</p>
+
+<p>
+Of course, just because I don't think this is appropriate for an interview
+as a blank question, I do think it could be fun to discuss and play with.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgca348f3" class="outline-2">
+<h2 id="orgca348f3">So, what was the non-DP solution?</h2>
+<div class="outline-text-2" id="text-orgca348f3">
+<p>
+As I said above, I think it is fair to assume that the expected answer is a
+DP formulation.  Someone else on the team, however, did this using a MIP
+formulation that performed rather well.  More, an amusing aspect of the
+formulation made me think about this in terms of another data structure I
+have yet to use.
 </p>
 
 <p>
@@ -273,12 +317,19 @@ together and then had to deal with overlapping intervals, the MIP
 formulation just put them together and then had another constraint that the
 sum of buys was always greater than the sum of sells.
 </p>
+</div>
+</div>
 
+<div id="outline-container-org469b235" class="outline-2">
+<h2 id="org469b235">Enter Binary Decision Diagrams</h2>
+<div class="outline-text-2" id="text-org469b235">
 <p>
 That got me thinking that maybe this would work in a Binary Decision
-Diagram (BDD).  And since I've never actually managed to use one of those,
-I thought I would find out.  (It also helped that I was going in for a
-medical procedure and could only think on the idea.)
+Diagram (BDD).  I learned of this data structure in Knuth's <a href="https://www.amazon.com/Art-Computer-Programming-Combinatorial-Algorithms/dp/0201038048">Art of Computer
+Programming 4a</a>, and the Wikipedia <a href="https://en.wikipedia.org/wiki/Binary_decision_diagram">article</a> does a good job introducing
+them.  Now, since I've never actually managed to use one of those, I
+thought I would find out if they could do this.  (It also helped that I was
+going in for a medical procedure and could only think on the idea.)
 </p>
 
 <p>
@@ -292,17 +343,17 @@ with some common problems.
 <p>
 My first attempt to build a diagram for this was not promising, as over
 just 4 days, I was looking to have 28 nodes in the diagram already.
-However, playing with it for a bit, I realized that I would only need 15
-total nodes for 4 days.  Even better, I realized this grew rather slowly
-for each added day, such that I only need \(2.5N\) total nodes over \(N\) days
-of possible trades.
+However, playing with it for a bit, I realized that with a sensible
+variable ordering, I would only need 15 total nodes for 4 days.  Even
+better, I realized this grew rather slowly for each added day, such that I
+only need \(2.5N\) total decision nodes over \(N\) days of possible trades.
 </p>
 </div>
 </div>
 
-<div id="outline-container-org7adebdc" class="outline-2">
-<h2 id="org7adebdc">Loading market data.</h2>
-<div class="outline-text-2" id="text-org7adebdc">
+<div id="outline-container-org44173ef" class="outline-2">
+<h2 id="org44173ef">Loading market data.</h2>
+<div class="outline-text-2" id="text-org44173ef">
 <p>
 So, lets get to coding.  We'll need the market data loaded up.  Just
 pulling that into a global.  For this experiment, I loaded up
@@ -376,9 +427,9 @@ With luck, we can force our algorithm to find these values later.
 </div>
 </div>
 
-<div id="outline-container-org7e80b1b" class="outline-2">
-<h2 id="org7e80b1b">Building a BDD</h2>
-<div class="outline-text-2" id="text-org7e80b1b">
+<div id="outline-container-org166fa8f" class="outline-2">
+<h2 id="org166fa8f">Building a BDD</h2>
+<div class="outline-text-2" id="text-org166fa8f">
 <p>
 So, again, what is a BDD?  Simply stated, it is a graph of nodes
 representing choice variables, where each choice is true/false, so the out
@@ -413,17 +464,20 @@ With that, we have a decision diagram that looks roughly like:
 </p>
 
 
-<div id="orga6990b3" class="figure">
+<div id="orga6ece1b" class="figure">
 <p><img src="example-bdd.png" alt="example-bdd.png" />
 </p>
 </div>
 
 <p>
 To read this, nodes are named for the variable they represent.  I have them
-arranged in 3 general columns, where the first column indicates that there
-is not at open trade, the second column is that there is an open trade, and
-the last is for when a cooldown to not allow a buy immediately after a
-sell.  (This is needed so that you do not sell and buy on the same day.)
+arranged in 3 general columns, where the first column indicates that you do
+not own a stock, the second column is that you do own a stock, and the last
+is for when a cooldown to not allow a buy immediately after a sell.  (This
+is needed so that you do not sell and buy on the same day.)
+</p>
+
+<p>
 Following a route through this diagram is to start on the first variable,
 and either take the solid path for "true" on that variable, or the dotted
 for "false."  If you ever hit the bottom node, you did something that is
@@ -431,7 +485,17 @@ not allowed.  (So, sell before you have bought, for example.)
 </p>
 
 <p>
-The super nice thing about this formulation, is that every added day just
+This would mean that node "1", you can either take the solid line for "buy
+on day 1" or the dotted line for "don't buy on day 1."  Similarly, when at
+variable "6", you can either take the solid line for "sell on day 4" or the
+dotted line for "don't sell on day 4."  Note that there is no even number
+for day 1, just as there is no odd number for day 4.  Similarly, note that
+you are allowed to not sell on day 4 only if you do not own a stock.  (And
+you can only sell if you do own a stock.)
+</p>
+
+<p>
+The super nice thing about this formulation, is that every added day only
 adds another two "layers" to this diagram.  We just have to make sure that
 the last day hooks up to the "true" and "false" nodes in the diagram
 correctly.  Easy peasy.
@@ -502,9 +566,9 @@ MAKE-TRADING-BDD
 </div>
 </div>
 
-<div id="outline-container-orgf1d2bfa" class="outline-2">
-<h2 id="orgf1d2bfa">How many solutions?</h2>
-<div class="outline-text-2" id="text-orgf1d2bfa">
+<div id="outline-container-orga7d833f" class="outline-2">
+<h2 id="orga7d833f">How many solutions?</h2>
+<div class="outline-text-2" id="text-orga7d833f">
 <p>
 So, that was far more dense than I'd appreciate in production code.  Did it
 work?
@@ -603,9 +667,9 @@ reason not to trust it.  And, it is a heck of a number.
 </div>
 </div>
 
-<div id="outline-container-org70f3a36" class="outline-2">
-<h2 id="org70f3a36">Finding the optimal solution</h2>
-<div class="outline-text-2" id="text-org70f3a36">
+<div id="outline-container-org3ae8e79" class="outline-2">
+<h2 id="org3ae8e79">Finding the optimal solution</h2>
+<div class="outline-text-2" id="text-org3ae8e79">
 <p>
 Ok, that is fun to consider.  But, can we find the optimal solution?  Not
 shockingly, the answer is yes.  The book mentions that "we can solve the
@@ -615,8 +679,8 @@ that \(w_1x_1 + \ldots + w_nx_n\) is maximum, subject to \(f(x_1,\ldots,x_n)\).
 
 <p>
 And it goes to give the general algorithm for doing that as the following.
-(Note that this is largely transcribed from source, and I haven't built the
-understanding of the code that is needed to make it presentable, yet.)
+(Note that this is largely a poor transcription from source, as I haven't
+built the understanding of the code that is needed to make it presentable.)
 </p>
 
 <div class="org-src-container">
@@ -675,9 +739,9 @@ understanding of the code that is needed to make it presentable, yet.)
 </div>
 </div>
 
-<div id="outline-container-org8ed7bc4" class="outline-2">
-<h2 id="org8ed7bc4">Trying it on just 4 days, first</h2>
-<div class="outline-text-2" id="text-org8ed7bc4">
+<div id="outline-container-org1f96eb4" class="outline-2">
+<h2 id="org1f96eb4">Trying it on just 4 days, first</h2>
+<div class="outline-text-2" id="text-org1f96eb4">
 <p>
 We will need a weight vector for how much we value a buy/sell.  For the
 larger trading question, we will build up something big.  To build some
@@ -791,7 +855,7 @@ calculated earlier, so can we force each of these options?
 </pre>
 </div>
 
-<pre class="example" id="org5043c82">
+<pre class="example" id="orgb03fa28">
 Looking at #(-1 0 -1 0 -1 0):
 Looking at #(-1 0 -2 0 -2 2):
              Day 1, Buy for -1.
@@ -824,9 +888,9 @@ Rather dense reading there; but, matches expectations.  Yay!
 </div>
 </div>
 
-<div id="outline-container-org7b546e0" class="outline-2">
-<h2 id="org7b546e0">Back to the full market data</h2>
-<div class="outline-text-2" id="text-org7b546e0">
+<div id="outline-container-org0bd458d" class="outline-2">
+<h2 id="org0bd458d">Back to the full market data</h2>
+<div class="outline-text-2" id="text-org0bd458d">
 <p>
 Now, to build up the weights for the giant solution.  For the odd
 variables, that is spending the money of the close for the relevant day.
@@ -912,9 +976,9 @@ confess I'm not sure I trust it.
 </div>
 </div>
 
-<div id="outline-container-org7aefb01" class="outline-2">
-<h2 id="org7aefb01">Looking at the solutions a bit more.</h2>
-<div class="outline-text-2" id="text-org7aefb01">
+<div id="outline-container-orgedca070" class="outline-2">
+<h2 id="orgedca070">Looking at the solutions a bit more.</h2>
+<div class="outline-text-2" id="text-orgedca070">
 <p>
 As we noted at the start, the min/max spread of this is roughly \(36000.00\).
 Such that, if the transaction cost was near that, we should be able to
@@ -969,7 +1033,12 @@ Day 10425, Sell for 36799.65.
 And this matches what we saw for the min/max of the closing value.  So, I
 am starting to trust this more.
 </p>
+</div>
+</div>
 
+<div id="outline-container-org13a74d9" class="outline-2">
+<h2 id="org13a74d9">Can we restrict this to \(N\) trades?</h2>
+<div class="outline-text-2" id="text-org13a74d9">
 <p>
 How easy is it to manipulate the result we are getting to constrict the
 number of trades?  Seems within reason that I could easily get ballpark
@@ -1175,12 +1244,20 @@ And to get an idea at the large level, it looks like:
 </tr>
 </tbody>
 </table>
+
+<p>
+So, with that, we could easily do a search across different transaction
+costs to find something close to a desired N.  I was rebuilding the entire
+BDD for each iteration, such that you could save some time by not doing
+that.  Since we are only talking about \(0.004\) seconds per iteration, I
+wasn't too worried about saving time for this page.
+</p>
 </div>
 </div>
 
-<div id="outline-container-org03068e8" class="outline-2">
-<h2 id="org03068e8">Thanks for reading!</h2>
-<div class="outline-text-2" id="text-org03068e8">
+<div id="outline-container-orgef00432" class="outline-2">
+<h2 id="orgef00432">Thanks for reading!</h2>
+<div class="outline-text-2" id="text-orgef00432">
 <p>
 For those that stuck with this, thanks for reading!  I had more than a
 little fun actually using a BDD.  I'm looking forward to finding out how or
@@ -1195,10 +1272,32 @@ more approachable than you probably think.
 </p>
 </div>
 </div>
+
+<div id="outline-container-orgf2be00f" class="outline-2">
+<h2 id="orgf2be00f">(Why Common Lisp?  And why the single letter variables?)</h2>
+<div class="outline-text-2" id="text-orgf2be00f">
+<p>
+Common Lisp is because I do find that a fun language to play with.  I had
+thought I would spend more time with the code than I did, and while it
+isn't quite the seamless SLIME experience, org-mode's source blocks work
+quite well to get going with this.
+</p>
+
+<p>
+The code was structured as closely to how Knuth specified it as I could
+get.  I am not at all used to some sequences being 1 based, and others
+being 0 based, such that I have some clunkiness on that front.  And, as
+stated in the post, I didn't have the understanding of the code to try and
+make any changes to it there.  (Now that I know roughly how it works, I
+think I can make it more presentable in my style, but I don't plan on
+making heavy edits to the code here.  Maybe in a followup.)
+</p>
+</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh Berry</p>
-<p class="date">Created: 2022-12-21 Wed 15:15</p>
+<p class="date">Created: 2022-12-30 Fri 10:07</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

@@ -12,9 +12,34 @@ techniques, so I mostly sat that one out.  I did give it a try later, but
 didn't come up with anything of note.  (And I was shown a leetcode writeup
 on the normal methods for doing this.)
 
-Someone else on the team, though, did this using a MIP formulation that
-performed rather well.  More, an amusing aspect of the formulation made me
-think about this in terms of another data structure I have yet to use.
+* Wait, is this really a "trading strategy?"
+
+By far the biggest feedback I got was around whether or not this is a
+legitimate trading strategy.  For that, I can only apologize for not making
+it clear that this is a toy problem that I think used to be popular in
+interviews.  The framing I heard is mirrored by many problems on leetcode.
+For example, [[https://leetcode.com/problems/best-time-to-buy-and-sell-stock/][Best Time to Buy and Sell Stock]], and I think many iterations
+of that general problem.
+
+Bluntly answered, I don't think this can be seen as a legit strategy.  And
+I am not familiar with leetcode, so if I have that linked incorrectly,
+please try searching.  If there is a better framing that makes it clear
+this is a toy, please share it.
+
+Similar to a lot of folks, I think, I am not a fan of questions like this
+for interviews.  It always feels that the kind of code that you are aiming
+for is very unrealistic to the code that it takes to solve these questions.
+
+Of course, just because I don't think this is appropriate for an interview
+as a blank question, I do think it could be fun to discuss and play with.
+
+* So, what was the non-DP solution?
+
+As I said above, I think it is fair to assume that the expected answer is a
+DP formulation.  Someone else on the team, however, did this using a MIP
+formulation that performed rather well.  More, an amusing aspect of the
+formulation made me think about this in terms of another data structure I
+have yet to use.
 
 Specifically, the thing I noticed was that the MIP formulation treated
 buying and selling as two distinct things.  Whereas before, I lumped them
@@ -22,10 +47,14 @@ together and then had to deal with overlapping intervals, the MIP
 formulation just put them together and then had another constraint that the
 sum of buys was always greater than the sum of sells.
 
+* Enter Binary Decision Diagrams
+
 That got me thinking that maybe this would work in a Binary Decision
-Diagram (BDD).  And since I've never actually managed to use one of those,
-I thought I would find out.  (It also helped that I was going in for a
-medical procedure and could only think on the idea.)
+Diagram (BDD).  I learned of this data structure in Knuth's [[https://www.amazon.com/Art-Computer-Programming-Combinatorial-Algorithms/dp/0201038048][Art of Computer
+Programming 4a]], and the Wikipedia [[https://en.wikipedia.org/wiki/Binary_decision_diagram][article]] does a good job introducing
+them.  Now, since I've never actually managed to use one of those, I
+thought I would find out if they could do this.  (It also helped that I was
+going in for a medical procedure and could only think on the idea.)
 
 Briefly, a binary decision diagram is a DAG that goes across yes/no
 decision variables and either ends in True or False.  Where you can exit
@@ -35,10 +64,10 @@ with some common problems.
 
 My first attempt to build a diagram for this was not promising, as over
 just 4 days, I was looking to have 28 nodes in the diagram already.
-However, playing with it for a bit, I realized that I would only need 15
-total nodes for 4 days.  Even better, I realized this grew rather slowly
-for each added day, such that I only need $2.5N$ total nodes over $N$ days
-of possible trades.
+However, playing with it for a bit, I realized that with a sensible
+variable ordering, I would only need 15 total nodes for 4 days.  Even
+better, I realized this grew rather slowly for each added day, such that I
+only need $2.5N$ total decision nodes over $N$ days of possible trades.
 
 * Loading market data.
 
@@ -122,16 +151,25 @@ With that, we have a decision diagram that looks roughly like:
 [[file:example-bdd.png]]
 
 To read this, nodes are named for the variable they represent.  I have them
-arranged in 3 general columns, where the first column indicates that there
-is not at open trade, the second column is that there is an open trade, and
-the last is for when a cooldown to not allow a buy immediately after a
-sell.  (This is needed so that you do not sell and buy on the same day.)
+arranged in 3 general columns, where the first column indicates that you do
+not own a stock, the second column is that you do own a stock, and the last
+is for when a cooldown to not allow a buy immediately after a sell.  (This
+is needed so that you do not sell and buy on the same day.)
+
 Following a route through this diagram is to start on the first variable,
 and either take the solid path for "true" on that variable, or the dotted
 for "false."  If you ever hit the bottom node, you did something that is
 not allowed.  (So, sell before you have bought, for example.)
 
-The super nice thing about this formulation, is that every added day just
+This would mean that node "1", you can either take the solid line for "buy
+on day 1" or the dotted line for "don't buy on day 1."  Similarly, when at
+variable "6", you can either take the solid line for "sell on day 4" or the
+dotted line for "don't sell on day 4."  Note that there is no even number
+for day 1, just as there is no odd number for day 4.  Similarly, note that
+you are allowed to not sell on day 4 only if you do not own a stock.  (And
+you can only sell if you do own a stock.)
+
+The super nice thing about this formulation, is that every added day only
 adds another two "layers" to this diagram.  We just have to make sure that
 the last day hooks up to the "true" and "false" nodes in the diagram
 correctly.  Easy peasy.
@@ -253,8 +291,8 @@ linear Boolean programming problem" for this.  That being "Find $x$ such
 that $w_1x_1 + \ldots + w_nx_n$ is maximum, subject to $f(x_1,\ldots,x_n)$.
 
 And it goes to give the general algorithm for doing that as the following.
-(Note that this is largely transcribed from source, and I haven't built the
-understanding of the code that is needed to make it presentable, yet.)
+(Note that this is largely a poor transcription from source, as I haven't
+built the understanding of the code that is needed to make it presentable.)
 
 #+begin_src lisp :exports code
   (defun maximal-cost-solution (bdd-nodes weights)
@@ -542,6 +580,8 @@ And what day does that have us buying/selling?
 And this matches what we saw for the min/max of the closing value.  So, I
 am starting to trust this more.
 
+* Can we restrict this to $N$ trades?
+
 How easy is it to manipulate the result we are getting to constrict the
 number of trades?  Seems within reason that I could easily get ballpark
 number of optimal trades with a growing transaction cost.  That is, I
@@ -624,6 +664,12 @@ And to get an idea at the large level, it looks like:
 | A transaction cost of 5,250 results in 2 trades for a profit of ~25,981.  |
 | A transaction cost of 5,500 results in 1 trades for a profit of ~25,022.  |
 
+So, with that, we could easily do a search across different transaction
+costs to find something close to a desired N.  I was rebuilding the entire
+BDD for each iteration, such that you could save some time by not doing
+that.  Since we are only talking about $0.004$ seconds per iteration, I
+wasn't too worried about saving time for this page.
+
 * Thanks for reading!
 
 For those that stuck with this, thanks for reading!  I had more than a
@@ -634,3 +680,18 @@ Finally, please don't let my abuse of either Common Lisp or Knuth's
 algorithms turn you off from trying either.  Knuth's work, in particular,
 has turned to the exploration of a lot of puzzles in fun ways that are much
 more approachable than you probably think.
+
+* (Why Common Lisp?  And why the single letter variables?)
+
+Common Lisp is because I do find that a fun language to play with.  I had
+thought I would spend more time with the code than I did, and while it
+isn't quite the seamless SLIME experience, org-mode's source blocks work
+quite well to get going with this.
+
+The code was structured as closely to how Knuth specified it as I could
+get.  I am not at all used to some sequences being 1 based, and others
+being 0 based, such that I have some clunkiness on that front.  And, as
+stated in the post, I didn't have the understanding of the code to try and
+make any changes to it there.  (Now that I know roughly how it works, I
+think I can make it more presentable in my style, but I don't plan on
+making heavy edits to the code here.  Maybe in a followup.)
