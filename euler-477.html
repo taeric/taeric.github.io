@@ -1,0 +1,1119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-01-31 Tue 05:03 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Euler Problem 477</title>
+<meta name="author" content="Josh Berry" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="org-overrides.css" />
+<script>
+  window.MathJax = {
+    tex: {
+      ams: {
+        multlineWidth: '85%'
+      },
+      tags: 'ams',
+      tagSide: 'right',
+      tagIndent: '.8em'
+    },
+    chtml: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    svg: {
+      scale: 1.0,
+      displayAlign: 'center',
+      displayIndent: '0em'
+    },
+    output: {
+      font: 'mathjax-modern',
+      displayOverflow: 'overflow'
+    }
+  };
+</script>
+
+<script
+  id="MathJax-script"
+  async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Euler Problem 477</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org25675dd">Introduction</a></li>
+<li><a href="#orgb5e87d7">Easy top down solution (that of course doesn't work)</a></li>
+<li><a href="#org723f8b5">Brute caching of results</a></li>
+<li><a href="#org2cc3f74">Restrict the size of the cache?</a></li>
+<li><a href="#org4b932d0">Not going to wait for that to complete.</a></li>
+<li><a href="#orgb2f57cf">Could I just be more efficient per layer?</a></li>
+<li><a href="#org36a3dd8">Could I go parallel?</a></li>
+<li><a href="#org5a64695">Could I get even more efficient per layer?</a></li>
+<li><a href="#org54339db">Any obvious non \(N^2\) algorithms for this?</a></li>
+<li><a href="#org7426634">How about linear?</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org25675dd" class="outline-2">
+<h2 id="org25675dd">Introduction</h2>
+<div class="outline-text-2" id="text-org25675dd">
+<p>
+I'm assuming some familiarity with <a href="https://projecteuler.net">Project Euler</a>.  Basically, a bunch of
+typically numerically intensive puzzles that can be solved using a
+computer.
+</p>
+
+<p>
+At any rate, way back when, <a href="https://projecteuler.net/problem=477">477</a> was the newest one when I was looking.
+They have, clearly, progressed since then.  That said, I've had this
+problem in my mind for quite a long time now.  I kept hoping to find some
+clever data structure to solve it, but never found one.
+</p>
+
+<p>
+This page is really just moving some notes I had on it.  I found an old
+paper notebook that had the final thoughts before I abandoned this, and
+thought I would jot them in electronic form.  This also required me to
+reimplement some of the ideas, as I long lost whatever computer files I had
+with these notes.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb5e87d7" class="outline-2">
+<h2 id="orgb5e87d7">Easy top down solution (that of course doesn't work)</h2>
+<div class="outline-text-2" id="text-orgb5e87d7">
+<p>
+This is a pretty straight forward implementation.  I wasn't going for
+anything particularly smart, but was curious just how long it would take.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">defun</span> <span style="color: #feacd0;">solve</span> (sequence <span style="color: #6ae4b9;">&amp;optional</span> (num-players 2) (cur-player 0) (i 0) (j (1- (length sequence))))
+  (<span style="color: #b6a0ff;">cond</span> ((= i j)
+         (list 0 (elt sequence i)))
+
+        (t
+         (<span style="color: #b6a0ff;">let*</span> ((left-number            (elt sequence i))
+                (right-number           (elt sequence j))
+                (next-player            (mod (1+ cur-player) num-players))
+                (left-opponent-choices  (solve sequence num-players next-player (1+ i) j))
+                (right-opponent-choices (solve sequence num-players next-player i (1- j))))
+           (<span style="color: #b6a0ff;">if</span> (&gt; (incf (elt left-opponent-choices cur-player) left-number)
+                  (incf (elt right-opponent-choices cur-player) right-number))
+               left-opponent-choices
+               right-opponent-choices)))))
+</pre>
+</div>
+
+
+<p>
+Does it give the right answers?  Before I can fully answer this, I need the
+sequence generator for the larger games.  So, lets get that real quick.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">defun</span> <span style="color: #feacd0;">gen-sequence</span> (n)
+  (<span style="color: #b6a0ff;">let</span> ((sequence (make-array n <span style="color: #f78fe7;">:initial-element</span> 0)))
+    (<span style="color: #b6a0ff;">loop</span> repeat (1- n)
+          for i from 1
+          do (setf (elt sequence i) (mod (+ (expt (elt sequence (1- i)) 2) 45) 1000000007)))
+    sequence))
+</pre>
+</div>
+
+<p>
+Does that agree with page on how the sequence starts?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(gen-sequence 7)
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">0</td>
+<td class="org-right">45</td>
+<td class="org-right">2070</td>
+<td class="org-right">4284945</td>
+<td class="org-right">753524550</td>
+<td class="org-right">478107844</td>
+<td class="org-right">894218625</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>
+And do we get the right answers for the smaller values?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(mapcar (<span style="color: #b6a0ff;">lambda</span> (s) (solve s)) (list #(1 2 10 3)
+                                     (gen-sequence 2)
+                                     (gen-sequence 4)
+                                     (gen-sequence 10)))
+
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">11</td>
+<td class="org-right">5</td>
+</tr>
+
+<tr>
+<td class="org-right">45</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-right">4284990</td>
+<td class="org-right">2070</td>
+</tr>
+
+<tr>
+<td class="org-right">1966275296</td>
+<td class="org-right">1292053722</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>
+We get answers, but we run too slow to see if we can get the 100 and larger
+cases.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org723f8b5" class="outline-2">
+<h2 id="org723f8b5">Brute caching of results</h2>
+<div class="outline-text-2" id="text-org723f8b5">
+<p>
+What would it take to get a rough shot at the larger values?  How does a
+simple cache work out?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">defun</span> <span style="color: #feacd0;">solve-with-cache</span> (sequence <span style="color: #6ae4b9;">&amp;optional</span> (num-players 2) (cur-player 0) (i 0) (j (1- (length sequence))) (cache (make-hash-table)))
+  (<span style="color: #b6a0ff;">cond</span>
+    <span style="color: #a8a8a8; font-style: italic;">;; </span><span style="color: #a8a8a8; font-style: italic;">We have a cached value</span>
+    ((gethash (+ (* i (length sequence)) j) cache))
+
+    <span style="color: #a8a8a8; font-style: italic;">;; </span><span style="color: #a8a8a8; font-style: italic;">This is a forced move and not worth caching...</span>
+    ((= i j)
+     (list 0 (elt sequence i)))
+
+    <span style="color: #a8a8a8; font-style: italic;">;; </span><span style="color: #a8a8a8; font-style: italic;">We need to examine left/right options</span>
+    (t
+     (<span style="color: #b6a0ff;">let*</span> ((left-number            (elt sequence i))
+            (right-number           (elt sequence j))
+            (next-player            (mod (1+ cur-player) num-players))
+            (left-opponent-choices  (copy-seq (solve-with-cache sequence num-players next-player (1+ i) j cache)))
+            (right-opponent-choices (copy-seq (solve-with-cache sequence num-players next-player i (1- j) cache))))
+       (setf (gethash (+ (* i (length sequence)) j) cache)
+             (<span style="color: #b6a0ff;">if</span> (&gt; (incf (elt left-opponent-choices cur-player) left-number)
+                    (incf (elt right-opponent-choices cur-player) right-number))
+                 left-opponent-choices
+                 right-opponent-choices))))))
+</pre>
+</div>
+
+<p>
+As expected, this gives us fairly quick answers for the next size up in the
+examples.  (Where, fairly quick is near instant.)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(mapcar (<span style="color: #b6a0ff;">lambda</span> (s) (solve-with-cache s)) (list #(1 2 10 3)
+                                                (gen-sequence 2)
+                                                (gen-sequence 4)
+                                                (gen-sequence 10)
+                                                (gen-sequence 100)))
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">11</td>
+<td class="org-right">5</td>
+</tr>
+
+<tr>
+<td class="org-right">45</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-right">4284990</td>
+<td class="org-right">2070</td>
+</tr>
+
+<tr>
+<td class="org-right">1966275296</td>
+<td class="org-right">1292053722</td>
+</tr>
+
+<tr>
+<td class="org-right">26365463243</td>
+<td class="org-right">24078282389</td>
+</tr>
+</tbody>
+</table>
+
+
+<p>
+Not too shockingly, it falls on its face for the next round, though.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">let</span> ((*TRACE-OUTPUT* *STANDARD-OUTPUT*))
+  (time
+   (format t <span style="color: #79a8ff;">"We did get an answer, at least: ~a~&amp;"</span>
+           (solve-with-cache (gen-sequence (expt 10 4))))))
+</pre>
+</div>
+
+<pre class="example">
+We did get an answer, at least: (2495838522951 2465448746904)
+Evaluation took:
+  13.084 seconds of real time
+  13.084478 seconds of total run time (11.185026 user, 1.899452 system)
+  [ Run times consist of 3.749 seconds GC time, and 9.336 seconds non-GC time. ]
+  100.00% CPU
+  49,624,216,720 processor cycles
+  8,267,083,984 bytes consed
+
+</pre>
+
+
+<p>
+Where, "falls on its face" is that it takes too long and uses way too much
+memory.  Which is unfortunate.  (It is fortunate, at least, that the answer
+looks correct. :D)
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2cc3f74" class="outline-2">
+<h2 id="org2cc3f74">Restrict the size of the cache?</h2>
+<div class="outline-text-2" id="text-org2cc3f74">
+<p>
+This is somewhat silly, as the cache should be able to just keep a "layer"
+of the solution in memory at any given time.  I could constrict it so that
+it only has the last \(N\) values looked at in the cache.  That will help
+with memory, but will not have much help for speed, I don't think.  Lets
+find out.
+</p>
+
+<p>
+Biggest callout here, is if we want to limit ourselves to \(N\) entries in the
+cache, we have to change the order that we traverse the possibles.  In
+particular, it is easy to see that we just go up and down a single "side"
+of the search space here, and we wind up with a cache that is effectively
+the entire search tree.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(trace solve-with-cache)
+(<span style="color: #b6a0ff;">let</span> ((*TRACE-OUTPUT* *STANDARD-OUTPUT*))
+  (solve-with-cache (gen-sequence 4)))
+(untrace solve-with-cache)
+</pre>
+</div>
+
+<pre class="example" id="org16ce51c">
+0: (SOLVE-WITH-CACHE #(0 45 2070 4284945))
+  1: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 1 1 3 #&lt;HASH-TABLE :TEST EQL :COUNT 0 {1015BC57B3}&gt;)
+    2: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 0 2 3 #&lt;HASH-TABLE :TEST EQL :COUNT 0 {1015BC57B3}&gt;)
+      3: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 1 3 3 #&lt;HASH-TABLE :TEST EQL :COUNT 0 {1015BC57B3}&gt;)
+      3: SOLVE-WITH-CACHE returned (0 4284945)
+      3: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 1 2 2 #&lt;HASH-TABLE :TEST EQL :COUNT 0 {1015BC57B3}&gt;)
+      3: SOLVE-WITH-CACHE returned (0 2070)
+    2: SOLVE-WITH-CACHE returned (4284945 2070)
+    2: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 0 1 2 #&lt;HASH-TABLE :TEST EQL :COUNT 1 {1015BC57B3}&gt;)
+      3: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 1 2 2 #&lt;HASH-TABLE :TEST EQL :COUNT 1 {1015BC57B3}&gt;)
+      3: SOLVE-WITH-CACHE returned (0 2070)
+      3: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 1 1 1 #&lt;HASH-TABLE :TEST EQL :COUNT 1 {1015BC57B3}&gt;)
+      3: SOLVE-WITH-CACHE returned (0 45)
+    2: SOLVE-WITH-CACHE returned (2070 45)
+  1: SOLVE-WITH-CACHE returned (2070 4284990)
+  1: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 1 0 2 #&lt;HASH-TABLE :TEST EQL :COUNT 3 {1015BC57B3}&gt;)
+    2: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 0 1 2 #&lt;HASH-TABLE :TEST EQL :COUNT 3 {1015BC57B3}&gt;)
+    2: SOLVE-WITH-CACHE returned (2070 45)
+    2: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 0 0 1 #&lt;HASH-TABLE :TEST EQL :COUNT 3 {1015BC57B3}&gt;)
+      3: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 1 1 1 #&lt;HASH-TABLE :TEST EQL :COUNT 3 {1015BC57B3}&gt;)
+      3: SOLVE-WITH-CACHE returned (0 45)
+      3: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 1 0 0 #&lt;HASH-TABLE :TEST EQL :COUNT 3 {1015BC57B3}&gt;)
+      3: SOLVE-WITH-CACHE returned (0 0)
+    2: SOLVE-WITH-CACHE returned (45 0)
+  1: SOLVE-WITH-CACHE returned (45 2070)
+0: SOLVE-WITH-CACHE returned (4284990 2070)
+</pre>
+
+<p>
+By virtue of the search we are doing, we could go up the search space from
+the bottom and then we would be guaranteed of having a cached value by only
+keeping \(N\) values in our cache.  That code, predictably, gets a bit more
+involved.  Still easy to keep in one spot, though.  (And only keeping in
+one spot as I am taking advantage of the trace outputs to do some
+debugging.)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">defun</span> <span style="color: #feacd0;">solve-with-lru-cache</span> (sequence <span style="color: #6ae4b9;">&amp;optional</span> (num-players 2) cur-player i j (cache (make-hash-table <span style="color: #f78fe7;">:size</span> (* 2 (length sequence))) cache-supplied-p))
+  (<span style="color: #b6a0ff;">cond</span>
+    <span style="color: #a8a8a8; font-style: italic;">;; </span><span style="color: #a8a8a8; font-style: italic;">Overall driver that moves us layer by layer</span>
+    ((not cache-supplied-p)
+
+     <span style="color: #a8a8a8; font-style: italic;">;; </span><span style="color: #a8a8a8; font-style: italic;">For keeping track of the recents, we will use a rudimentary ring buffer</span>
+     <span style="color: #a8a8a8; font-style: italic;">;; </span><span style="color: #a8a8a8; font-style: italic;">Yes, I should have put this abstraction on top of the hashtable and been</span>
+     <span style="color: #a8a8a8; font-style: italic;">;; </span><span style="color: #a8a8a8; font-style: italic;">cleaner.  I knew what my next iteration looked like, so didn't bother.</span>
+     (setf (gethash 'recents cache cache) (make-array (- (length sequence) 1))
+           (gethash 'recents-head cache)  0
+           (gethash 'recents-count cache) 0)
+     (<span style="color: #b6a0ff;">loop</span> for inc from 1 below (length sequence)
+           for cur-player = 0 then (setf cur-player (mod (1+ cur-player) num-players))
+           do (<span style="color: #b6a0ff;">loop</span> for j from inc below (length sequence)
+                    do (solve-with-lru-cache sequence num-players cur-player (- j inc) j cache)))
+     (values (gethash (1- (length sequence)) cache)))
+
+    <span style="color: #a8a8a8; font-style: italic;">;;</span><span style="color: #a8a8a8; font-style: italic;">We had a cached value</span>
+    ((gethash (+ (* i (length sequence)) j) cache))
+
+    <span style="color: #a8a8a8; font-style: italic;">;;</span><span style="color: #a8a8a8; font-style: italic;">We are at the last choice, not bothering with cache here...</span>
+    ((= i j)
+     (list 0 (elt sequence i)))
+
+    <span style="color: #a8a8a8; font-style: italic;">;;</span><span style="color: #a8a8a8; font-style: italic;">We have to compare left and right.</span>
+    (t
+     (<span style="color: #b6a0ff;">let*</span> ((left-number            (elt sequence i))
+            (right-number           (elt sequence j))
+            (next-player            (mod (1+ cur-player) num-players))
+            (left-opponent-choices  (copy-seq (solve-with-lru-cache sequence num-players next-player (1+ i) j cache)))
+            (right-opponent-choices (copy-seq (solve-with-lru-cache sequence num-players next-player i (1- j) cache))))
+       <span style="color: #a8a8a8; font-style: italic;">;;</span><span style="color: #a8a8a8; font-style: italic;">And this is where my hamfisted eviction for the cache comes in.</span>
+       (<span style="color: #b6a0ff;">let*</span> ((recents       (gethash 'recents cache))
+              (recents-head  (gethash 'recents-head cache))
+              (recents-count (incf (gethash 'recents-count cache)))
+              (recents-tail  (mod (1+ recents-head) (length recents))))
+         (<span style="color: #b6a0ff;">unless</span> (&lt; recents-count (length recents))
+           (remhash (elt recents recents-tail) cache))
+
+         (setf (elt recents recents-tail)    (+ (* i (length sequence)) j)
+               (gethash 'recents-head cache) recents-tail))
+
+       (setf (gethash (+ (* i (length sequence)) j) cache)
+             (<span style="color: #b6a0ff;">if</span> (&gt; (incf (elt left-opponent-choices cur-player) left-number)
+                    (incf (elt right-opponent-choices cur-player) right-number))
+                 left-opponent-choices
+                 right-opponent-choices))))))
+</pre>
+</div>
+
+<p>
+And how do I know that this uses the cache well?  The trace should show
+that we never get further than 2 calls in.  (I'm not showing a gigantic
+trace here, but the same pattern holds for that.  This trace is arguably
+already gigantic&#x2026;)
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(trace solve-with-lru-cache)
+(<span style="color: #b6a0ff;">let</span> ((*TRACE-OUTPUT* *STANDARD-OUTPUT*))
+  (solve-with-lru-cache (gen-sequence 4)))
+(untrace solve-with-lru-cache)
+</pre>
+</div>
+
+<pre class="example" id="orga3a6c10">
+0: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945))
+  1: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 0 0 1 #&lt;HASH-TABLE :TEST EQL :COUNT 3 {1098AB56F3}&gt;)
+    2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 1 1 1 #&lt;HASH-TABLE :TEST EQL :COUNT 3 {1098AB56F3}&gt;)
+    2: SOLVE-WITH-LRU-CACHE returned (0 45)
+    2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 1 0 0 #&lt;HASH-TABLE :TEST EQL :COUNT 3 {1098AB56F3}&gt;)
+    2: SOLVE-WITH-LRU-CACHE returned (0 0)
+  1: SOLVE-WITH-LRU-CACHE returned (45 0)
+  1: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 0 1 2 #&lt;HASH-TABLE :TEST EQL :COUNT 4 {1098AB56F3}&gt;)
+    2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 1 2 2 #&lt;HASH-TABLE :TEST EQL :COUNT 4 {1098AB56F3}&gt;)
+    2: SOLVE-WITH-LRU-CACHE returned (0 2070)
+    2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 1 1 1 #&lt;HASH-TABLE :TEST EQL :COUNT 4 {1098AB56F3}&gt;)
+    2: SOLVE-WITH-LRU-CACHE returned (0 45)
+  1: SOLVE-WITH-LRU-CACHE returned (2070 45)
+  1: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 0 2 3 #&lt;HASH-TABLE :TEST EQL :COUNT 5 {1098AB56F3}&gt;)
+    2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 1 3 3 #&lt;HASH-TABLE :TEST EQL :COUNT 5 {1098AB56F3}&gt;)
+    2: SOLVE-WITH-LRU-CACHE returned (0 4284945)
+    2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 1 2 2 #&lt;HASH-TABLE :TEST EQL :COUNT 5 {1098AB56F3}&gt;)
+    2: SOLVE-WITH-LRU-CACHE returned (0 2070)
+  1: SOLVE-WITH-LRU-CACHE returned (4284945 2070)
+  1: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 1 0 2 #&lt;HASH-TABLE :TEST EQL :COUNT 6 {1098AB56F3}&gt;)
+    2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 0 1 2 #&lt;HASH-TABLE :TEST EQL :COUNT 6 {1098AB56F3}&gt;)
+    2: SOLVE-WITH-LRU-CACHE returned (2070 45)
+    2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 0 0 1 #&lt;HASH-TABLE :TEST EQL :COUNT 6 {1098AB56F3}&gt;)
+    2: SOLVE-WITH-LRU-CACHE returned (45 0)
+  1: SOLVE-WITH-LRU-CACHE returned (45 2070)
+  1: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 1 1 3 #&lt;HASH-TABLE :TEST EQL :COUNT 6 {1098AB56F3}&gt;)
+    2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 0 2 3 #&lt;HASH-TABLE :TEST EQL :COUNT 6 {1098AB56F3}&gt;)
+    2: SOLVE-WITH-LRU-CACHE returned (4284945 2070)
+    2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 0 1 2 #&lt;HASH-TABLE :TEST EQL :COUNT 6 {1098AB56F3}&gt;)
+    2: SOLVE-WITH-LRU-CACHE returned (2070 45)
+  1: SOLVE-WITH-LRU-CACHE returned (2070 4284990)
+  1: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 0 0 3 #&lt;HASH-TABLE :TEST EQL :COUNT 6 {1098AB56F3}&gt;)
+    2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 1 1 3 #&lt;HASH-TABLE :TEST EQL :COUNT 6 {1098AB56F3}&gt;)
+    2: SOLVE-WITH-LRU-CACHE returned (2070 4284990)
+    2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 1 0 2 #&lt;HASH-TABLE :TEST EQL :COUNT 6 {1098AB56F3}&gt;)
+    2: SOLVE-WITH-LRU-CACHE returned (45 2070)
+  1: SOLVE-WITH-LRU-CACHE returned (4284990 2070)
+0: SOLVE-WITH-LRU-CACHE returned (4284990 2070)
+</pre>
+
+<p>
+But, how does that do with the same test that I was unhappy with for the
+unbounded cache?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">let</span> ((*TRACE-OUTPUT* *STANDARD-OUTPUT*))
+  (time
+   (format t <span style="color: #79a8ff;">"We did get an answer, at least: ~a~&amp;"</span>
+           (solve-with-lru-cache (gen-sequence (expt 10 4))))))
+</pre>
+</div>
+
+<pre class="example">
+We did get an answer, at least: (2495838522951 2465448746904)
+Evaluation took:
+  14.264 seconds of real time
+  14.261510 seconds of total run time (14.082674 user, 0.178836 system)
+  [ Run times consist of 0.056 seconds GC time, and 14.206 seconds non-GC time. ]
+  99.99% CPU
+  54,093,054,074 processor cycles
+  3,201,016,448 bytes consed
+
+</pre>
+
+
+<p>
+As expected, is about the same in the speed, but much nicer to our memory.
+It is especially obvious if I watch the memory usage of the machine.  And
+somewhat clear from the lack of time spent in GC here.  (I will note that
+this points out that I don't understand the "bytes consed" number.  Ah
+well..)
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4b932d0" class="outline-2">
+<h2 id="org4b932d0">Not going to wait for that to complete.</h2>
+<div class="outline-text-2" id="text-org4b932d0">
+<p>
+Sadly, that paints a pretty clear picture that this will not help get the
+answer for \(10^8\).  And it is fairly clear why.  This is calculating every
+node in the search space.  And, that space has \(N(N + 1) \over 2\) values in
+it.  By the time we get to \(10^8\) for \(N\), this is clearly slogging us
+down.
+</p>
+
+<p>
+To put some probably wrong numbers to it, we see that it takes 14 seconds
+to calculate for \(10^4\) values.  That puts this at about 40 some odd years
+using this code.
+</p>
+
+<p>
+Just for the laughs to sanity check that math, lets predict how long it
+would take to solve a 4000 length sequence and then try it.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">defun</span> <span style="color: #feacd0;">triangle-number</span> (n)
+  (/ (* n (+ n 1))
+     2))
+(format t <span style="color: #79a8ff;">"We are predicting ~F seconds.~&amp;"</span> (* (triangle-number 4000) (/ 14 (triangle-number (expt 10 4)))))
+(<span style="color: #b6a0ff;">let</span> ((*TRACE-OUTPUT* *STANDARD-OUTPUT*))
+  (time
+   (format t <span style="color: #79a8ff;">"Our answer was: ~a~&amp;"</span>
+           (solve-with-lru-cache (gen-sequence 4000)))))
+</pre>
+</div>
+
+<pre class="example" id="org22dd35c">
+We are predicting 2.240336 seconds.
+Our answer was: (1006836930817 969259845004)
+Evaluation took:
+  2.272 seconds of real time
+  2.271653 seconds of total run time (2.271653 user, 0.000000 system)
+  [ Run times consist of 0.003 seconds GC time, and 2.269 seconds non-GC time. ]
+  100.00% CPU
+  8,615,589,102 processor cycles
+  512,378,512 bytes consed
+
+</pre>
+
+<p>
+That prediction comes out fairly close, all told.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb2f57cf" class="outline-2">
+<h2 id="orgb2f57cf">Could I just be more efficient per layer?</h2>
+<div class="outline-text-2" id="text-orgb2f57cf">
+<p>
+Certainly.  The above was my hamfisting an eviction policy into the cache,
+but we could save a multiplication and hash (and an amusing amount of code)
+by building up the score on the way up the space.  That could look roughly
+like:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">defun</span> <span style="color: #feacd0;">solve-by-layer</span> (sequence <span style="color: #6ae4b9;">&amp;optional</span> (num-players 2) cur-player i j (cache (make-array (length sequence)) cache-supplied-p))
+  (<span style="color: #b6a0ff;">cond</span>
+    <span style="color: #a8a8a8; font-style: italic;">;; </span><span style="color: #a8a8a8; font-style: italic;">Overall driver that moves us layer by layer</span>
+    ((not cache-supplied-p)
+     <span style="color: #a8a8a8; font-style: italic;">;;</span><span style="color: #a8a8a8; font-style: italic;">Have to seed the base score</span>
+     (<span style="color: #b6a0ff;">loop</span> for i from 0 below (length sequence)
+           do (setf (elt cache i) (list 0 (elt sequence i))))
+     <span style="color: #a8a8a8; font-style: italic;">;;</span><span style="color: #a8a8a8; font-style: italic;">Then, mostly proceed as before</span>
+     (<span style="color: #b6a0ff;">loop</span> for inc from 1 below (length sequence)
+           for cur-player = 0 then (setf cur-player (mod (1+ cur-player) num-players))
+           do (<span style="color: #b6a0ff;">loop</span> for j from inc below (length sequence)
+                    do (solve-by-layer sequence num-players cur-player (- j inc) j cache)))
+     (elt cache 0))
+
+    <span style="color: #a8a8a8; font-style: italic;">;;</span><span style="color: #a8a8a8; font-style: italic;">We have to compare left and right.</span>
+    (t
+     (<span style="color: #b6a0ff;">let*</span> ((left-number            (elt sequence i))
+            (right-number           (elt sequence j))
+            (left-opponent-choices  (copy-seq (elt cache (1+ i))))
+            (right-opponent-choices (copy-seq (elt cache i))))
+
+       (setf (elt cache i)
+             (<span style="color: #b6a0ff;">if</span> (&gt; (incf (elt left-opponent-choices cur-player) left-number)
+                    (incf (elt right-opponent-choices cur-player) right-number))
+                 left-opponent-choices
+                 right-opponent-choices))))))
+</pre>
+</div>
+
+<p>
+As desired, this never drops below a single recursive call.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(trace solve-by-layer)
+(<span style="color: #b6a0ff;">let</span> ((*TRACE-OUTPUT* *STANDARD-OUTPUT*))
+  (solve-by-layer (gen-sequence 4)))
+(untrace solve-by-layer)
+</pre>
+</div>
+
+<pre class="example" id="org331a1f1">
+0: (SOLVE-BY-LAYER #(0 45 2070 4284945))
+  1: (SOLVE-BY-LAYER #(0 45 2070 4284945) 2 0 0 1 #((0 0) (0 45) (0 2070) (0 4284945)))
+  1: SOLVE-BY-LAYER returned (45 0)
+  1: (SOLVE-BY-LAYER #(0 45 2070 4284945) 2 0 1 2 #((45 0) (0 45) (0 2070) (0 4284945)))
+  1: SOLVE-BY-LAYER returned (2070 45)
+  1: (SOLVE-BY-LAYER #(0 45 2070 4284945) 2 0 2 3 #((45 0) (2070 45) (0 2070) (0 4284945)))
+  1: SOLVE-BY-LAYER returned (4284945 2070)
+  1: (SOLVE-BY-LAYER #(0 45 2070 4284945) 2 1 0 2 #((45 0) (2070 45) (4284945 2070) (0 4284945)))
+  1: SOLVE-BY-LAYER returned (45 2070)
+  1: (SOLVE-BY-LAYER #(0 45 2070 4284945) 2 1 1 3 #((45 2070) (2070 45) (4284945 2070) (0 4284945)))
+  1: SOLVE-BY-LAYER returned (2070 4284990)
+  1: (SOLVE-BY-LAYER #(0 45 2070 4284945) 2 0 0 3 #((45 2070) (2070 4284990) (4284945 2070) (0 4284945)))
+  1: SOLVE-BY-LAYER returned (4284990 2070)
+0: SOLVE-BY-LAYER returned (4284990 2070)
+</pre>
+
+<p>
+For speed, this is unsurprisingly better.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">let</span> ((*TRACE-OUTPUT* *STANDARD-OUTPUT*))
+  (time
+   (format t <span style="color: #79a8ff;">"We did get an answer, at least: ~a~&amp;"</span>
+           (solve-by-layer (gen-sequence (expt 10 4))))))
+</pre>
+</div>
+
+<pre class="example">
+We did get an answer, at least: (2495838522951 2465448746904)
+Evaluation took:
+  3.500 seconds of real time
+  3.502130 seconds of total run time (3.502111 user, 0.000019 system)
+  [ Run times consist of 0.040 seconds GC time, and 3.463 seconds non-GC time. ]
+  100.06% CPU
+  13,279,585,526 processor cycles
+  3,200,161,024 bytes consed
+
+</pre>
+
+
+<p>
+Still has me in years of processing time.  :(
+</p>
+</div>
+</div>
+
+<div id="outline-container-org36a3dd8" class="outline-2">
+<h2 id="org36a3dd8">Could I go parallel?</h2>
+<div class="outline-text-2" id="text-org36a3dd8">
+<p>
+I don't see why not?  Just using threads on my computer is unlikely to
+really help too much, as I don't have that many cores.  I do, however, have
+a GPU I could try with.  Same napkin math has it such that that should
+complete in a few weeks.  Which, yes, is faster than years.  Still feels
+sadly misguided.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5a64695" class="outline-2">
+<h2 id="org5a64695">Could I get even more efficient per layer?</h2>
+<div class="outline-text-2" id="text-org5a64695">
+<p>
+Almost certainly.  Drop all of the copies I'm doing above and things should
+get better.  Probably not by enough to matter, annoyingly.  My specific
+target has to drop this by a factor of about a million?  I don't want a
+solution that takes more than a minute or so.
+</p>
+
+<p>
+I could also port this to a different runtime.  That would require some
+changes, of course, but the general idea would stay the same.  May give
+this a try.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org54339db" class="outline-2">
+<h2 id="org54339db">Any obvious non \(N^2\) algorithms for this?</h2>
+<div class="outline-text-2" id="text-org54339db">
+<p>
+Not surprisingly, I spent more time writing up the above than I did
+thinking about or doing any of that.  As stated, I wanted a solution that
+could go in less than a minute.  Assuming I was correct in the number of
+decisions, that general direction has a silly floor of months if I shrank
+it down to a few cycles per decision.  Which, is clearly not happening.
+</p>
+
+<p>
+Unfortunately, I mostly thought of dead ends to solve it.  The size of the
+decision space was enough that all of the potentially fun ways to implement
+a solution I thought of were not really options.
+</p>
+
+<p>
+In particular, I was really hoping I'd see a clever way of using a BDD/ZDD.
+This would be my second use of those.  If there is an easy formulation for
+that, I'm not seeing it.  And since I blew the memory on the basic
+hashtable of all of the solutions, and a BDD node is bigger than a score, I
+haven't even bothered to really do the math of how big the BDD could be.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7426634" class="outline-2">
+<h2 id="org7426634">How about linear?</h2>
+<div class="outline-text-2" id="text-org7426634">
+<p>
+Basically, I felt there had to be a linear solution to this.  Largely as I
+don't imagine folks are leaving machines running for a long time to get
+some puzzle answers.  I appreciate that I can be wrong there.
+</p>
+
+<p>
+At any rate, if this is the case, I want a solution that is light on the
+backtracking.  Preferrably with none.  After staring at many solutions I
+didn't come up with much.  About the best I can see is that player 1 has a
+clear "floor" on what their high score is.  Specifically, the max of either
+all odd indexed values, or all even indexed.  Annoyingly, this gives the
+"answer" for the first few values.  Is wrong starting at \(10^4\), though.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">let</span> ((counts (list 2 4 100 (expt 10 4))))
+  (<span style="color: #b6a0ff;">loop</span> for n in counts
+        collect (<span style="color: #b6a0ff;">loop</span> with s = (gen-sequence n)
+                      for v across s
+                      for i from 1
+                      if (= 0 (mod i 2))
+                        sum v into even-sum
+                      else
+                        sum v into odd-sum
+                      finally (<span style="color: #b6a0ff;">return</span> (list (max even-sum odd-sum) (min even-sum odd-sum))))))
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">45</td>
+<td class="org-right">0</td>
+</tr>
+
+<tr>
+<td class="org-right">4284990</td>
+<td class="org-right">2070</td>
+</tr>
+
+<tr>
+<td class="org-right">26365463243</td>
+<td class="org-right">24078282389</td>
+</tr>
+
+<tr>
+<td class="org-right">2487583914490</td>
+<td class="org-right">2473703355365</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+My original hope was that I could concoct an algorithm where player 1 looks
+to steal a number along the way, with a preference to whichever set of
+numbers has the highest sum remaining.  I couldn't come up with one that
+helps for player 2, though.  Their goal is to try to keep the numbers such
+that player 1 doesn't want to steal?  I couldn't find it.
+</p>
+
+<p>
+Other ideas involved trying to look at all of the increasing "runs" in the
+number sequence.  The idea being that, along a run of decreasing values,
+the strategy is to just pull from one direction.
+</p>
+
+<p>
+To demonstrate, lets get something that shows us the "path."
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff;">defun</span> <span style="color: #feacd0;">solve-showing-work</span> (sequence <span style="color: #6ae4b9;">&amp;optional</span> (num-players 2) cur-player i j (cache (make-array (length sequence)) cache-supplied-p))
+  (<span style="color: #b6a0ff;">cond</span>
+    <span style="color: #a8a8a8; font-style: italic;">;; </span><span style="color: #a8a8a8; font-style: italic;">Overall driver that moves us layer by layer</span>
+    ((not cache-supplied-p)
+     <span style="color: #a8a8a8; font-style: italic;">;;</span><span style="color: #a8a8a8; font-style: italic;">Have to seed the base score</span>
+     (<span style="color: #b6a0ff;">loop</span> for i from 0 below (length sequence)
+           do (setf (elt cache i) (list 0 (elt sequence i)(list (list 'no-choice (elt sequence i))))))
+     <span style="color: #a8a8a8; font-style: italic;">;;</span><span style="color: #a8a8a8; font-style: italic;">Then, mostly proceed as before</span>
+     (<span style="color: #b6a0ff;">loop</span> for inc from 1 below (length sequence)
+           for cur-player = 0 then (setf cur-player (mod (1+ cur-player) num-players))
+           do (<span style="color: #b6a0ff;">loop</span> for j from inc below (length sequence)
+                    do (solve-showing-work sequence num-players cur-player (- j inc) j cache)))
+     (elt cache 0))
+
+    <span style="color: #a8a8a8; font-style: italic;">;;</span><span style="color: #a8a8a8; font-style: italic;">We have to compare left and right.</span>
+    (t
+     (<span style="color: #b6a0ff;">let*</span> ((left-number            (elt sequence i))
+            (right-number           (elt sequence j))
+            (left-opponent-choices  (copy-seq (elt cache (1+ i))))
+            (right-opponent-choices (copy-seq (elt cache i))))
+
+       (push (list 'left left-number) (elt left-opponent-choices 2))
+       (push (list 'right right-number) (elt right-opponent-choices 2))
+
+       (setf (elt cache i)
+             (<span style="color: #b6a0ff;">if</span> (&gt; (incf (elt left-opponent-choices cur-player) left-number)
+                    (incf (elt right-opponent-choices cur-player) right-number))
+                 left-opponent-choices
+                 right-opponent-choices))))))
+</pre>
+</div>
+
+<p>
+With that, a few examples.  First, one that shows a "run" of numbers is
+followed.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(solve-showing-work #(8 7 6 5 4 3 2 1))
+</pre>
+</div>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-right" />
+
+<col  class="org-right" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-right">20</td>
+<td class="org-right">16</td>
+<td class="org-left">((LEFT 8) (LEFT 7) (LEFT 6) (LEFT 5) (LEFT 4) (LEFT 3) (LEFT 2) (NO-CHOICE 1))</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+Of course, it isn't hard to see how to force alternating left/right
+choices.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(solve-showing-work #(7 5 3 1 2 4 6 8))
+</pre>
+</div>
+
+<p>
+And I can't immediately see why this starts from the right before jumping
+to the left.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(solve-showing-work #(10 11 12 13 7 5 3 1 2 4 6 8))
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Josh Berry</p>
+<p class="date">Created: 2023-01-31 Tue 05:03</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

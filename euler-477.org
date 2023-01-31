@@ -1,0 +1,634 @@
+#+TITLE: Euler Problem 477
+#+OPTIONS: num:nil
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
+
+* Introduction
+
+I'm assuming some familiarity with [[https://projecteuler.net][Project Euler]].  Basically, a bunch of
+typically numerically intensive puzzles that can be solved using a
+computer.
+
+At any rate, way back when, [[https://projecteuler.net/problem=477][477]] was the newest one when I was looking.
+They have, clearly, progressed since then.  That said, I've had this
+problem in my mind for quite a long time now.  I kept hoping to find some
+clever data structure to solve it, but never found one.
+
+This page is really just moving some notes I had on it.  I found an old
+paper notebook that had the final thoughts before I abandoned this, and
+thought I would jot them in electronic form.  This also required me to
+reimplement some of the ideas, as I long lost whatever computer files I had
+with these notes.
+
+* Easy top down solution (that of course doesn't work)
+
+This is a pretty straight forward implementation.  I wasn't going for
+anything particularly smart, but was curious just how long it would take.
+
+#+begin_src lisp
+  (defun solve (sequence &optional (num-players 2) (cur-player 0) (i 0) (j (1- (length sequence))))
+    (cond ((= i j)
+           (list 0 (elt sequence i)))
+
+          (t
+           (let* ((left-number            (elt sequence i))
+                  (right-number           (elt sequence j))
+                  (next-player            (mod (1+ cur-player) num-players))
+                  (left-opponent-choices  (solve sequence num-players next-player (1+ i) j))
+                  (right-opponent-choices (solve sequence num-players next-player i (1- j))))
+             (if (> (incf (elt left-opponent-choices cur-player) left-number)
+                    (incf (elt right-opponent-choices cur-player) right-number))
+                 left-opponent-choices
+                 right-opponent-choices)))))
+#+end_src
+
+#+RESULTS:
+: SOLVE
+
+
+Does it give the right answers?  Before I can fully answer this, I need the
+sequence generator for the larger games.  So, lets get that real quick.
+
+#+begin_src lisp :exports code
+  (defun gen-sequence (n)
+    (let ((sequence (make-array n :initial-element 0)))
+      (loop repeat (1- n)
+            for i from 1
+            do (setf (elt sequence i) (mod (+ (expt (elt sequence (1- i)) 2) 45) 1000000007)))
+      sequence))
+#+end_src
+
+#+RESULTS:
+: GEN-SEQUENCE
+
+Does that agree with page on how the sequence starts?
+
+#+begin_src lisp :exports both
+  (gen-sequence 7)
+#+end_src
+
+#+RESULTS:
+| 0 | 45 | 2070 | 4284945 | 753524550 | 478107844 | 894218625 |
+
+
+And do we get the right answers for the smaller values?
+
+#+begin_src lisp :exports both
+  (mapcar (lambda (s) (solve s)) (list #(1 2 10 3)
+                                       (gen-sequence 2)
+                                       (gen-sequence 4)
+                                       (gen-sequence 10)))
+
+#+end_src
+
+#+RESULTS:
+|         11 |          5 |
+|         45 |          0 |
+|    4284990 |       2070 |
+| 1966275296 | 1292053722 |
+
+
+We get answers, but we run too slow to see if we can get the 100 and larger
+cases.
+
+* Brute caching of results
+
+What would it take to get a rough shot at the larger values?  How does a
+simple cache work out?
+
+#+begin_src lisp :exports code
+  (defun solve-with-cache (sequence &optional (num-players 2) (cur-player 0) (i 0) (j (1- (length sequence))) (cache (make-hash-table)))
+    (cond
+      ;; We have a cached value
+      ((gethash (+ (* i (length sequence)) j) cache))
+
+      ;; This is a forced move and not worth caching...
+      ((= i j)
+       (list 0 (elt sequence i)))
+
+      ;; We need to examine left/right options
+      (t
+       (let* ((left-number            (elt sequence i))
+              (right-number           (elt sequence j))
+              (next-player            (mod (1+ cur-player) num-players))
+              (left-opponent-choices  (copy-seq (solve-with-cache sequence num-players next-player (1+ i) j cache)))
+              (right-opponent-choices (copy-seq (solve-with-cache sequence num-players next-player i (1- j) cache))))
+         (setf (gethash (+ (* i (length sequence)) j) cache)
+               (if (> (incf (elt left-opponent-choices cur-player) left-number)
+                      (incf (elt right-opponent-choices cur-player) right-number))
+                   left-opponent-choices
+                   right-opponent-choices))))))
+#+end_src
+
+#+RESULTS:
+: SOLVE-WITH-CACHE
+
+As expected, this gives us fairly quick answers for the next size up in the
+examples.  (Where, fairly quick is near instant.)
+
+#+begin_src lisp :exports both
+  (mapcar (lambda (s) (solve-with-cache s)) (list #(1 2 10 3)
+                                                  (gen-sequence 2)
+                                                  (gen-sequence 4)
+                                                  (gen-sequence 10)
+                                                  (gen-sequence 100)))
+#+end_src
+
+#+RESULTS:
+|          11 |           5 |
+|          45 |           0 |
+|     4284990 |        2070 |
+|  1966275296 |  1292053722 |
+| 26365463243 | 24078282389 |
+
+
+Not too shockingly, it falls on its face for the next round, though.
+
+#+begin_src lisp :results verbatim output :exports both
+    (let ((*TRACE-OUTPUT* *STANDARD-OUTPUT*))
+      (time
+       (format t "We did get an answer, at least: ~a~&"
+               (solve-with-cache (gen-sequence (expt 10 4))))))
+#+end_src
+
+#+RESULTS:
+: We did get an answer, at least: (2495838522951 2465448746904)
+: Evaluation took:
+:   13.084 seconds of real time
+:   13.084478 seconds of total run time (11.185026 user, 1.899452 system)
+:   [ Run times consist of 3.749 seconds GC time, and 9.336 seconds non-GC time. ]
+:   100.00% CPU
+:   49,624,216,720 processor cycles
+:   8,267,083,984 bytes consed
+:
+
+Where, "falls on its face" is that it takes too long and uses way too much
+memory.  Which is unfortunate.  (It is fortunate, at least, that the answer
+looks correct. :D)
+
+* Restrict the size of the cache?
+
+This is somewhat silly, as the cache should be able to just keep a "layer"
+of the solution in memory at any given time.  I could constrict it so that
+it only has the last $N$ values looked at in the cache.  That will help
+with memory, but will not have much help for speed, I don't think.  Lets
+find out.
+
+Biggest callout here, is if we want to limit ourselves to $N$ entries in the
+cache, we have to change the order that we traverse the possibles.  In
+particular, it is easy to see that we just go up and down a single "side"
+of the search space here, and we wind up with a cache that is effectively
+the entire search tree.
+
+#+begin_src lisp :results verbatim output :exports both
+  (trace solve-with-cache)
+  (let ((*TRACE-OUTPUT* *STANDARD-OUTPUT*))
+    (solve-with-cache (gen-sequence 4)))
+  (untrace solve-with-cache)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+  0: (SOLVE-WITH-CACHE #(0 45 2070 4284945))
+    1: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 1 1 3 #<HASH-TABLE :TEST EQL :COUNT 0 {1015BC57B3}>)
+      2: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 0 2 3 #<HASH-TABLE :TEST EQL :COUNT 0 {1015BC57B3}>)
+        3: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 1 3 3 #<HASH-TABLE :TEST EQL :COUNT 0 {1015BC57B3}>)
+        3: SOLVE-WITH-CACHE returned (0 4284945)
+        3: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 1 2 2 #<HASH-TABLE :TEST EQL :COUNT 0 {1015BC57B3}>)
+        3: SOLVE-WITH-CACHE returned (0 2070)
+      2: SOLVE-WITH-CACHE returned (4284945 2070)
+      2: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 0 1 2 #<HASH-TABLE :TEST EQL :COUNT 1 {1015BC57B3}>)
+        3: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 1 2 2 #<HASH-TABLE :TEST EQL :COUNT 1 {1015BC57B3}>)
+        3: SOLVE-WITH-CACHE returned (0 2070)
+        3: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 1 1 1 #<HASH-TABLE :TEST EQL :COUNT 1 {1015BC57B3}>)
+        3: SOLVE-WITH-CACHE returned (0 45)
+      2: SOLVE-WITH-CACHE returned (2070 45)
+    1: SOLVE-WITH-CACHE returned (2070 4284990)
+    1: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 1 0 2 #<HASH-TABLE :TEST EQL :COUNT 3 {1015BC57B3}>)
+      2: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 0 1 2 #<HASH-TABLE :TEST EQL :COUNT 3 {1015BC57B3}>)
+      2: SOLVE-WITH-CACHE returned (2070 45)
+      2: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 0 0 1 #<HASH-TABLE :TEST EQL :COUNT 3 {1015BC57B3}>)
+        3: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 1 1 1 #<HASH-TABLE :TEST EQL :COUNT 3 {1015BC57B3}>)
+        3: SOLVE-WITH-CACHE returned (0 45)
+        3: (SOLVE-WITH-CACHE #(0 45 2070 4284945) 2 1 0 0 #<HASH-TABLE :TEST EQL :COUNT 3 {1015BC57B3}>)
+        3: SOLVE-WITH-CACHE returned (0 0)
+      2: SOLVE-WITH-CACHE returned (45 0)
+    1: SOLVE-WITH-CACHE returned (45 2070)
+  0: SOLVE-WITH-CACHE returned (4284990 2070)
+#+end_example
+
+By virtue of the search we are doing, we could go up the search space from
+the bottom and then we would be guaranteed of having a cached value by only
+keeping $N$ values in our cache.  That code, predictably, gets a bit more
+involved.  Still easy to keep in one spot, though.  (And only keeping in
+one spot as I am taking advantage of the trace outputs to do some
+debugging.)
+
+#+begin_src lisp :exports code
+  (defun solve-with-lru-cache (sequence &optional (num-players 2) cur-player i j (cache (make-hash-table :size (* 2 (length sequence))) cache-supplied-p))
+    (cond
+      ;; Overall driver that moves us layer by layer
+      ((not cache-supplied-p)
+
+       ;; For keeping track of the recents, we will use a rudimentary ring buffer
+       ;; Yes, I should have put this abstraction on top of the hashtable and been
+       ;; cleaner.  I knew what my next iteration looked like, so didn't bother.
+       (setf (gethash 'recents cache cache) (make-array (- (length sequence) 1))
+             (gethash 'recents-head cache)  0
+             (gethash 'recents-count cache) 0)
+       (loop for inc from 1 below (length sequence)
+             for cur-player = 0 then (setf cur-player (mod (1+ cur-player) num-players))
+             do (loop for j from inc below (length sequence)
+                      do (solve-with-lru-cache sequence num-players cur-player (- j inc) j cache)))
+       (values (gethash (1- (length sequence)) cache)))
+
+      ;;We had a cached value
+      ((gethash (+ (* i (length sequence)) j) cache))
+
+      ;;We are at the last choice, not bothering with cache here...
+      ((= i j)
+       (list 0 (elt sequence i)))
+
+      ;;We have to compare left and right.
+      (t
+       (let* ((left-number            (elt sequence i))
+              (right-number           (elt sequence j))
+              (next-player            (mod (1+ cur-player) num-players))
+              (left-opponent-choices  (copy-seq (solve-with-lru-cache sequence num-players next-player (1+ i) j cache)))
+              (right-opponent-choices (copy-seq (solve-with-lru-cache sequence num-players next-player i (1- j) cache))))
+         ;;And this is where my hamfisted eviction for the cache comes in.
+         (let* ((recents       (gethash 'recents cache))
+                (recents-head  (gethash 'recents-head cache))
+                (recents-count (incf (gethash 'recents-count cache)))
+                (recents-tail  (mod (1+ recents-head) (length recents))))
+           (unless (< recents-count (length recents))
+             (remhash (elt recents recents-tail) cache))
+
+           (setf (elt recents recents-tail)    (+ (* i (length sequence)) j)
+                 (gethash 'recents-head cache) recents-tail))
+
+         (setf (gethash (+ (* i (length sequence)) j) cache)
+               (if (> (incf (elt left-opponent-choices cur-player) left-number)
+                      (incf (elt right-opponent-choices cur-player) right-number))
+                   left-opponent-choices
+                   right-opponent-choices))))))
+#+end_src
+
+#+RESULTS:
+: SOLVE-WITH-LRU-CACHE
+
+And how do I know that this uses the cache well?  The trace should show
+that we never get further than 2 calls in.  (I'm not showing a gigantic
+trace here, but the same pattern holds for that.  This trace is arguably
+already gigantic...)
+
+#+begin_src lisp :results verbatim output :exports both
+  (trace solve-with-lru-cache)
+  (let ((*TRACE-OUTPUT* *STANDARD-OUTPUT*))
+    (solve-with-lru-cache (gen-sequence 4)))
+  (untrace solve-with-lru-cache)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+  0: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945))
+    1: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 0 0 1 #<HASH-TABLE :TEST EQL :COUNT 3 {1098AB56F3}>)
+      2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 1 1 1 #<HASH-TABLE :TEST EQL :COUNT 3 {1098AB56F3}>)
+      2: SOLVE-WITH-LRU-CACHE returned (0 45)
+      2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 1 0 0 #<HASH-TABLE :TEST EQL :COUNT 3 {1098AB56F3}>)
+      2: SOLVE-WITH-LRU-CACHE returned (0 0)
+    1: SOLVE-WITH-LRU-CACHE returned (45 0)
+    1: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 0 1 2 #<HASH-TABLE :TEST EQL :COUNT 4 {1098AB56F3}>)
+      2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 1 2 2 #<HASH-TABLE :TEST EQL :COUNT 4 {1098AB56F3}>)
+      2: SOLVE-WITH-LRU-CACHE returned (0 2070)
+      2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 1 1 1 #<HASH-TABLE :TEST EQL :COUNT 4 {1098AB56F3}>)
+      2: SOLVE-WITH-LRU-CACHE returned (0 45)
+    1: SOLVE-WITH-LRU-CACHE returned (2070 45)
+    1: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 0 2 3 #<HASH-TABLE :TEST EQL :COUNT 5 {1098AB56F3}>)
+      2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 1 3 3 #<HASH-TABLE :TEST EQL :COUNT 5 {1098AB56F3}>)
+      2: SOLVE-WITH-LRU-CACHE returned (0 4284945)
+      2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 1 2 2 #<HASH-TABLE :TEST EQL :COUNT 5 {1098AB56F3}>)
+      2: SOLVE-WITH-LRU-CACHE returned (0 2070)
+    1: SOLVE-WITH-LRU-CACHE returned (4284945 2070)
+    1: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 1 0 2 #<HASH-TABLE :TEST EQL :COUNT 6 {1098AB56F3}>)
+      2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 0 1 2 #<HASH-TABLE :TEST EQL :COUNT 6 {1098AB56F3}>)
+      2: SOLVE-WITH-LRU-CACHE returned (2070 45)
+      2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 0 0 1 #<HASH-TABLE :TEST EQL :COUNT 6 {1098AB56F3}>)
+      2: SOLVE-WITH-LRU-CACHE returned (45 0)
+    1: SOLVE-WITH-LRU-CACHE returned (45 2070)
+    1: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 1 1 3 #<HASH-TABLE :TEST EQL :COUNT 6 {1098AB56F3}>)
+      2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 0 2 3 #<HASH-TABLE :TEST EQL :COUNT 6 {1098AB56F3}>)
+      2: SOLVE-WITH-LRU-CACHE returned (4284945 2070)
+      2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 0 1 2 #<HASH-TABLE :TEST EQL :COUNT 6 {1098AB56F3}>)
+      2: SOLVE-WITH-LRU-CACHE returned (2070 45)
+    1: SOLVE-WITH-LRU-CACHE returned (2070 4284990)
+    1: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 0 0 3 #<HASH-TABLE :TEST EQL :COUNT 6 {1098AB56F3}>)
+      2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 1 1 3 #<HASH-TABLE :TEST EQL :COUNT 6 {1098AB56F3}>)
+      2: SOLVE-WITH-LRU-CACHE returned (2070 4284990)
+      2: (SOLVE-WITH-LRU-CACHE #(0 45 2070 4284945) 2 1 0 2 #<HASH-TABLE :TEST EQL :COUNT 6 {1098AB56F3}>)
+      2: SOLVE-WITH-LRU-CACHE returned (45 2070)
+    1: SOLVE-WITH-LRU-CACHE returned (4284990 2070)
+  0: SOLVE-WITH-LRU-CACHE returned (4284990 2070)
+#+end_example
+
+But, how does that do with the same test that I was unhappy with for the
+unbounded cache?
+
+#+begin_src lisp :results verbatim output :exports both
+  (let ((*TRACE-OUTPUT* *STANDARD-OUTPUT*))
+    (time
+     (format t "We did get an answer, at least: ~a~&"
+             (solve-with-lru-cache (gen-sequence (expt 10 4))))))
+#+end_src
+
+#+RESULTS:
+: We did get an answer, at least: (2495838522951 2465448746904)
+: Evaluation took:
+:   14.264 seconds of real time
+:   14.261510 seconds of total run time (14.082674 user, 0.178836 system)
+:   [ Run times consist of 0.056 seconds GC time, and 14.206 seconds non-GC time. ]
+:   99.99% CPU
+:   54,093,054,074 processor cycles
+:   3,201,016,448 bytes consed
+:
+
+As expected, is about the same in the speed, but much nicer to our memory.
+It is especially obvious if I watch the memory usage of the machine.  And
+somewhat clear from the lack of time spent in GC here.  (I will note that
+this points out that I don't understand the "bytes consed" number.  Ah
+well..)
+
+* Not going to wait for that to complete.
+
+Sadly, that paints a pretty clear picture that this will not help get the
+answer for $10^8$.  And it is fairly clear why.  This is calculating every
+node in the search space.  And, that space has $N(N + 1) \over 2$ values in
+it.  By the time we get to $10^8$ for $N$, this is clearly slogging us
+down.
+
+To put some probably wrong numbers to it, we see that it takes 14 seconds
+to calculate for $10^4$ values.  That puts this at about 40 some odd years
+using this code.
+
+Just for the laughs to sanity check that math, lets predict how long it
+would take to solve a 4000 length sequence and then try it.
+
+#+begin_src lisp :results verbatim output :exports both
+  (defun triangle-number (n)
+    (/ (* n (+ n 1))
+       2))
+  (format t "We are predicting ~F seconds.~&" (* (triangle-number 4000) (/ 14 (triangle-number (expt 10 4)))))
+  (let ((*TRACE-OUTPUT* *STANDARD-OUTPUT*))
+    (time
+     (format t "Our answer was: ~a~&"
+             (solve-with-lru-cache (gen-sequence 4000)))))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+We are predicting 2.240336 seconds.
+Our answer was: (1006836930817 969259845004)
+Evaluation took:
+  2.272 seconds of real time
+  2.271653 seconds of total run time (2.271653 user, 0.000000 system)
+  [ Run times consist of 0.003 seconds GC time, and 2.269 seconds non-GC time. ]
+  100.00% CPU
+  8,615,589,102 processor cycles
+  512,378,512 bytes consed
+
+#+end_example
+
+That prediction comes out fairly close, all told.
+
+* Could I just be more efficient per layer?
+
+Certainly.  The above was my hamfisting an eviction policy into the cache,
+but we could save a multiplication and hash (and an amusing amount of code)
+by building up the score on the way up the space.  That could look roughly
+like:
+
+#+begin_src lisp :exports code
+  (defun solve-by-layer (sequence &optional (num-players 2) cur-player i j (cache (make-array (length sequence)) cache-supplied-p))
+    (cond
+      ;; Overall driver that moves us layer by layer
+      ((not cache-supplied-p)
+       ;;Have to seed the base score
+       (loop for i from 0 below (length sequence)
+             do (setf (elt cache i) (list 0 (elt sequence i))))
+       ;;Then, mostly proceed as before
+       (loop for inc from 1 below (length sequence)
+             for cur-player = 0 then (setf cur-player (mod (1+ cur-player) num-players))
+             do (loop for j from inc below (length sequence)
+                      do (solve-by-layer sequence num-players cur-player (- j inc) j cache)))
+       (elt cache 0))
+
+      ;;We have to compare left and right.
+      (t
+       (let* ((left-number            (elt sequence i))
+              (right-number           (elt sequence j))
+              (left-opponent-choices  (copy-seq (elt cache (1+ i))))
+              (right-opponent-choices (copy-seq (elt cache i))))
+
+         (setf (elt cache i)
+               (if (> (incf (elt left-opponent-choices cur-player) left-number)
+                      (incf (elt right-opponent-choices cur-player) right-number))
+                   left-opponent-choices
+                   right-opponent-choices))))))
+#+end_src
+
+#+RESULTS:
+: SOLVE-BY-LAYER
+
+As desired, this never drops below a single recursive call.
+
+#+begin_src lisp :results verbatim output :exports both
+  (trace solve-by-layer)
+  (let ((*TRACE-OUTPUT* *STANDARD-OUTPUT*))
+    (solve-by-layer (gen-sequence 4)))
+  (untrace solve-by-layer)
+#+end_src
+
+#+RESULTS:
+#+begin_example
+  0: (SOLVE-BY-LAYER #(0 45 2070 4284945))
+    1: (SOLVE-BY-LAYER #(0 45 2070 4284945) 2 0 0 1 #((0 0) (0 45) (0 2070) (0 4284945)))
+    1: SOLVE-BY-LAYER returned (45 0)
+    1: (SOLVE-BY-LAYER #(0 45 2070 4284945) 2 0 1 2 #((45 0) (0 45) (0 2070) (0 4284945)))
+    1: SOLVE-BY-LAYER returned (2070 45)
+    1: (SOLVE-BY-LAYER #(0 45 2070 4284945) 2 0 2 3 #((45 0) (2070 45) (0 2070) (0 4284945)))
+    1: SOLVE-BY-LAYER returned (4284945 2070)
+    1: (SOLVE-BY-LAYER #(0 45 2070 4284945) 2 1 0 2 #((45 0) (2070 45) (4284945 2070) (0 4284945)))
+    1: SOLVE-BY-LAYER returned (45 2070)
+    1: (SOLVE-BY-LAYER #(0 45 2070 4284945) 2 1 1 3 #((45 2070) (2070 45) (4284945 2070) (0 4284945)))
+    1: SOLVE-BY-LAYER returned (2070 4284990)
+    1: (SOLVE-BY-LAYER #(0 45 2070 4284945) 2 0 0 3 #((45 2070) (2070 4284990) (4284945 2070) (0 4284945)))
+    1: SOLVE-BY-LAYER returned (4284990 2070)
+  0: SOLVE-BY-LAYER returned (4284990 2070)
+#+end_example
+
+For speed, this is unsurprisingly better.
+
+#+begin_src lisp :results verbatim output :exports both
+  (let ((*TRACE-OUTPUT* *STANDARD-OUTPUT*))
+    (time
+     (format t "We did get an answer, at least: ~a~&"
+             (solve-by-layer (gen-sequence (expt 10 4))))))
+#+end_src
+
+#+RESULTS:
+: We did get an answer, at least: (2495838522951 2465448746904)
+: Evaluation took:
+:   3.500 seconds of real time
+:   3.502130 seconds of total run time (3.502111 user, 0.000019 system)
+:   [ Run times consist of 0.040 seconds GC time, and 3.463 seconds non-GC time. ]
+:   100.06% CPU
+:   13,279,585,526 processor cycles
+:   3,200,161,024 bytes consed
+:
+
+Still has me in years of processing time.  :(
+
+* Could I go parallel?
+
+I don't see why not?  Just using threads on my computer is unlikely to
+really help too much, as I don't have that many cores.  I do, however, have
+a GPU I could try with.  Same napkin math has it such that that should
+complete in a few weeks.  Which, yes, is faster than years.  Still feels
+sadly misguided.
+
+* Could I get even more efficient per layer?
+
+Almost certainly.  Drop all of the copies I'm doing above and things should
+get better.  Probably not by enough to matter, annoyingly.  My specific
+target has to drop this by a factor of about a million?  I don't want a
+solution that takes more than a minute or so.
+
+I could also port this to a different runtime.  That would require some
+changes, of course, but the general idea would stay the same.  May give
+this a try.
+
+* Any obvious non $N^2$ algorithms for this?
+
+Not surprisingly, I spent more time writing up the above than I did
+thinking about or doing any of that.  As stated, I wanted a solution that
+could go in less than a minute.  Assuming I was correct in the number of
+decisions, that general direction has a silly floor of months if I shrank
+it down to a few cycles per decision.  Which, is clearly not happening.
+
+Unfortunately, I mostly thought of dead ends to solve it.  The size of the
+decision space was enough that all of the potentially fun ways to implement
+a solution I thought of were not really options.
+
+In particular, I was really hoping I'd see a clever way of using a BDD/ZDD.
+This would be my second use of those.  If there is an easy formulation for
+that, I'm not seeing it.  And since I blew the memory on the basic
+hashtable of all of the solutions, and a BDD node is bigger than a score, I
+haven't even bothered to really do the math of how big the BDD could be.
+
+* How about linear?
+
+Basically, I felt there had to be a linear solution to this.  Largely as I
+don't imagine folks are leaving machines running for a long time to get
+some puzzle answers.  I appreciate that I can be wrong there.
+
+At any rate, if this is the case, I want a solution that is light on the
+backtracking.  Preferrably with none.  After staring at many solutions I
+didn't come up with much.  About the best I can see is that player 1 has a
+clear "floor" on what their high score is.  Specifically, the max of either
+all odd indexed values, or all even indexed.  Annoyingly, this gives the
+"answer" for the first few values.  Is wrong starting at $10^4$, though.
+
+#+begin_src lisp :exports both
+  (let ((counts (list 2 4 100 (expt 10 4))))
+    (loop for n in counts
+          collect (loop with s = (gen-sequence n)
+                        for v across s
+                        for i from 1
+                        if (= 0 (mod i 2))
+                          sum v into even-sum
+                        else
+                          sum v into odd-sum
+                        finally (return (list (max even-sum odd-sum) (min even-sum odd-sum))))))
+#+end_src
+
+#+RESULTS:
+|            45 |             0 |
+|       4284990 |          2070 |
+|   26365463243 |   24078282389 |
+| 2487583914490 | 2473703355365 |
+
+My original hope was that I could concoct an algorithm where player 1 looks
+to steal a number along the way, with a preference to whichever set of
+numbers has the highest sum remaining.  I couldn't come up with one that
+helps for player 2, though.  Their goal is to try to keep the numbers such
+that player 1 doesn't want to steal?  I couldn't find it.
+
+Other ideas involved trying to look at all of the increasing "runs" in the
+number sequence.  The idea being that, along a run of decreasing values,
+the strategy is to just pull from one direction.
+
+To demonstrate, lets get something that shows us the "path."
+
+#+begin_src lisp :exports code
+  (defun solve-showing-work (sequence &optional (num-players 2) cur-player i j (cache (make-array (length sequence)) cache-supplied-p))
+    (cond
+      ;; Overall driver that moves us layer by layer
+      ((not cache-supplied-p)
+       ;;Have to seed the base score
+       (loop for i from 0 below (length sequence)
+             do (setf (elt cache i) (list 0 (elt sequence i)(list (list 'no-choice (elt sequence i))))))
+       ;;Then, mostly proceed as before
+       (loop for inc from 1 below (length sequence)
+             for cur-player = 0 then (setf cur-player (mod (1+ cur-player) num-players))
+             do (loop for j from inc below (length sequence)
+                      do (solve-showing-work sequence num-players cur-player (- j inc) j cache)))
+       (elt cache 0))
+
+      ;;We have to compare left and right.
+      (t
+       (let* ((left-number            (elt sequence i))
+              (right-number           (elt sequence j))
+              (left-opponent-choices  (copy-seq (elt cache (1+ i))))
+              (right-opponent-choices (copy-seq (elt cache i))))
+
+         (push (list 'left left-number) (elt left-opponent-choices 2))
+         (push (list 'right right-number) (elt right-opponent-choices 2))
+
+         (setf (elt cache i)
+               (if (> (incf (elt left-opponent-choices cur-player) left-number)
+                      (incf (elt right-opponent-choices cur-player) right-number))
+                   left-opponent-choices
+                   right-opponent-choices))))))
+#+end_src
+
+#+RESULTS:
+: SOLVE-SHOWING-WORK
+
+With that, a few examples.  First, one that shows a "run" of numbers is
+followed.
+
+#+begin_src lisp :exports both
+  (solve-showing-work #(8 7 6 5 4 3 2 1))
+#+end_src
+
+#+RESULTS:
+| 20 | 16 | ((LEFT 8) (LEFT 7) (LEFT 6) (LEFT 5) (LEFT 4) (LEFT 3) (LEFT 2) (NO-CHOICE 1)) |
+
+Of course, it isn't hard to see how to force alternating left/right
+choices.
+
+#+begin_src lisp
+  (solve-showing-work #(7 5 3 1 2 4 6 8))
+#+end_src
+
+#+RESULTS:
+| 20 | 16 | ((RIGHT 8) (LEFT 7) (RIGHT 6) (LEFT 5) (RIGHT 4) (LEFT 3) (RIGHT 2) (NO-CHOICE 1)) |
+
+And I can't immediately see why this starts from the right before jumping
+to the left.
+
+#+begin_src lisp
+  (solve-showing-work #(10 11 12 13 7 5 3 1 2 4 6 8))
+#+end_src
+
+#+RESULTS:
+| 43 | 39 | ((RIGHT 8) (RIGHT 6) (RIGHT 4) (LEFT 10) (LEFT 11) (LEFT 12) (LEFT 13) (LEFT 7) (LEFT 5) (LEFT 3) (RIGHT 2) (NO-CHOICE 1)) |
