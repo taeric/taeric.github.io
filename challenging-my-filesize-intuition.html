@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-03-20 Mon 13:01 -->
+<!-- 2023-03-20 Mon 13:15 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Challenging My Intuition On File Sizes</title>
@@ -202,23 +202,23 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgdf38baf">How much memory should a file take when you load it?</a></li>
-<li><a href="#org3416e2f">Why do I think things should be smaller?</a></li>
-<li><a href="#org40865af">So, lets take a look at some examples</a>
+<li><a href="#org86f7d69">How much memory should a file take when you load it?</a></li>
+<li><a href="#org6bae6b4">Why do I think things should be smaller?</a></li>
+<li><a href="#org3c1d528">So, lets take a look at some examples</a>
 <ul>
-<li><a href="#org69f3a9a">Unconfirmed Bitcoin Transactions</a></li>
-<li><a href="#orgfa10909">Contiguous US Annual Precipitation</a></li>
-<li><a href="#org2d5cdf0">Monthly Airline Delays by Airport, 2003-2016</a></li>
+<li><a href="#org37e8ba0">Unconfirmed Bitcoin Transactions</a></li>
+<li><a href="#org4259186">Contiguous US Annual Precipitation</a></li>
+<li><a href="#orgdb28e7f">Monthly Airline Delays by Airport, 2003-2016</a></li>
 </ul>
 </li>
-<li><a href="#orge80d8b6">After all of that</a></li>
+<li><a href="#org4710423">After all of that</a></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgdf38baf" class="outline-2">
-<h2 id="orgdf38baf">How much memory should a file take when you load it?</h2>
-<div class="outline-text-2" id="text-orgdf38baf">
+<div id="outline-container-org86f7d69" class="outline-2">
+<h2 id="org86f7d69">How much memory should a file take when you load it?</h2>
+<div class="outline-text-2" id="text-org86f7d69">
 <p>
 In reading <a href="https://thenybble.de/posts/json-analysis/">Analyzing multi-gigabyte JSON files locally</a>, I made the
 comment to some folks that it surprises me that many have the
@@ -236,9 +236,9 @@ Outside of choices that the developer can choose not to make.
 </div>
 </div>
 
-<div id="outline-container-org3416e2f" class="outline-2">
-<h2 id="org3416e2f">Why do I think things should be smaller?</h2>
-<div class="outline-text-2" id="text-org3416e2f">
+<div id="outline-container-org6bae6b4" class="outline-2">
+<h2 id="org6bae6b4">Why do I think things should be smaller?</h2>
+<div class="outline-text-2" id="text-org6bae6b4">
 <p>
 I should be upfront that I am only thinking of data heavy formats that
 are in human readable form.  So, JSON and CSV.  I'm also assuming some
@@ -261,9 +261,9 @@ taking Pandas at face value for how much space it says data is taking.
 </div>
 </div>
 
-<div id="outline-container-org40865af" class="outline-2">
-<h2 id="org40865af">So, lets take a look at some examples</h2>
-<div class="outline-text-2" id="text-org40865af">
+<div id="outline-container-org3c1d528" class="outline-2">
+<h2 id="org3c1d528">So, lets take a look at some examples</h2>
+<div class="outline-text-2" id="text-org3c1d528">
 <p>
 To get a rough idea on this, I first wanted some data I could look at
 that others can also see.  To that end, I did a search for "free json
@@ -282,15 +282,15 @@ only has pandas installed, and then just have the following imports.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python">import pandas as pd
-import json
+<pre class="src src-python"><span style="color: #b6a0ff;">import</span> pandas <span style="color: #b6a0ff;">as</span> pd
+<span style="color: #b6a0ff;">import</span> json
 </pre>
 </div>
 </div>
 
-<div id="outline-container-org69f3a9a" class="outline-3">
-<h3 id="org69f3a9a">Unconfirmed Bitcoin Transactions</h3>
-<div class="outline-text-3" id="text-org69f3a9a">
+<div id="outline-container-org37e8ba0" class="outline-3">
+<h3 id="org37e8ba0">Unconfirmed Bitcoin Transactions</h3>
+<div class="outline-text-3" id="text-org37e8ba0">
 <p>
 The first section included a neat peak at unconfirmed bitcoin
 transactions.  I'm assuming this is live, such that it will not be
@@ -327,14 +327,14 @@ And taking a peek at the file in python.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python">with open('/tmp/unconfirmed-transactions.json') as file:
-    json_data = json.load(file)
-df = pd.DataFrame.from_dict(json_data['txs'])
-df.info(memory_usage='deep')
+<pre class="src src-python"><span style="color: #b6a0ff;">with</span> <span style="color: #f78fe7;">open</span>(<span style="color: #79a8ff;">'/tmp/unconfirmed-transactions.json'</span>) <span style="color: #b6a0ff;">as</span> <span style="color: #f78fe7;">file</span>:
+    <span style="color: #00d3d0;">json_data</span> = json.load(<span style="color: #f78fe7;">file</span>)
+<span style="color: #00d3d0;">df</span> = pd.DataFrame.from_dict(json_data[<span style="color: #79a8ff;">'txs'</span>])
+df.info(memory_usage=<span style="color: #79a8ff;">'deep'</span>)
 </pre>
 </div>
 
-<pre class="example" id="org88f03e1">
+<pre class="example" id="org7d3c611">
 &lt;class 'pandas.core.frame.DataFrame'&gt;
 RangeIndex: 100 entries, 0 to 99
 Data columns (total 17 columns):
@@ -372,9 +372,9 @@ On to the next example, then.
 </div>
 </div>
 
-<div id="outline-container-orgfa10909" class="outline-3">
-<h3 id="orgfa10909">Contiguous US Annual Precipitation</h3>
-<div class="outline-text-3" id="text-orgfa10909">
+<div id="outline-container-org4259186" class="outline-3">
+<h3 id="org4259186">Contiguous US Annual Precipitation</h3>
+<div class="outline-text-3" id="text-org4259186">
 <p>
 Next in that website was Climate data.  I arbitrarily chose the last
 item there, and changed the url to include up to 2023.
@@ -411,10 +411,10 @@ learn here.  Still, basic loading in python gives me:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python">with open('/tmp/precipitation.json') as file:
-    json_data = json.load(file)
-df = pd.DataFrame.from_dict(json_data['data'],orient='index')
-df.info(memory_usage='deep')
+<pre class="src src-python"><span style="color: #b6a0ff;">with</span> <span style="color: #f78fe7;">open</span>(<span style="color: #79a8ff;">'/tmp/precipitation.json'</span>) <span style="color: #b6a0ff;">as</span> <span style="color: #f78fe7;">file</span>:
+    <span style="color: #00d3d0;">json_data</span> = json.load(<span style="color: #f78fe7;">file</span>)
+<span style="color: #00d3d0;">df</span> = pd.DataFrame.from_dict(json_data[<span style="color: #79a8ff;">'data'</span>],orient=<span style="color: #79a8ff;">'index'</span>)
+df.info(memory_usage=<span style="color: #79a8ff;">'deep'</span>)
 </pre>
 </div>
 
@@ -458,10 +458,10 @@ point numbers lets just try using float.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python">with open('/tmp/precipitation.json') as file:
-    json_data = json.load(file)
-df = pd.DataFrame.from_dict(json_data['data'],orient='index',dtype='float')
-df.info(memory_usage='deep')
+<pre class="src src-python"><span style="color: #b6a0ff;">with</span> <span style="color: #f78fe7;">open</span>(<span style="color: #79a8ff;">'/tmp/precipitation.json'</span>) <span style="color: #b6a0ff;">as</span> <span style="color: #f78fe7;">file</span>:
+    <span style="color: #00d3d0;">json_data</span> = json.load(<span style="color: #f78fe7;">file</span>)
+<span style="color: #00d3d0;">df</span> = pd.DataFrame.from_dict(json_data[<span style="color: #79a8ff;">'data'</span>],orient=<span style="color: #79a8ff;">'index'</span>,dtype=<span style="color: #79a8ff;">'float'</span>)
+df.info(memory_usage=<span style="color: #79a8ff;">'deep'</span>)
 </pre>
 </div>
 
@@ -485,11 +485,11 @@ data we see that none of these are gigantic or that precise of data.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python">with open('/tmp/precipitation.json') as file:
-    json_data = json.load(file)
-df = pd.DataFrame.from_dict(json_data['data'],orient='index',dtype='float32')
-df.index = pd.to_datetime(df.index, format="%Y%m")
-df.info(memory_usage='deep')
+<pre class="src src-python"><span style="color: #b6a0ff;">with</span> <span style="color: #f78fe7;">open</span>(<span style="color: #79a8ff;">'/tmp/precipitation.json'</span>) <span style="color: #b6a0ff;">as</span> <span style="color: #f78fe7;">file</span>:
+    <span style="color: #00d3d0;">json_data</span> = json.load(<span style="color: #f78fe7;">file</span>)
+<span style="color: #00d3d0;">df</span> = pd.DataFrame.from_dict(json_data[<span style="color: #79a8ff;">'data'</span>],orient=<span style="color: #79a8ff;">'index'</span>,dtype=<span style="color: #79a8ff;">'float32'</span>)
+df.<span style="color: #00d3d0;">index</span> = pd.to_datetime(df.index, <span style="color: #f78fe7;">format</span>=<span style="color: #79a8ff;">"%Y%m"</span>)
+df.info(memory_usage=<span style="color: #79a8ff;">'deep'</span>)
 </pre>
 </div>
 
@@ -513,9 +513,9 @@ surprised me.  Still, again we are way smaller than what was on disk.
 </div>
 </div>
 
-<div id="outline-container-org2d5cdf0" class="outline-3">
-<h3 id="org2d5cdf0">Monthly Airline Delays by Airport, 2003-2016</h3>
-<div class="outline-text-3" id="text-org2d5cdf0">
+<div id="outline-container-orgdb28e7f" class="outline-3">
+<h3 id="orgdb28e7f">Monthly Airline Delays by Airport, 2003-2016</h3>
+<div class="outline-text-3" id="text-orgdb28e7f">
 <p>
 I confess I was already losing interest, in this idea.  So far, I have
 not found anything to challenge my intuition too terribly.  Which,
@@ -557,14 +557,14 @@ And the naive loading into python?
 </p>
 
 <div class="org-src-container">
-<pre class="src src-python">with open('/tmp/airline-delays.json') as file:
-    json_data = json.load(file)
-df = pd.json_normalize(json_data)
-df.info(memory_usage='deep')
+<pre class="src src-python"><span style="color: #b6a0ff;">with</span> <span style="color: #f78fe7;">open</span>(<span style="color: #79a8ff;">'/tmp/airline-delays.json'</span>) <span style="color: #b6a0ff;">as</span> <span style="color: #f78fe7;">file</span>:
+    <span style="color: #00d3d0;">json_data</span> = json.load(<span style="color: #f78fe7;">file</span>)
+<span style="color: #00d3d0;">df</span> = pd.json_normalize(json_data)
+df.info(memory_usage=<span style="color: #79a8ff;">'deep'</span>)
 </pre>
 </div>
 
-<pre class="example" id="org07b636d">
+<pre class="example" id="orgf21461c">
 &lt;class 'pandas.core.frame.DataFrame'&gt;
 RangeIndex: 4408 entries, 0 to 4407
 Data columns (total 24 columns):
@@ -606,9 +606,9 @@ smaller.  So, I'm not going to bother looking for ways to shrink this.
 </div>
 </div>
 
-<div id="outline-container-orge80d8b6" class="outline-2">
-<h2 id="orge80d8b6">After all of that</h2>
-<div class="outline-text-2" id="text-orge80d8b6">
+<div id="outline-container-org4710423" class="outline-2">
+<h2 id="org4710423">After all of that</h2>
+<div class="outline-text-2" id="text-org4710423">
 <p>
 As I said in the last example, I am actually worried I didn't find any
 examples that were counter to my intuition here.  That worries me more
@@ -640,7 +640,7 @@ destroy this intuition of mine, I'd be delighted to see them.
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh Berry</p>
-<p class="date">Created: 2023-03-20 Mon 13:01</p>
+<p class="date">Created: 2023-03-20 Mon 13:15</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
