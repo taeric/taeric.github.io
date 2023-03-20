@@ -1,0 +1,293 @@
+#+TITLE: Challenging My Intuition On File Sizes
+#+OPTIONS: num:nil
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
+
+* How much memory should a file take when you load it?
+
+In reading [[https://thenybble.de/posts/json-analysis/][Analyzing multi-gigabyte JSON files locally]], I made the
+comment to some folks that it surprises me that many have the
+intuition that files will be larger in memory than they are on disk.
+Oddly, I was not in large company feeling this.  Most everyone I
+directly chatted with assumed things would be larger in memory than on
+disk.
+
+This intuition still feels wrong to me.  At face value, I don't see
+why things should take more space in memory than they do on disk.
+Outside of choices that the developer can choose not to make.
+
+* Why do I think things should be smaller?
+
+I should be upfront that I am only thinking of data heavy formats that
+are in human readable form.  So, JSON and CSV.  I'm also assuming some
+familiarity with the data such that you don't have to load it in the
+most dynamic way that you can.
+
+To that end, if you don't know anything about what you are loading, I
+can understand you may make some choices that cause an explosion.
+This is particularly true for Pandas usage.  A fast load of data using
+the defaults is easy to use, but terrible for memory usage.
+
+I should also caveat that I do not plan on getting too deep peaking at
+how much ram my processes are taking up.  Specifically, I will just be
+taking Pandas at face value for how much space it says data is taking.
+
+* So, lets take a look at some examples
+
+To get a rough idea on this, I first wanted some data I could look at
+that others can also see.  To that end, I did a search for "free json
+data sets."  Top result was [[https://github.com/jdorfman/awesome-json-datasets][Awesome JSON Datasets]].  Seemed to fit the
+bill just fine.
+
+I opted to pick a few and then got bored.  This is what all I saw
+before the boredom really kicked in.
+
+For the purposes of all code that follows, I setup a basic venv that
+only has pandas installed, and then just have the following imports.
+
+#+begin_src python :session file-to-data-sizes :exports code
+  import pandas as pd
+  import json
+#+end_src
+
+** Unconfirmed Bitcoin Transactions
+
+The first section included a neat peak at unconfirmed bitcoin
+transactions.  I'm assuming this is live, such that it will not be
+possible to fully recreate my numbers here, but still fun to look at.
+
+Peeking, the file I have is how big?
+
+#+begin_src shell :exports both
+  du -h /tmp/unconfirmed-transactions.json
+#+end_src
+
+#+RESULTS:
+| 212K | /tmp/unconfirmed-transactions.json |
+
+And taking a peek at the file in python.
+
+#+begin_src python :session file-to-data-sizes :exports both :results output
+  with open('/tmp/unconfirmed-transactions.json') as file:
+      json_data = json.load(file)
+  df = pd.DataFrame.from_dict(json_data['txs'])
+  df.info(memory_usage='deep')
+#+end_src
+
+#+RESULTS:
+#+begin_example
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 100 entries, 0 to 99
+Data columns (total 17 columns):
+ #   Column        Non-Null Count  Dtype
+---  ------        --------------  -----
+ 0   hash          100 non-null    object
+ 1   ver           100 non-null    int64
+ 2   vin_sz        100 non-null    int64
+ 3   vout_sz       100 non-null    int64
+ 4   size          100 non-null    int64
+ 5   weight        100 non-null    int64
+ 6   fee           100 non-null    int64
+ 7   relayed_by    100 non-null    object
+ 8   lock_time     100 non-null    int64
+ 9   tx_index      100 non-null    int64
+ 10  double_spend  100 non-null    bool
+ 11  time          100 non-null    int64
+ 12  block_index   0 non-null      object
+ 13  block_height  0 non-null      object
+ 14  inputs        100 non-null    object
+ 15  out           100 non-null    object
+ 16  rbf           39 non-null     object
+dtypes: bool(1), int64(9), object(7)
+memory usage: 50.5 KB
+#+end_example
+
+I confess I was expecting this to be larger than the on disk items.
+As things stand, this is a win without even trying.
+
+On to the next example, then.
+
+** Contiguous US Annual Precipitation
+
+Next in that website was Climate data.  I arbitrarily chose the last
+item there, and changed the url to include up to 2023.
+
+Again, peeking at the file.
+
+#+begin_src shell :exports both
+  du -h /tmp/precipitation.json
+#+end_src
+
+#+RESULTS:
+| 8.0K | /tmp/precipitation.json |
+
+This is a somewhat laughably small file, so not expecting too much to
+learn here.  Still, basic loading in python gives me:
+
+#+begin_src python :session file-to-data-sizes :exports both :results output
+  with open('/tmp/precipitation.json') as file:
+      json_data = json.load(file)
+  df = pd.DataFrame.from_dict(json_data['data'],orient='index')
+  df.info(memory_usage='deep')
+#+end_src
+
+#+RESULTS:
+: <class 'pandas.core.frame.DataFrame'>
+: Index: 122 entries, 189512 to 201612
+: Data columns (total 2 columns):
+:  #   Column   Non-Null Count  Dtype
+: ---  ------   --------------  -----
+:  0   value    122 non-null    object
+:  1   anomaly  122 non-null    object
+: dtypes: object(2)
+: memory usage: 22.2 KB
+
+Sure enough, using well over double the ram than the file size.  Why
+is that?  Biggest smoking gun there is the "object" data type.
+Peeking at the data, what do we see?
+
+#+begin_src python :session file-to-data-sizes :exports both
+  df.head()
+#+end_src
+
+#+RESULTS:
+:         value anomaly
+: 189512  27.55   -2.58
+: 189612  29.77   -0.36
+: 189712  29.70   -0.43
+: 189812  29.57   -0.56
+: 189912  28.71   -1.42
+
+Small numbers, but not in a numeric type.  Since they are all floating
+point numbers lets just try using float.
+
+#+begin_src python :session file-to-data-sizes :exports both :results output
+  with open('/tmp/precipitation.json') as file:
+      json_data = json.load(file)
+  df = pd.DataFrame.from_dict(json_data['data'],orient='index',dtype='float')
+  df.info(memory_usage='deep')
+#+end_src
+
+#+RESULTS:
+: <class 'pandas.core.frame.DataFrame'>
+: Index: 122 entries, 189512 to 201612
+: Data columns (total 2 columns):
+:  #   Column   Non-Null Count  Dtype
+: ---  ------   --------------  -----
+:  0   value    122 non-null    float64
+:  1   anomaly  122 non-null    float64
+: dtypes: float64(2)
+: memory usage: 9.4 KB
+
+Already, we are back on par with the original file size.  We can also
+clean up the index, to see if that helps sizes, and peeking at the
+data we see that none of these are gigantic or that precise of data.
+
+#+begin_src python :session file-to-data-sizes :exports both :results output
+  with open('/tmp/precipitation.json') as file:
+      json_data = json.load(file)
+  df = pd.DataFrame.from_dict(json_data['data'],orient='index',dtype='float32')
+  df.index = pd.to_datetime(df.index, format="%Y%m")
+  df.info(memory_usage='deep')
+#+end_src
+
+#+RESULTS:
+: <class 'pandas.core.frame.DataFrame'>
+: DatetimeIndex: 122 entries, 1895-12-01 to 2016-12-01
+: Data columns (total 2 columns):
+:  #   Column   Non-Null Count  Dtype
+: ---  ------   --------------  -----
+:  0   value    122 non-null    float32
+:  1   anomaly  122 non-null    float32
+: dtypes: float32(2)
+: memory usage: 1.9 KB
+
+Most of that savings is from the index change, which I confess
+surprised me.  Still, again we are way smaller than what was on disk.
+
+** Monthly Airline Delays by Airport, 2003-2016
+
+I confess I was already losing interest, in this idea.  So far, I have
+not found anything to challenge my intuition too terribly.  Which,
+actually scares me more than validates me.
+
+Still, one last data set that looks neat.  The airline delays.
+Peeking at the data in my browser, this one was at least far more
+structured, such that I expect it will be larger.  More, it has a lot
+of text, which is exactly what was predicted to make things larger in
+memory.
+
+#+begin_src shell :exports both
+  du -h /tmp/airline-delays.json
+#+end_src
+
+#+RESULTS:
+| 4.8M | /tmp/airline-delays.json |
+
+
+And the naive loading into python?
+
+#+begin_src python :session file-to-data-sizes :exports both :results output
+  with open('/tmp/airline-delays.json') as file:
+      json_data = json.load(file)
+  df = pd.json_normalize(json_data)
+  df.info(memory_usage='deep')
+#+end_src
+
+#+RESULTS:
+#+begin_example
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 4408 entries, 0 to 4407
+Data columns (total 24 columns):
+ #   Column                                               Non-Null Count  Dtype
+---  ------                                               --------------  -----
+ 0   Airport.Code                                         4408 non-null   object
+ 1   Airport.Name                                         4408 non-null   object
+ 2   Time.Label                                           4408 non-null   object
+ 3   Time.Month                                           4408 non-null   int64
+ 4   Time.Month Name                                      4408 non-null   object
+ 5   Time.Year                                            4408 non-null   int64
+ 6   Statistics.# of Delays.Carrier                       4408 non-null   int64
+ 7   Statistics.# of Delays.Late Aircraft                 4408 non-null   int64
+ 8   Statistics.# of Delays.National Aviation System      4408 non-null   int64
+ 9   Statistics.# of Delays.Security                      4408 non-null   int64
+ 10  Statistics.# of Delays.Weather                       4408 non-null   int64
+ 11  Statistics.Carriers.Names                            4408 non-null   object
+ 12  Statistics.Carriers.Total                            4408 non-null   int64
+ 13  Statistics.Flights.Cancelled                         4408 non-null   int64
+ 14  Statistics.Flights.Delayed                           4408 non-null   int64
+ 15  Statistics.Flights.Diverted                          4408 non-null   int64
+ 16  Statistics.Flights.On Time                           4408 non-null   int64
+ 17  Statistics.Flights.Total                             4408 non-null   int64
+ 18  Statistics.Minutes Delayed.Carrier                   4408 non-null   int64
+ 19  Statistics.Minutes Delayed.Late Aircraft             4408 non-null   int64
+ 20  Statistics.Minutes Delayed.National Aviation System  4408 non-null   int64
+ 21  Statistics.Minutes Delayed.Security                  4408 non-null   int64
+ 22  Statistics.Minutes Delayed.Total                     4408 non-null   int64
+ 23  Statistics.Minutes Delayed.Weather                   4408 non-null   int64
+dtypes: int64(19), object(5)
+memory usage: 3.2 MB
+#+end_example
+
+That said, without even having to look for tricks, the data is already
+smaller.  So, I'm not going to bother looking for ways to shrink this.
+
+* After all of that
+
+As I said in the last example, I am actually worried I didn't find any
+examples that were counter to my intuition here.  That worries me more
+than it gives me confidence.  There were a lot of folks discussing how
+it makes sense that "in memory" for a data set would be bigger than
+"on disk."
+
+My gut is that they deal with far more textual data than I expect.
+That or they have been bitten by turning data into objects too often.
+A common trap I remember setting for myself back in the day, was to
+build an object model in java, and then try to serialize a lot of data
+into collections of these objects.
+
+Still, I'm very open to the idea that my looking here is flawed.
+Perhaps I shouldn't be taking Pandas' word on how much memory it is
+using?
+
+On the off chance anyone I know has good examples that successfully
+destroy this intuition of mine, I'd be delighted to see them.

@@ -22,6 +22,9 @@
      construct a tree given the in-order and pre-order values of it.
    - [[file:trading-with-bdds.org][Trading with BDDs]]: In which I almost certainly butcher my first
      attempt at using a binary decision diagram
+   - [[file:challenging-my-filesize-intuition.org][Challenging my intuition on file sizes]]: In which I try to see if
+     I am unreasonable to expect data loaded into memory should be
+     smaller than on disk.
 
 
 * I'm probably wrong.
