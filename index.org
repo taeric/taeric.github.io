@@ -25,6 +25,8 @@
    - [[file:challenging-my-filesize-intuition.org][Challenging my intuition on file sizes]]: In which I try to see if
      I am unreasonable to expect data loaded into memory should be
      smaller than on disk.
+   - [[file:reflecting-on-engineers-path.Org][Reflecting on the Staff Engineer's Path]]: Book I read in a mini
+     reading club online and my thoughts from the read.
 
 
 * I'm probably wrong.

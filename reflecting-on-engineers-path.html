@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2023-05-14 Sun 14:23 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Reflecting on The Staff Engineer's Path.</title>
+<meta name="author" content="Josh Berry" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="org-overrides.css" />
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Reflecting on The Staff Engineer's Path.</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org32c1675">Getting started</a></li>
+<li><a href="#org02aee23">My understanding of a staff level position, per the book.</a></li>
+<li><a href="#org6cb33fb">My first major disagreement</a></li>
+<li><a href="#orgbb21279">Does anyone really work places where local maximums rule?</a></li>
+<li><a href="#org9fccbb5">Winning friends and influence</a></li>
+<li><a href="#orgcccbf50">I almost stopped reading about writing a document</a></li>
+<li><a href="#orgcceeded">I do still recommend the book</a></li>
+</ul>
+</div>
+</div>
+<p>
+I hesitate to call this a book review, as I don't really even know how
+to do a book report anymore.  Been far far too long.  At any rate, as
+I try to get a hold of my path in programming and how I can contribute
+to things, I did find <a href="https://www.amazon.com/Staff-Engineers-Path-Tanya-Reilly-ebook/dp/B0BG16Y553">The Staff Engineer's Path</a> a compelling read.
+This will be my attempt at reflecting on why.
+</p>
+
+<div id="outline-container-org32c1675" class="outline-2">
+<h2 id="org32c1675">Getting started</h2>
+<div class="outline-text-2" id="text-org32c1675">
+<p>
+The book starts with a fun set of explorations on the idea of "where
+do you see yourself in five years?"  As in the book, I view this as
+mainly having socially acceptable answers.  I am not sure I agree with
+thinking of this as a serious question.  This view of mine has only
+grown more as I have grown a family.
+</p>
+
+<p>
+I do, at least, find comfort that the exploration admits to just how
+similar senior positions are.  That said, I found that the book does a
+lot to weaken the general idea that we are seriously looking at viable
+paths to meaningful tenure for individual contributor style positions.
+</p>
+
+<p>
+My gripes start in the introduction.  It is not hard to reframe all of
+the "pillars" into essentially getting lucky for far too many people.
+Worse, they are framed in a very "just so" style for why things are
+more important and need "more seniority."
+</p>
+</div>
+</div>
+
+<div id="outline-container-org02aee23" class="outline-2">
+<h2 id="org02aee23">My understanding of a staff level position, per the book.</h2>
+<div class="outline-text-2" id="text-org02aee23">
+<p>
+The book lays out a general framework for how knowledge and experience
+are foundations for holding up "big picture thinking," "project
+execution," and "leveling up" as pillars to "Impact."
+</p>
+
+<p>
+Yes, this is clearly intentionally vague and somewhat hand wavy and at
+face value, I don't mind that.  Perspective does give way to keeping
+things hand wavy so that you don't find people only running checklists
+for what is expected of them.  "Fly casually" perfectly captures the
+general idea for many things.
+</p>
+
+<p>
+However, I never really got a concrete sense of what was intended.
+The best I came away with was that staff engineers are those that
+worked on successful projects.  But, that is a very unsatisfactory
+explanation to me.  In large because it is trivial to see that the
+paths outlined in this book are insufficient to explain so many
+successful people and projects.
+</p>
+
+<p>
+Worse, though, is that the straw man scenarios dreamed up to justify
+many of the assertions are painfully dry.  To the point that I just
+can't find inspiration in them.  Nor can I see generalizations that
+seem promised.
+</p>
+
+<p>
+More personally, I've been on successful projects where people got
+promoted and everyone had to live with the complexity that they
+demanded so that they could get that promotion.  I think it is equally
+a straw man to say that we solely promote complexity, but I have to
+acknowledge I've seen a lot of real life straw men.  (I think this is
+a valid check against me, that I cannot dismiss the talking in this
+book as only straw man.)
+</p>
+
+<p>
+By the end of the book, I think I have come to an understanding that
+"staff" level positions are viewed heavily as public performance
+positions.  Not in a negative way, but the role seems easiest to
+summarize as "people that are willing to do things publicly, have had
+successes, and are generally able to get teams to work together."
+</p>
+</div>
+</div>
+
+<div id="outline-container-org6cb33fb" class="outline-2">
+<h2 id="org6cb33fb">My first major disagreement</h2>
+<div class="outline-text-2" id="text-org6cb33fb">
+<p>
+I should confess that my first real disagreement came from a sidebar
+about titles.  At large, I don't have a lot of respect for
+hierarchies.  Which tends to mean I don't have too much respect for
+bolstering titles.
+</p>
+
+<p>
+Up front, I certainly agree that titles matter to some people.
+Usually, though, they mainly only matter at the extremes.  This is all
+the more true for titles that are not tied to accomplishments or
+direct responsibilities.  If you are at a small company and called
+"Principal Engineer," what does that really tell me about what you are
+capable of or responsible for?  I used to be at a large company and
+even there I couldn't really tell you what it meant.
+</p>
+
+<p>
+Now, I do not intend this as a criticism of anyone that allows titles
+to be given, but I have to acknowledge my bias against the idea.  Have
+I worked with some amazing "Principal" level engineers?  Absolutely.
+But I have also worked with some that I felt did their best to
+complicate the situation to an obvious stallout.  Such that the title
+alone isn't enough to prime me for what to expect.
+</p>
+
+<p>
+More telling, the best principal engineer I ever had the privilege to
+work with did not seem to care what anyone's title in the room was.
+Such that even agreeing that care should be taken in giving out
+titles, I view that largely as yet another bias that should be worked
+against.  Not built upon.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgbb21279" class="outline-2">
+<h2 id="orgbb21279">Does anyone really work places where local maximums rule?</h2>
+<div class="outline-text-2" id="text-orgbb21279">
+<p>
+Back to the first section, then, the need for "staff engineers" was
+mainly outlined as "for the overall good of the company, over the
+local desires of a team."  That is, A large part of the need for "big
+picture thinking" was to make sure decisions were contextualized so
+that choices are made that maximize value across the company.  The
+idea being that many teams would normally choose their cheapest
+option, even if that was not the best value for the everyone.
+</p>
+
+<p>
+I can confess that I have seen a few choices like this made.  However,
+not nearly as often as is usually put forth.  Far too often, teams are
+so lean in staffing and resources that they aren't choosing a cheap
+option for the sake of being cheap, but for the sake of survival and
+progress.
+</p>
+
+<p>
+I hesitate to flat out dismiss this idea, but it would be more
+compelling with larger examples of success from such choices.  Maybe I
+missed them, but I don't remember any.  Instead, it was your general
+charts showing value of the two choices available, with the obvious
+"you should pick the bigger value."
+</p>
+</div>
+</div>
+
+<div id="outline-container-org9fccbb5" class="outline-2">
+<h2 id="org9fccbb5">Winning friends and influence</h2>
+<div class="outline-text-2" id="text-org9fccbb5">
+<p>
+So much of the rest of the book feels like a distillation of how to
+navigate in a political environment.  From looking at where you sit in
+an overall organization hierarchy to knowing who to talk to in other
+parts of the company.
+</p>
+
+<p>
+To be clear, I think a lot of this is good advice.  I do think keeping
+perspective on who you are talking to is important.  I also think it
+is a great idea to build channels of communication between groups that
+aren't talking, for some reason.
+</p>
+
+<p>
+I'm not sure any of this should be confined to "staff" level
+developers, though.  Certainly, entry level positions are best kept
+from having to find everything out on their own.  They can still be
+given opportunities to do so, though.
+</p>
+
+<p>
+Similarly, the sections that go over political capital and costs are
+things that are easier for established people.  A brand new person on
+a team will almost certainly not have the reputation necessary to have
+given them political capital in an organization.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgcccbf50" class="outline-2">
+<h2 id="orgcccbf50">I almost stopped reading about writing a document</h2>
+<div class="outline-text-2" id="text-orgcccbf50">
+<p>
+My largest gripe on the entire book was the entire section about
+writing a document.  This section started out appealing to me with a
+general idea of getting a vision created.  I was thinking it would be
+like an earlier piece on writing a "personal scope document" about
+where you feel you fit in.
+</p>
+
+<p>
+I do think a general set of guiding principles is a great idea.  I
+further enjoy the idea of trying to make a narrative of what is being
+targetted.  So many things can fall apart trying to make sense of them
+in a narrative, such that you can save a ton of development time by
+realizing you don't actually have a destination.
+</p>
+
+<p>
+But, I lost the train when sections are justifying the need to have a
+director level sponsor for the document.  And having a team built for
+the purpose of building the document.  Which ostensibly is for the
+purpose of building something else?
+</p>
+
+<p>
+Again, it isn't that I even disagree with the general idea.  Yes, you
+need leadership buyin on anything that you are wanting to push for.
+Yes, you should have a general vision.  Yes, you should plan out what
+you are going to do.  You should have a general idea of what you will
+do when you progress to certain points.  All great points.
+</p>
+
+<p>
+However, I have yet to ever work on anything that was kicked off with
+a multi month document building process that did not immediately stall
+out or find that it was, at best, solving last year's problems.
+Worse, when these documents are treated as the public performance that
+they are, it is common for them to be packed with aspirational
+requirements that are not based on learned necesseties.
+</p>
+
+<p>
+That last point, I believe, is why we get so much of what is commonly
+called "cargo cult engineering."  People see a solution that worked
+somewhere else and immediately try to graft either that solution, or
+their situation, into a place it may or may not fit.  And then you get
+so coupled to a vision of what people wanted to be able to build, that
+you are not ready or capable to pivot out.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgcceeded" class="outline-2">
+<h2 id="orgcceeded">I do still recommend the book</h2>
+<div class="outline-text-2" id="text-orgcceeded">
+<p>
+Despite my grievances on titles and teams to build a document, I think
+I still recommend the book.  The general idea of trying to get better
+still resonates very well and there are plenty of sections that I
+think can be molded to many situations a developer is likely to find
+themselves in.
+</p>
+
+<p>
+I also think I should be challenged on the parts I disagree with.
+Such that I would be delighted to have anyone give examples of where
+these things actually worked out in the wild.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Josh Berry</p>
+<p class="date">Created: 2023-05-14 Sun 14:23</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

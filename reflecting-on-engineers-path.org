@@ -1,0 +1,188 @@
+#+title: Reflecting on The Staff Engineer's Path.
+#+OPTIONS: num:nil
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
+
+I hesitate to call this a book review, as I don't really even know how
+to do a book report anymore.  Been far far too long.  At any rate, as
+I try to get a hold of my path in programming and how I can contribute
+to things, I did find [[https://www.amazon.com/Staff-Engineers-Path-Tanya-Reilly-ebook/dp/B0BG16Y553][The Staff Engineer's Path]] a compelling read.
+This will be my attempt at reflecting on why.
+
+* Getting started
+
+The book starts with a fun set of explorations on the idea of "where
+do you see yourself in five years?"  As in the book, I view this as
+mainly having socially acceptable answers.  I am not sure I agree with
+thinking of this as a serious question.  This view of mine has only
+grown more as I have grown a family.
+
+I do, at least, find comfort that the exploration admits to just how
+similar senior positions are.  That said, I found that the book does a
+lot to weaken the general idea that we are seriously looking at viable
+paths to meaningful tenure for individual contributor style positions.
+
+My gripes start in the introduction.  It is not hard to reframe all of
+the "pillars" into essentially getting lucky for far too many people.
+Worse, they are framed in a very "just so" style for why things are
+more important and need "more seniority."
+
+* My understanding of a staff level position, per the book.
+
+The book lays out a general framework for how knowledge and experience
+are foundations for holding up "big picture thinking," "project
+execution," and "leveling up" as pillars to "Impact."
+
+Yes, this is clearly intentionally vague and somewhat hand wavy and at
+face value, I don't mind that.  Perspective does give way to keeping
+things hand wavy so that you don't find people only running checklists
+for what is expected of them.  "Fly casually" perfectly captures the
+general idea for many things.
+
+However, I never really got a concrete sense of what was intended.
+The best I came away with was that staff engineers are those that
+worked on successful projects.  But, that is a very unsatisfactory
+explanation to me.  In large because it is trivial to see that the
+paths outlined in this book are insufficient to explain so many
+successful people and projects.
+
+Worse, though, is that the straw man scenarios dreamed up to justify
+many of the assertions are painfully dry.  To the point that I just
+can't find inspiration in them.  Nor can I see generalizations that
+seem promised.
+
+More personally, I've been on successful projects where people got
+promoted and everyone had to live with the complexity that they
+demanded so that they could get that promotion.  I think it is equally
+a straw man to say that we solely promote complexity, but I have to
+acknowledge I've seen a lot of real life straw men.  (I think this is
+a valid check against me, that I cannot dismiss the talking in this
+book as only straw man.)
+
+By the end of the book, I think I have come to an understanding that
+"staff" level positions are viewed heavily as public performance
+positions.  Not in a negative way, but the role seems easiest to
+summarize as "people that are willing to do things publicly, have had
+successes, and are generally able to get teams to work together."
+
+* My first major disagreement
+
+I should confess that my first real disagreement came from a sidebar
+about titles.  At large, I don't have a lot of respect for
+hierarchies.  Which tends to mean I don't have too much respect for
+bolstering titles.
+
+Up front, I certainly agree that titles matter to some people.
+Usually, though, they mainly only matter at the extremes.  This is all
+the more true for titles that are not tied to accomplishments or
+direct responsibilities.  If you are at a small company and called
+"Principal Engineer," what does that really tell me about what you are
+capable of or responsible for?  I used to be at a large company and
+even there I couldn't really tell you what it meant.
+
+Now, I do not intend this as a criticism of anyone that allows titles
+to be given, but I have to acknowledge my bias against the idea.  Have
+I worked with some amazing "Principal" level engineers?  Absolutely.
+But I have also worked with some that I felt did their best to
+complicate the situation to an obvious stallout.  Such that the title
+alone isn't enough to prime me for what to expect.
+
+More telling, the best principal engineer I ever had the privilege to
+work with did not seem to care what anyone's title in the room was.
+Such that even agreeing that care should be taken in giving out
+titles, I view that largely as yet another bias that should be worked
+against.  Not built upon.
+
+* Does anyone really work places where local maximums rule?
+
+Back to the first section, then, the need for "staff engineers" was
+mainly outlined as "for the overall good of the company, over the
+local desires of a team."  That is, A large part of the need for "big
+picture thinking" was to make sure decisions were contextualized so
+that choices are made that maximize value across the company.  The
+idea being that many teams would normally choose their cheapest
+option, even if that was not the best value for the everyone.
+
+I can confess that I have seen a few choices like this made.  However,
+not nearly as often as is usually put forth.  Far too often, teams are
+so lean in staffing and resources that they aren't choosing a cheap
+option for the sake of being cheap, but for the sake of survival and
+progress.
+
+I hesitate to flat out dismiss this idea, but it would be more
+compelling with larger examples of success from such choices.  Maybe I
+missed them, but I don't remember any.  Instead, it was your general
+charts showing value of the two choices available, with the obvious
+"you should pick the bigger value."
+
+* Winning friends and influence
+
+So much of the rest of the book feels like a distillation of how to
+navigate in a political environment.  From looking at where you sit in
+an overall organization hierarchy to knowing who to talk to in other
+parts of the company.
+
+To be clear, I think a lot of this is good advice.  I do think keeping
+perspective on who you are talking to is important.  I also think it
+is a great idea to build channels of communication between groups that
+aren't talking, for some reason.
+
+I'm not sure any of this should be confined to "staff" level
+developers, though.  Certainly, entry level positions are best kept
+from having to find everything out on their own.  They can still be
+given opportunities to do so, though.
+
+Similarly, the sections that go over political capital and costs are
+things that are easier for established people.  A brand new person on
+a team will almost certainly not have the reputation necessary to have
+given them political capital in an organization.
+
+* I almost stopped reading about writing a document
+
+My largest gripe on the entire book was the entire section about
+writing a document.  This section started out appealing to me with a
+general idea of getting a vision created.  I was thinking it would be
+like an earlier piece on writing a "personal scope document" about
+where you feel you fit in.
+
+I do think a general set of guiding principles is a great idea.  I
+further enjoy the idea of trying to make a narrative of what is being
+targetted.  So many things can fall apart trying to make sense of them
+in a narrative, such that you can save a ton of development time by
+realizing you don't actually have a destination.
+
+But, I lost the train when sections are justifying the need to have a
+director level sponsor for the document.  And having a team built for
+the purpose of building the document.  Which ostensibly is for the
+purpose of building something else?
+
+Again, it isn't that I even disagree with the general idea.  Yes, you
+need leadership buyin on anything that you are wanting to push for.
+Yes, you should have a general vision.  Yes, you should plan out what
+you are going to do.  You should have a general idea of what you will
+do when you progress to certain points.  All great points.
+
+However, I have yet to ever work on anything that was kicked off with
+a multi month document building process that did not immediately stall
+out or find that it was, at best, solving last year's problems.
+Worse, when these documents are treated as the public performance that
+they are, it is common for them to be packed with aspirational
+requirements that are not based on learned necesseties.
+
+That last point, I believe, is why we get so much of what is commonly
+called "cargo cult engineering."  People see a solution that worked
+somewhere else and immediately try to graft either that solution, or
+their situation, into a place it may or may not fit.  And then you get
+so coupled to a vision of what people wanted to be able to build, that
+you are not ready or capable to pivot out.
+
+* I do still recommend the book
+
+Despite my grievances on titles and teams to build a document, I think
+I still recommend the book.  The general idea of trying to get better
+still resonates very well and there are plenty of sections that I
+think can be molded to many situations a developer is likely to find
+themselves in.
+
+I also think I should be challenged on the parts I disagree with.
+Such that I would be delighted to have anyone give examples of where
+these things actually worked out in the wild.
