@@ -19,6 +19,8 @@ install will get everything you need for these to work.
   import cv2
 #+end_src
 
+#+RESULTS:
+
 To get started, we'll first make a QR code and see what it looks like.
 I do make it larger, but that is just so I can see it easily.
 
@@ -38,11 +40,11 @@ And reading that code back in?
 
 #+begin_src python :session opencv :exports both
   qr_detector = cv2.QRCodeDetector()
-  qr_detector.detectAndDecode(big_code)[0]
+  qr_detector.detectAndDecode(code)[0]
 #+end_src
 
 #+RESULTS:
-: This is just a silly test.
+: This is just a silly example.
 
 * Slightly more complicated.
 

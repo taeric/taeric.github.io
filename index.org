@@ -30,4 +30,4 @@ Not sure how you found yourself on my site, but have fun.
    - [[file:reflecting-on-engineers-path.Org][Reflecting on the Staff Engineer's Path]]: Book I read in a mini
      reading club online and my thoughts from the read.
    - [[file:sum-types.org][Sum Types and Visitors]]: In which I make a bad argument with nobody.
-   - [[file:looking-at-qrcodes.org][Looking at QRCodes]]: In which I find that opencv works as advertised.
+   - [[file:looking-at-qr-codes.org][Looking at QRCodes]]: In which I find that opencv works as advertised.
