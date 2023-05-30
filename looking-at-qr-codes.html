@@ -3,10 +3,10 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2023-05-30 Tue 11:32 -->
+<!-- 2023-05-29 Mon 12:01 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Josh Berry's Blog</title>
+<title>Looking at QR Codes</title>
 <meta name="author" content="Josh Berry" />
 <meta name="generator" content="Org Mode" />
 <style>
@@ -197,56 +197,147 @@
 </head>
 <body>
 <div id="content" class="content">
-<h1 class="title">Josh Berry's Blog</h1>
+<h1 class="title">Looking at QR Codes</h1>
 <div id="table-of-contents" role="doc-toc">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orgd087447">1. Random stuff.</a></li>
+<li><a href="#org69d0b44">Get started with OpenCV</a></li>
+<li><a href="#orgb18af71">Slightly more complicated.</a></li>
+<li><a href="#org20ddd1e">WeChat to the rescue</a></li>
 </ul>
 </div>
 </div>
 <p>
-Not sure how you found yourself on my site, but have fun.
+In looking to get some image scanning available in an AWS Lambda, I
+found that scanning QR codes was easier than I had anticipated.  With
+some caveats.  This is my exploring those caveats.
 </p>
 
-<div id="outline-container-orgd087447" class="outline-2">
-<h2 id="orgd087447"><span class="section-number-2">1.</span> Random stuff.</h2>
-<div class="outline-text-2" id="text-1">
-<ul class="org-ul">
-<li><a href="./DancingLinks.html">DancingLinks</a>: In which I butcher an otherwise elegant technique.</li>
-<li><a href="Sudoku.html">Sudoku</a>: In which I use dancing links to solve Sudoku.</li>
-<li><a href="searching-delimited-log-files.html">sed</a>: In which I make an overly complicated sed script.</li>
-<li><a href="ChangeForDollar.html">Change for a Dollar</a>: In which I come up with a bad way to solve
-the change for a dollar problem.</li>
-<li><a href="luhn.html">Luhn Checking</a>: In which I switch doubling and adding digits with
-a lookup table.</li>
-<li><a href="cube-permutations-1.html">Playing with a Rubik's Cube</a>: In which I confirm that a
-"permutations" view the toy works.</li>
-<li><a href="CodeAsData.html">Code as Data</a>: My attempt at exploring why that means something in
-lisp.</li>
-<li><a href="generating-polyominos.html">Generating Polyominos for Tiling</a>: How many ways can you tile a
-board with polyominos?</li>
-<li><a href="generating-free-polyominos.html">Generating Free Polyominos</a>: Same as last time, just no longer
-with a tetris mindset.</li>
-<li><a href="AmusingAlgorithm.html">Searching for an Amusing Algorithm</a>: In which I explore how to
-construct a tree given the in-order and pre-order values of it.</li>
-<li><a href="trading-with-bdds.html">Trading with BDDs</a>: In which I almost certainly butcher my first
-attempt at using a binary decision diagram</li>
-<li><a href="challenging-my-filesize-intuition.html">Challenging my intuition on file sizes</a>: In which I try to see if
-I am unreasonable to expect data loaded into memory should be
-smaller than on disk.</li>
-<li><a href="reflecting-on-engineers-path.html">Reflecting on the Staff Engineer's Path</a>: Book I read in a mini
-reading club online and my thoughts from the read.</li>
-<li><a href="sum-types.html">Sum Types and Visitors</a>: In which I make a bad argument with nobody.</li>
-<li><a href="looking-at-qrcodes.html">Looking at QRCodes</a>: In which I find that opencv works as advertised.</li>
-</ul>
+<div id="outline-container-org69d0b44" class="outline-2">
+<h2 id="org69d0b44">Get started with OpenCV</h2>
+<div class="outline-text-2" id="text-org69d0b44">
+<p>
+This is relatively straight forward, make a virtualenv and install
+`opencv-contrib-python`.  (For running in Lambda, we'd use the
+`-headless` version.)
+</p>
+
+<p>
+Note that you do <b>not</b> have to otherwise install opencv.  The pip
+install will get everything you need for these to work.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #b6a0ff;">import</span> cv2
+</pre>
+</div>
+
+<p>
+To get started, we'll first make a QR code and see what it looks like.
+I do make it larger, but that is just so I can see it easily.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #00d3d0;">qr_encoder</span> = cv2.QRCodeEncoder_create()
+<span style="color: #00d3d0;">code</span> = qr_encoder.encode(<span style="color: #79a8ff;">"This is just a silly example."</span>)
+<span style="color: #00d3d0;">code</span> = cv2.resize(code, (100, 100))
+cv2.imwrite(<span style="color: #79a8ff;">"silly-qr-code.png"</span>, code)
+</pre>
+</div>
+
+
+<div id="orgaf4b3bc" class="figure">
+<p><img src="silly-qr-code.png" alt="silly-qr-code.png" />
+</p>
+</div>
+
+<p>
+And reading that code back in?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #00d3d0;">qr_detector</span> = cv2.QRCodeDetector()
+qr_detector.detectAndDecode(big_code)[0]
+</pre>
+</div>
+
+<pre class="example">
+This is just a silly test.
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgb18af71" class="outline-2">
+<h2 id="orgb18af71">Slightly more complicated.</h2>
+<div class="outline-text-2" id="text-orgb18af71">
+<p>
+I decided to hunt around my house and see if I had any codes around.
+For reasons of weak will power, I had some chips.  So, snapped a
+photo.
+</p>
+
+
+<div id="org9f22715" class="figure">
+<p><img src="food-label-qrcode.jpg" alt="food-label-qrcode.jpg" width="100px" />
+</p>
+</div>
+
+<p>
+And then quickly got disappointed that I couldn't decode it.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #00d3d0;">food_label</span> = cv2.imread(<span style="color: #79a8ff;">"food-label-qrcode.jpg"</span>)
+qr_detector.detectAndDecode(food_label)
+</pre>
+</div>
+
+<pre class="example">
+('', None, None)
+</pre>
+
+
+<p>
+I tried running the image through some filters, but never managed to
+get this to detect.  Left me feeling pretty frustrated, as I have a
+hard time reading the docs for this library.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org20ddd1e" class="outline-2">
+<h2 id="org20ddd1e">WeChat to the rescue</h2>
+<div class="outline-text-2" id="text-org20ddd1e">
+<p>
+Luckily, I saw that there is another decoder in the contrib
+directory. I originally didn't want to try it, as I was not sure I
+could get it running in an AWS Lambda.  In particular, I don't want to
+use docker, so was limited in file size.
+</p>
+
+<p>
+That said, it does the job.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #00d3d0;">wechat_qr_detector</span> = cv2.wechat_qrcode_WeChatQRCode()
+wechat_qr_detector.detectAndDecode(food_label)
+</pre>
+</div>
+
+<pre class="example">
+(('http://pepsico.info/490k32',), (array([[ 506.0724 , 1682.5837 ],
+       [1346.1771 , 1644.7062 ],
+       [1340.8032 , 2498.914  ],
+       [ 489.23245, 2523.8735 ]], dtype=float32),))
+</pre>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Josh Berry</p>
-<p class="date">Created: 2023-05-30 Tue 11:32</p>
+<p class="date">Created: 2023-05-29 Mon 12:01</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

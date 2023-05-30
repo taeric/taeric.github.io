@@ -1,0 +1,87 @@
+#+TITLE: Looking at QR Codes
+#+OPTIONS: num:nil
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
+
+In looking to get some image scanning available in an AWS Lambda, I
+found that scanning QR codes was easier than I had anticipated.  With
+some caveats.  This is my exploring those caveats.
+
+* Get started with OpenCV
+
+This is relatively straight forward, make a virtualenv and install
+`opencv-contrib-python`.  (For running in Lambda, we'd use the
+`-headless` version.)
+
+Note that you do *not* have to otherwise install opencv.  The pip
+install will get everything you need for these to work.
+
+#+begin_src python :session opencv
+  import cv2
+#+end_src
+
+To get started, we'll first make a QR code and see what it looks like.
+I do make it larger, but that is just so I can see it easily.
+
+#+begin_src python :session opencv :exports code
+  qr_encoder = cv2.QRCodeEncoder_create()
+  code = qr_encoder.encode("This is just a silly example.")
+  code = cv2.resize(code, (100, 100))
+  cv2.imwrite("silly-qr-code.png", code)
+#+end_src
+
+#+RESULTS:
+: True
+
+[[file:silly-qr-code.png]]
+
+And reading that code back in?
+
+#+begin_src python :session opencv :exports both
+  qr_detector = cv2.QRCodeDetector()
+  qr_detector.detectAndDecode(big_code)[0]
+#+end_src
+
+#+RESULTS:
+: This is just a silly test.
+
+* Slightly more complicated.
+
+I decided to hunt around my house and see if I had any codes around.
+For reasons of weak will power, I had some chips.  So, snapped a
+photo.
+
+#+attr_html: :width 100px
+[[file:food-label-qrcode.jpg]]
+
+And then quickly got disappointed that I couldn't decode it.
+
+#+begin_src python :session opencv :exports both :results verbatim
+  food_label = cv2.imread("food-label-qrcode.jpg")
+  qr_detector.detectAndDecode(food_label)
+#+end_src
+
+#+RESULTS:
+: ('', None, None)
+
+I tried running the image through some filters, but never managed to
+get this to detect.  Left me feeling pretty frustrated.
+
+* WeChat to the rescue
+
+Luckily, I saw that there is another decoder in the contrib
+directory. I originally didn't want to try it, as I was not sure I
+could get it running in an AWS Lambda.  In particular, I don't want to
+use docker, so was limited in file size.
+
+That said, it does the job.
+
+#+begin_src python :session opencv :exports both :results verbatim
+  wechat_qr_detector = cv2.wechat_qrcode_WeChatQRCode()
+  wechat_qr_detector.detectAndDecode(food_label)
+#+end_src
+
+#+RESULTS:
+: (('http://pepsico.info/490k32',), (array([[ 506.0724 , 1682.5837 ],
+:        [1346.1771 , 1644.7062 ],
+:        [1340.8032 , 2498.914  ],
+:        [ 489.23245, 2523.8735 ]], dtype=float32),))
