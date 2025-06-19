@@ -31,3 +31,5 @@ Not sure how you found yourself on my site, but have fun.
      reading club online and my thoughts from the read.
    - [[file:sum-types.org][Sum Types and Visitors]]: In which I make a bad argument with nobody.
    - [[file:looking-at-qr-codes.org][Looking at QRCodes]]: In which I find that opencv works as advertised.
+   - [[file:many_sums.org][Wasting time to count sums]]: I had fun with an old interview
+     question.

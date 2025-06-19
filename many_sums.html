@@ -1,0 +1,986 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2025-06-19 Thu 11:03 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Wasting time looking at many ways to sum to a number.</title>
+<meta name="author" content="Josh Berry" />
+<meta name="generator" content="Org Mode" />
+<style type="text/css">
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="org-overrides.css" />
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">Wasting time looking at many ways to sum to a number.</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org3ef648f">Musings on the "N-Sum" problem</a></li>
+<li><a href="#orgec671d5">At any rate, is there a fun way to do this?</a></li>
+<li><a href="#org4f3e440">Basics</a></li>
+<li><a href="#org228f854">Constructing a BDD for Sums.</a>
+<ul>
+<li><a href="#org8076047">Outline of function</a></li>
+<li><a href="#orga87ba9e">Start at v<sub>1</sub> and build nodes.</a></li>
+<li><a href="#org2f99482">Remove all nodes with equal hi/lo fields.</a></li>
+</ul>
+</li>
+<li><a href="#org6a4b666">Now, lets make something that can count solutions.</a></li>
+<li><a href="#org1d31530">What if I want to see solutions?</a></li>
+<li><a href="#orgcb4f117">What if I want to see the BDD?</a></li>
+<li><a href="#orgdfc8019">I'm also curious on how many nodes are in the BDD.</a></li>
+<li><a href="#org142469a">Trying it out.</a>
+<ul>
+<li><a href="#org90a0a40">First, on a trivial list</a></li>
+<li><a href="#orgb5720e5">How does it do on a larger basic sequence?</a></li>
+<li><a href="#org9192395">Does order matter?</a></li>
+<li><a href="#org8de5259">On random values?</a></li>
+<li><a href="#org004011d">Does sorting speed things up?</a></li>
+</ul>
+</li>
+<li><a href="#org97228e3">And the visualizations</a></li>
+<li><a href="#org2d7850a">Closing thoughts.</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-org3ef648f" class="outline-2">
+<h2 id="org3ef648f">Musings on the "N-Sum" problem</h2>
+<div class="outline-text-2" id="text-org3ef648f">
+<p>
+A common interview question for a while was "are there two (or three)
+numbers that sum to a target in a list?"  I confess I still like this
+as an interview question, as it is easy to talk through different
+things you can do.
+</p>
+
+<p>
+The basic implementation I would coach people towards is small enough
+and easy to have discussions on.  Even if what you would get would
+have obvious performance concerns.  I can hope nobody is doing this in
+production.  (Not that I really expect what I want to do to be a good
+idea, either&#x2026;)
+</p>
+</div>
+</div>
+<div id="outline-container-orgec671d5" class="outline-2">
+<h2 id="orgec671d5">At any rate, is there a fun way to do this?</h2>
+<div class="outline-text-2" id="text-orgec671d5">
+<p>
+I'd like to say that there is a good reason to think of doing this a
+different way.  There probably is, but I don't know it right off.  I
+just want to have fun coding a Binary Decision Diagram (BDD)
+structure.
+</p>
+
+<p>
+I suppose this lets me extend the puzzle a bit, of course.  Instead of
+asking if a sum exists, I can find all ways to sum to a number in a
+fairly straight forward way.
+</p>
+
+<p>
+There is also a neat trick where you can combine BDDs to limit the
+answer to only using a set number of values.  Or only even values.  Or
+whatever.
+</p>
+
+<p>
+I will probably not code that trick here.
+</p>
+</div>
+</div>
+<div id="outline-container-org4f3e440" class="outline-2">
+<h2 id="org4f3e440">Basics</h2>
+<div class="outline-text-2" id="text-org4f3e440">
+<p>
+I will be taking a lot of the conventions from Knuth's discussion of
+BDDs.  I may play with generating random lists of numbers to look at,
+as well.  Will likely just stick to a general range of numbers.
+</p>
+
+<p>
+To begin, the basic idea of a BDD is that we look at each "variable"
+in turn and take a branch on whether or not the variable is true.
+Where, for this, true means number is included in the sum.
+</p>
+
+<p>
+For our main structure, this means we need to know what variable we
+are looking at, and then we need to know what decision to go to next.
+With a "hi" being when this variable is true, and a "lo" when it is
+false.  I will also keep an "aux" field for use in construction and
+then counting.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff; font-weight: bold;">defstruct</span> <span style="color: #6ae4b9; font-weight: bold;">bdd-node</span> v hi lo aux)
+</pre>
+</div>
+
+<p>
+Rather than try and wire everything together using object references,
+I have grown fond of the "array of nodes" idea to patch things
+together in.  Where the "hi" and "lo" values will be indexes into this
+array to know what node is next.
+</p>
+
+<p>
+This has the gigantic advantage that I can traverse all of the nodes
+bottom up in a basic scan of the array.  I will use that for counting
+solutions.  Can even breadth first traverse the nodes in a basic scan
+for showing the nodes.
+</p>
+
+<p>
+To that end, our overall "bdd" struct will be an array of nodes with
+the first two nodes being the two nodes that correspond to True and
+False/Bottom.  The rest tied together through links.
+</p>
+</div>
+</div>
+<div id="outline-container-org228f854" class="outline-2">
+<h2 id="org228f854">Constructing a BDD for Sums.</h2>
+<div class="outline-text-2" id="text-org228f854">
+<p>
+What, then, does construction look like?  I'm opting for a semi
+"literate" style here.  We'll see how that turns out.
+</p>
+</div>
+<div id="outline-container-org8076047" class="outline-3">
+<h3 id="org8076047">Outline of function</h3>
+<div class="outline-text-3" id="text-org8076047">
+<p>
+The basic outline of our function is straight forward enough.  Take in
+the numbers we are considering and our target.  Go ahead and build a
+basic array to hold our nodes, and then get ready to start building.
+Expect that we will need some extra variables, and the meat of the
+iteration will come later.
+</p>
+
+<p>
+That said, no reason not to go ahead and put the two base nodes of the
+structure in.  The "aux" fields are not super important on them, but
+going ahead and giving them something.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff; font-weight: bold;">defvar</span> <span style="color: #00d3d0;">*max-num-nodes*</span> 1000000) <span style="color: #989898; font-style: italic;">; Just a stab at how much headroom I need.</span>
+(<span style="color: #b6a0ff; font-weight: bold;">defun</span> <span style="color: #feacd0;">make-sums-bdd</span> (nums target)
+  (<span style="color: #b6a0ff; font-weight: bold;">let*</span> ((num-nodes *max-num-nodes*)
+         (bdd-nodes (make-array num-nodes))
+         (v_max (length nums))
+         &lt;&lt;extra variables&gt;&gt;)
+
+    (setf (elt bdd-nodes 0) (make-bdd-node <span style="color: #f78fe7; font-weight: bold;">:v</span> (+ 2 v_max) <span style="color: #f78fe7; font-weight: bold;">:hi</span> 0 <span style="color: #f78fe7; font-weight: bold;">:lo</span> 0 <span style="color: #f78fe7; font-weight: bold;">:aux</span> 0)
+          (elt bdd-nodes 1) (make-bdd-node <span style="color: #f78fe7; font-weight: bold;">:v</span> (+ 1 v_max) <span style="color: #f78fe7; font-weight: bold;">:hi</span> 1 <span style="color: #f78fe7; font-weight: bold;">:lo</span> 1 <span style="color: #f78fe7; font-weight: bold;">:aux</span> target))
+
+    &lt;&lt;start at v_1 and build nodes&gt;&gt;
+
+    bdd-nodes))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orga87ba9e" class="outline-3">
+<h3 id="orga87ba9e">Start at v<sub>1</sub> and build nodes.</h3>
+<div class="outline-text-3" id="text-orga87ba9e">
+<p>
+As the name of the section implies, we will be starting at v<sub>1</sub>.  Where
+v<sub>1</sub> represents whether we include element 0 of our numbers.  (Yes, if
+I care about speed and plan on indexing into the numbers, I should
+make sure our input numbers is an array.  No, I'm not going to do that
+here.)
+</p>
+
+<p>
+Largely for aesthetics, I start the root of the bdd at the tail end.
+From there, my convoluted steps are the following:
+</p>
+
+<ol class="org-ol">
+<li>Set node<sub>i</sub>, cur-v, cur-num, and cur-aux to current values
+according to i.  If node<sub>i</sub> is not a bdd-node, or cur-v is
+greater than v<sub>max</sub>, go to step 6.</li>
+<li>If we are at v<sub>max</sub>, then if adding 0 to current aux gives target,
+set lo to 1, otherwise 0.  If adding current num to aux gives
+target, set hi to 1, otherwise 0.  Decrement i and go back to
+step 1.  If not at v<sub>max</sub>, Set j = i - 1 and continue to step 3.</li>
+<li>Find or create node to connect lo to.  Walk variable j down to 0
+looking for either existing node with v = cur-v + 1 and aux =
+cur-aux, or creating it if node<sub>i</sub>[j] isn't a node, yet.  Set
+current lo to j.  Set j back to i - 1 and continue to step 4.</li>
+<li>Find or create node to connect hi to.  If cur-aux + cur-num is &lt;=
+target, walk j down to zero looking for node that matches.  Set
+current hi to j.  Otherwise, set current hi to 0.</li>
+<li>Set i = i - 1, go to step 1.</li>
+</ol>
+
+<div class="org-src-container">
+<pre class="src src-lisp" id="org2ce95ec">(setf i (1- num-nodes)
+      (elt bdd-nodes i) (make-bdd-node <span style="color: #f78fe7; font-weight: bold;">:v</span> 1 <span style="color: #f78fe7; font-weight: bold;">:hi</span> -1 <span style="color: #f78fe7; font-weight: bold;">:lo</span> -1 <span style="color: #f78fe7; font-weight: bold;">:aux</span> 0))
+
+(<span style="color: #b6a0ff; font-weight: bold;">tagbody</span>
+   s1
+   (setf node_i (elt bdd-nodes i))
+   (<span style="color: #b6a0ff; font-weight: bold;">if</span> (not (bdd-node-p node_i))
+       (<span style="color: #b6a0ff; font-weight: bold;">go</span> s6))
+   (setf cur-v    (bdd-node-v node_i)
+         cur-num  (elt nums (1- cur-v))
+         cur-aux  (bdd-node-aux node_i))
+   (<span style="color: #b6a0ff; font-weight: bold;">if</span> (&gt; cur-v v_max)
+       (<span style="color: #b6a0ff; font-weight: bold;">go</span> s6))
+   s2
+   (<span style="color: #b6a0ff; font-weight: bold;">when</span> (eq cur-v v_max)
+     (<span style="color: #b6a0ff; font-weight: bold;">if</span> (= cur-aux target)
+         (setf (bdd-node-lo node_i) 1)
+         (setf (bdd-node-lo node_i) 0))
+     (<span style="color: #b6a0ff; font-weight: bold;">if</span> (= (+ cur-num cur-aux) target)
+         (setf (bdd-node-hi node_i) 1)
+         (setf (bdd-node-hi node_i) 0))
+     (setf i (1- i))
+     (<span style="color: #b6a0ff; font-weight: bold;">go</span> s1))
+   (setf j (1- i))
+   s3
+   (<span style="color: #b6a0ff; font-weight: bold;">when</span> (not (bdd-node-p (elt bdd-nodes j)))
+     (setf (elt bdd-nodes j) (make-bdd-node <span style="color: #f78fe7; font-weight: bold;">:v</span> (1+ cur-v) <span style="color: #f78fe7; font-weight: bold;">:hi</span> 0 <span style="color: #f78fe7; font-weight: bold;">:lo</span> 0 <span style="color: #f78fe7; font-weight: bold;">:aux</span> cur-aux)))
+   (<span style="color: #b6a0ff; font-weight: bold;">when</span> (not (eq (bdd-node-aux (elt bdd-nodes j)) cur-aux))
+     (setf j (1- j))
+     (<span style="color: #b6a0ff; font-weight: bold;">when</span> (= j 1)
+         (<span style="color: #fec43f; font-weight: bold;">error</span> <span style="color: #79a8ff;">"Effectively out of memory.  Rerun with more headroom, or rework algo."</span>))
+     (<span style="color: #b6a0ff; font-weight: bold;">go</span> s3))
+   (setf (bdd-node-lo node_i) j
+         j (1- i))
+   s4
+   (<span style="color: #b6a0ff; font-weight: bold;">when</span> (&gt; (+ cur-num cur-aux) target)
+     (setf (bdd-node-hi node_i) 0)
+     (<span style="color: #b6a0ff; font-weight: bold;">go</span> s5))
+   (<span style="color: #b6a0ff; font-weight: bold;">when</span> (not (bdd-node-p (elt bdd-nodes j)))
+     (setf (elt bdd-nodes j) (make-bdd-node <span style="color: #f78fe7; font-weight: bold;">:v</span> (1+ cur-v) <span style="color: #f78fe7; font-weight: bold;">:hi</span> -1 <span style="color: #f78fe7; font-weight: bold;">:lo</span> -1 <span style="color: #f78fe7; font-weight: bold;">:aux</span> (+ cur-num cur-aux))))
+   (<span style="color: #b6a0ff; font-weight: bold;">when</span> (not (and (eq (bdd-node-aux (elt bdd-nodes j)) (+ cur-num cur-aux))
+                   (eq (bdd-node-v (elt bdd-nodes j)) (1+ cur-v))))
+     (setf j (1- j))
+     (<span style="color: #b6a0ff; font-weight: bold;">when</span> (= j 1)
+         (<span style="color: #fec43f; font-weight: bold;">error</span> <span style="color: #79a8ff;">"Effectively out of memory.  Rerun with more headroom, or rework algo."</span>))
+     (<span style="color: #b6a0ff; font-weight: bold;">go</span> s4))
+   (setf (bdd-node-hi node_i) j)
+   s5
+   (setf i (1- i))
+   (<span style="color: #b6a0ff; font-weight: bold;">go</span> s1)
+   &lt;&lt;Remove all nodes with equal hi/lo fields&gt;&gt;
+   end)
+</pre>
+</div>
+
+<p>
+We introduced quite a few variables here, but none that are too
+complicated.  And none that need initial values.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">i
+j
+node_i
+cur-v
+cur-num
+cur-aux
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org2f99482" class="outline-3">
+<h3 id="org2f99482">Remove all nodes with equal hi/lo fields.</h3>
+<div class="outline-text-3" id="text-org2f99482">
+<p>
+If a node has the same outcome whether it is true or false, we can
+remove it and set any reference to it to the results it was
+referencing.
+</p>
+
+<p>
+For this reduction, we can do it from the "bottom up" on the
+structure.  Ideally, we would also "compact" the nodes as we do this.
+</p>
+
+<p>
+Steps are:
+</p>
+
+
+<ol start="6" class="org-ol">
+<li>If i = num-nodes, terminate.  Otherwise, set node<sub>i</sub> according
+to i.  If not on a bdd-node, increment i and repeat step 6.</li>
+<li>If hi and lo of current node are equal, then set current node in
+bdd-nodes to 0 and set j = i + 1 and continue to step 8.
+Otherwise, set i = i + 1 and go back to step 6.</li>
+<li>If j = num-nodes, go back to step 6.  Otherwise, if j is a valid
+bdd-node, check if hi = i and change it to hi of node<sub>i</sub>.  Check
+if lo = i and change it to lo of node<sub>i</sub>.  Set j = j + 1 and
+repeat step 8.</li>
+</ol>
+
+
+<div class="org-src-container">
+<pre class="src src-lisp" id="org75568c3">s6
+(<span style="color: #b6a0ff; font-weight: bold;">when</span> (= i num-nodes)
+  (<span style="color: #b6a0ff; font-weight: bold;">go</span> end))
+(setf node_i (elt bdd-nodes i))
+(<span style="color: #b6a0ff; font-weight: bold;">when</span> (not (bdd-node-p node_i))
+  (setf i (1+ i))
+  (<span style="color: #b6a0ff; font-weight: bold;">go</span> s6))
+s7
+(<span style="color: #b6a0ff; font-weight: bold;">when</span> (= (bdd-node-hi node_i) (bdd-node-lo node_i))
+  (setf (elt bdd-nodes i) 0
+        j                 (1+ i))
+  (<span style="color: #b6a0ff; font-weight: bold;">go</span> s8))
+(setf i (1+ i))
+(<span style="color: #b6a0ff; font-weight: bold;">go</span> s6)
+s8
+(<span style="color: #b6a0ff; font-weight: bold;">when</span> (= j num-nodes)
+  (<span style="color: #b6a0ff; font-weight: bold;">go</span> s6))
+(setf node_j (elt bdd-nodes j))
+(setf j (1+ j))
+(<span style="color: #b6a0ff; font-weight: bold;">when</span> (not (bdd-node-p node_j))
+  (<span style="color: #b6a0ff; font-weight: bold;">go</span> s8))
+(<span style="color: #b6a0ff; font-weight: bold;">when</span> (= (bdd-node-hi node_j) i)
+  (setf (bdd-node-hi node_j) (bdd-node-hi node_i)))
+(<span style="color: #b6a0ff; font-weight: bold;">when</span> (= (bdd-node-lo node_j) i)
+  (setf (bdd-node-lo node_j) (bdd-node-lo node_i)))
+(<span style="color: #b6a0ff; font-weight: bold;">go</span> s8)
+</pre>
+</div>
+
+<p>
+And for this section, I needed another node reference.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">node_j
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-org6a4b666" class="outline-2">
+<h2 id="org6a4b666">Now, lets make something that can count solutions.</h2>
+<div class="outline-text-2" id="text-org6a4b666">
+<p>
+Now for a function that will annotate the BDD with solution counts.
+We no longer need the aux fields, so we will use that to keep the
+counts and can walk the generated tree bottom up and then simply
+return the top value at the end.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff; font-weight: bold;">defun</span> <span style="color: #feacd0;">bdd-count-solutions</span> (bdd)
+  (setf (bdd-node-aux (elt bdd 0)) 0
+        (bdd-node-aux (elt bdd 1)) 1)
+  (<span style="color: #b6a0ff; font-weight: bold;">loop</span> for i from 2 below (length bdd)
+        for node_i = (elt bdd i)
+        if (bdd-node-p node_i)
+          do (<span style="color: #b6a0ff; font-weight: bold;">let*</span> ((hi-node  (elt bdd (bdd-node-hi node_i)))
+                    (lo-node  (elt bdd (bdd-node-lo node_i)))
+                    (cur-solutions (+ (* (bdd-node-aux hi-node) (expt 2 (- (bdd-node-v hi-node) (bdd-node-v node_i) 1)))
+                                      (* (bdd-node-aux lo-node) (expt 2 (- (bdd-node-v lo-node) (bdd-node-v node_i) 1))))))
+               (setf (bdd-node-aux node_i) cur-solutions))
+        finally (<span style="color: #b6a0ff; font-weight: bold;">return</span> (bdd-node-aux node_i))))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org1d31530" class="outline-2">
+<h2 id="org1d31530">What if I want to see solutions?</h2>
+<div class="outline-text-2" id="text-org1d31530">
+<p>
+I confess I got by just looking at the nodes created for a while.  But
+good to actually get it to show the solutions to make sure it is
+correct.
+</p>
+
+<p>
+Basic approach is a simple depth first traversal of the tree from the
+root node.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff; font-weight: bold;">defun</span> <span style="color: #feacd0;">show-sums-bdd-solutions</span> (nums bdd <span style="color: #6ae4b9; font-weight: bold;">&amp;optional</span> (num-solutions 20))
+  (<span style="color: #b6a0ff; font-weight: bold;">labels</span> ((diver (node included-nums)
+             (<span style="color: #b6a0ff; font-weight: bold;">cond</span>
+               ((eq node (elt bdd 0)) nil)
+               ((eq node (elt bdd 1))
+                (decf num-solutions)
+                (format t <span style="color: #79a8ff;">"~a~&amp;"</span> included-nums))
+               (t
+                (<span style="color: #b6a0ff; font-weight: bold;">when</span> (&gt; num-solutions 0)
+                  (diver (elt bdd (bdd-node-lo node)) included-nums)
+                  (diver (elt bdd (bdd-node-hi node)) (cons (elt nums (1- (bdd-node-v node))) included-nums)))))))
+    (diver (elt bdd (1- (length bdd))) nil)))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgcb4f117" class="outline-2">
+<h2 id="orgcb4f117">What if I want to see the BDD?</h2>
+<div class="outline-text-2" id="text-orgcb4f117">
+<p>
+For this, I am just going to lean on graphviz.  With no effort to
+pretty print.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff; font-weight: bold;">defun</span> <span style="color: #feacd0;">bdd-to-graphviz</span> (bdd)
+  (format t <span style="color: #79a8ff;">"digraph G {~&amp;"</span>)
+  (<span style="color: #b6a0ff; font-weight: bold;">loop</span> for i from (1- (length bdd)) downto 2
+        for node = (elt bdd i)
+        if (bdd-node-p node)
+          do (<span style="color: #b6a0ff; font-weight: bold;">let</span> ((v (bdd-node-v node))
+                   (hi-node (bdd-node-hi node))
+                   (lo-node (bdd-node-lo node)))
+               (format t <span style="color: #79a8ff;">"V~a [label=\"~a\"]~&amp;"</span> i v)
+               (<span style="color: #b6a0ff; font-weight: bold;">case</span> hi-node
+                 (1 (format t <span style="color: #79a8ff;">"V~a -&gt; Hi~&amp;"</span> i))
+                 (0 (format t <span style="color: #79a8ff;">"V~a -&gt; Lo~&amp;"</span> i))
+                 (otherwise (format t <span style="color: #79a8ff;">"V~a -&gt; V~a ~&amp;"</span> i hi-node)))
+               (<span style="color: #b6a0ff; font-weight: bold;">case</span> lo-node
+                 (1 (format t <span style="color: #79a8ff;">"V~a -&gt; Hi [style=dotted]~&amp;"</span> i))
+                 (0 (format t <span style="color: #79a8ff;">"V~a -&gt; Lo [style=dotted]~&amp;"</span> i))
+                 (otherwise (format t <span style="color: #79a8ff;">"V~a -&gt; V~a [style=dotted]~&amp;"</span> i lo-node)))))
+  (format t <span style="color: #79a8ff;">"}~&amp;"</span>))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgdfc8019" class="outline-2">
+<h2 id="orgdfc8019">I'm also curious on how many nodes are in the BDD.</h2>
+<div class="outline-text-2" id="text-orgdfc8019">
+<p>
+More a curiousity than much else.  How many active nodes are in the BDD?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff; font-weight: bold;">defun</span> <span style="color: #feacd0;">bdd-count-nodes</span> (bdd)
+  (<span style="color: #b6a0ff; font-weight: bold;">loop</span> for node across bdd
+        if (bdd-node-p node)
+          sum 1))
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org142469a" class="outline-2">
+<h2 id="org142469a">Trying it out.</h2>
+<div class="outline-text-2" id="text-org142469a">
+</div>
+<div id="outline-container-org90a0a40" class="outline-3">
+<h3 id="org90a0a40">First, on a trivial list</h3>
+<div class="outline-text-3" id="text-org90a0a40">
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff; font-weight: bold;">let*</span> ((*trace-output* *standard-output*)
+       (nums '(-3 -2 -1 1 2 3))
+       (bdd (time (make-sums-bdd nums 1))))
+  (format t <span style="color: #79a8ff;">"~a nodes covering ~a solutions~&amp;"</span>
+          (bdd-count-nodes bdd)
+          (bdd-count-solutions bdd))
+  (format t <span style="color: #79a8ff;">"Solutions found: ~&amp;"</span>)
+  (show-sums-bdd-solutions nums bdd 10))
+</pre>
+</div>
+
+<pre class="example" id="org631b0e3">
+Evaluation took:
+  0.000 seconds of real time
+  0.000846 seconds of total run time (0.000180 user, 0.000666 system)
+  100.00% CPU
+  8,000,016 bytes consed
+  
+21 nodes covering 8 solutions
+Solutions found: 
+(1)
+(2 -1)
+(3 -2)
+(2 1 -2)
+(3 1 -1 -2)
+(3 1 -3)
+(3 2 -1 -3)
+(3 2 1 -2 -3)
+</pre>
+
+<p>
+Obviously, 21 nodes to store the 8 solutions is not exactly
+beneficial.  Still, it works.  And you can walk through the below
+diagram easily enough.
+</p>
+
+
+<div id="org0c826c4" class="figure">
+<p><img src="bdd-dot0.png" alt="bdd-dot0.png" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgb5720e5" class="outline-3">
+<h3 id="orgb5720e5">How does it do on a larger basic sequence?</h3>
+<div class="outline-text-3" id="text-orgb5720e5">
+<p>
+Where "basic" is just counting up from one.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff; font-weight: bold;">let*</span> ((*trace-output* *standard-output*)
+       (nums (<span style="color: #b6a0ff; font-weight: bold;">loop</span> for i from 1 to 1000 collect i))
+       (bdd (time (make-sums-bdd nums 40))))
+  (format t <span style="color: #79a8ff;">"~a nodes covering ~a solutions~&amp;"</span>
+          (bdd-count-nodes bdd)
+          (bdd-count-solutions bdd))
+  (format t <span style="color: #79a8ff;">"Five example sums: ~&amp;"</span>)
+  (show-sums-bdd-solutions nums bdd 5))
+</pre>
+</div>
+
+<pre class="example" id="org4697365">
+Evaluation took:
+  3.580 seconds of real time
+  7.158027 seconds of total run time (7.148454 user, 0.009573 system)
+  199.94% CPU
+  10,162,368 bytes consed
+  
+1613 nodes covering 1113 solutions
+Five example sums: 
+(40)
+(21 19)
+(22 18)
+(23 17)
+(24 16)
+</pre>
+</div>
+</div>
+<div id="outline-container-org9192395" class="outline-3">
+<h3 id="org9192395">Does order matter?</h3>
+<div class="outline-text-3" id="text-org9192395">
+<p>
+Specifically, counting down from one?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff; font-weight: bold;">let*</span> ((*trace-output* *standard-output*)
+       (nums (<span style="color: #b6a0ff; font-weight: bold;">loop</span> for i from 1000 downto 1 collect i))
+       (bdd (time (make-sums-bdd nums 40))))
+  (format t <span style="color: #79a8ff;">"~a nodes covering ~a solutions~&amp;"</span>
+          (bdd-count-nodes bdd)
+          (bdd-count-solutions bdd))
+  (format t <span style="color: #79a8ff;">"Five example sums: ~&amp;"</span>)
+  (show-sums-bdd-solutions nums bdd 5))
+</pre>
+</div>
+
+<pre class="example" id="org0053be2">
+Evaluation took:
+  0.003 seconds of real time
+  0.003579 seconds of total run time (0.002571 user, 0.001008 system)
+  133.33% CPU
+  8,131,072 bytes consed
+  
+1613 nodes covering 1113 solutions
+Five example sums: 
+(1 2 3 4 6 7 8 9)
+(2 3 5 6 7 8 9)
+(1 4 5 6 7 8 9)
+(1 2 3 4 5 7 8 10)
+(2 3 4 6 7 8 10)
+</pre>
+
+<p>
+Answer was yes?  It went much faster.
+</p>
+</div>
+</div>
+<div id="outline-container-org8de5259" class="outline-3">
+<h3 id="org8de5259">On random values?</h3>
+<div class="outline-text-3" id="text-org8de5259">
+<p>
+And what about looking for a sum in a collection of random numbers?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff; font-weight: bold;">let*</span> ((*trace-output* *standard-output*)
+       (nums (<span style="color: #b6a0ff; font-weight: bold;">loop</span> repeat 1000 collect (random 1000)))
+       (bdd (time (make-sums-bdd nums 400))))
+  (format t <span style="color: #79a8ff;">"~a nodes covering ~a solutions~&amp;"</span>
+          (bdd-count-nodes bdd)
+          (bdd-count-solutions bdd))
+  (format t <span style="color: #79a8ff;">"Five example sums: ~&amp;"</span>)
+  (show-sums-bdd-solutions nums bdd 5))
+</pre>
+</div>
+
+<pre class="example" id="orgeaf483d">
+Evaluation took:
+  41.004 seconds of real time
+  73.295845 seconds of total run time (73.136984 user, 0.158861 system)
+  [ Real times consist of 0.041 seconds GC time, and 40.963 seconds non-GC time. ]
+  [ Run times consist of 0.038 seconds GC time, and 73.258 seconds non-GC time. ]
+  178.75% CPU
+  90,580,624 bytes consed
+  
+345545 nodes covering 58210951128428 solutions
+Five example sums: 
+(109 216 75)
+(72 75 180 53 20)
+(169 211 20)
+(72 97 211 20)
+(75 180 145)
+</pre>
+
+<p>
+Note that that has taken up to 5 minutes on my laptop.  Glad I wasn't
+expecting this to be an amazingly fast implementation/algorithm. :D
+</p>
+</div>
+</div>
+<div id="outline-container-org004011d" class="outline-3">
+<h3 id="org004011d">Does sorting speed things up?</h3>
+<div class="outline-text-3" id="text-org004011d">
+<p>
+And does sorting still help?
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp">(<span style="color: #b6a0ff; font-weight: bold;">let*</span> ((*trace-output* *standard-output*)
+       (nums (<span style="color: #b6a0ff; font-weight: bold;">loop</span> repeat 1000 collect (random 1000)))
+       (unsorted-bdd (time (make-sums-bdd nums 400)))
+       (sorted-bdd   (time (make-sums-bdd (sort nums #'&gt;) 400))))
+  (format t <span style="color: #79a8ff;">"Unsorted was ~a nodes covering ~a solutions~&amp;"</span>
+          (bdd-count-nodes unsorted-bdd)
+          (bdd-count-solutions unsorted-bdd))
+  (format t <span style="color: #79a8ff;">"Sorted was ~a nodes covering ~a solutions"</span>
+          (bdd-count-nodes sorted-bdd)
+          (bdd-count-solutions sorted-bdd)))
+</pre>
+</div>
+
+<pre class="example" id="org2added6">
+Evaluation took:
+  48.441 seconds of real time
+  61.021978 seconds of total run time (60.889363 user, 0.132615 system)
+  125.97% CPU
+  71,756,640 bytes consed
+  
+Evaluation took:
+  2.339 seconds of real time
+  2.339897 seconds of total run time (2.331706 user, 0.008191 system)
+  100.04% CPU
+  11,286,848 bytes consed
+  
+Unsorted was 337658 nodes covering 68817298959228 solutions
+Sorted was 60000 nodes covering 68817298959228 solutions
+</pre>
+
+<p>
+Answer appears to be yes.  Running this several times averaged under 5
+seconds for the sorted.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org97228e3" class="outline-2">
+<h2 id="org97228e3">And the visualizations</h2>
+<div class="outline-text-2" id="text-org97228e3">
+<p>
+I spent more time looking at some of these than makes sense.  That
+said, just dropping a few in here.  Nothing to really say on them.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp" id="org6a469e6">(bdd-to-graphviz (make-sums-bdd '(1 2 3 4 5 6) 6))
+</pre>
+</div>
+
+<p>
+Looks like:
+</p>
+
+
+<div id="org7ef1232" class="figure">
+<p><img src="bdd-dot.png" alt="bdd-dot.png" />
+</p>
+</div>
+
+<p>
+Where as the countdown version looks like the following:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp" id="org9669c0a">(bdd-to-graphviz (make-sums-bdd '(6 5 4 3 2 1) 6))
+</pre>
+</div>
+
+
+<div id="org9955bbb" class="figure">
+<p><img src="bdd-dot2.png" alt="bdd-dot2.png" />
+</p>
+</div>
+
+<p>
+And for fun, a larger one looks like:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp" id="orgae5120e">(bdd-to-graphviz (make-sums-bdd (<span style="color: #b6a0ff; font-weight: bold;">loop</span> repeat 20 collect (random 20)) 15))
+</pre>
+</div>
+
+
+<div id="org68fb7e9" class="figure">
+<p><img src="bdd-dot3.png" alt="bdd-dot3.png" width="800px" />
+</p>
+</div>
+
+<p>
+With the sorted version looking like:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-lisp" id="org52fe333">(bdd-to-graphviz (make-sums-bdd (sort (<span style="color: #b6a0ff; font-weight: bold;">loop</span> repeat 20 collect (random 20)) #'&gt;) 15))
+</pre>
+</div>
+
+
+<div id="org765ba18" class="figure">
+<p><img src="bdd-dot4.png" alt="bdd-dot4.png" width="800px" />
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org2d7850a" class="outline-2">
+<h2 id="org2d7850a">Closing thoughts.</h2>
+<div class="outline-text-2" id="text-org2d7850a">
+<p>
+This was as much fun as I'd hoped it would be.  At least, once I got
+it running.  I drug my feet for a long time as I was more than half
+convinced it would not, in fact, work.  At all.  Glad to see I was
+wrong.
+</p>
+
+<p>
+In implementation thoughts, tagbody was more fun to use than I would
+have thought it would be.  Yay for goto based programming in lisp.  I
+also found the list of steps to implement easier to reason about than
+I expected.  In particular, I have grown worse at wording some of
+these things in terms of loops or recursions, versus repeating a step.
+</p>
+
+<p>
+I know this would take effort to get to work for large lists.  Some
+things that could be tried include bailing early on the list once it
+is clear that none of the remaining values could hit the sum.  This
+is, if I am correct, essentially what makes the sorted attempts
+faster.  If you had that, you would probably need to "compact" the
+nodes to keep from hitting the ceiling on total nodes.  You could also
+move to pointers and let the GC deal with that, I suppose.
+</p>
+
+<p>
+I also should give some thoughts to how things typeset with name
+choices.  For that matter, my naming choices were a bit of a mess
+here.  Would clean up if I still had energy for this.
+</p>
+
+<p>
+Finally, I know of a few bugs in this code.  I would be delighted to
+have them found by others.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Josh Berry</p>
+<p class="date">Created: 2025-06-19 Thu 11:03</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

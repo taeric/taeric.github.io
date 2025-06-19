@@ -1,0 +1,638 @@
+#+TITLE: Wasting time looking at many ways to sum to a number.
+#+OPTIONS: num:nil num:nil
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="org-overrides.css" />
+
+* Musings on the "N-Sum" problem
+
+A common interview question for a while was "are there two (or three)
+numbers that sum to a target in a list?"  I confess I still like this
+as an interview question, as it is easy to talk through different
+things you can do.
+
+The basic implementation I would coach people towards is small enough
+and easy to have discussions on.  Even if what you would get would
+have obvious performance concerns.  I can hope nobody is doing this in
+production.  (Not that I really expect what I want to do to be a good
+idea, either...)
+
+* At any rate, is there a fun way to do this?
+
+I'd like to say that there is a good reason to think of doing this a
+different way.  There probably is, but I don't know it right off.  I
+just want to have fun coding a Binary Decision Diagram (BDD)
+structure.
+
+I suppose this lets me extend the puzzle a bit, of course.  Instead of
+asking if a sum exists, I can find all ways to sum to a number in a
+fairly straight forward way.
+
+There is also a neat trick where you can combine BDDs to limit the
+answer to only using a set number of values.  Or only even values.  Or
+whatever.
+
+I will probably not code that trick here.
+
+* Basics
+
+I will be taking a lot of the conventions from Knuth's discussion of
+BDDs.  I may play with generating random lists of numbers to look at,
+as well.  Will likely just stick to a general range of numbers.
+
+To begin, the basic idea of a BDD is that we look at each "variable"
+in turn and take a branch on whether or not the variable is true.
+Where, for this, true means number is included in the sum.
+
+For our main structure, this means we need to know what variable we
+are looking at, and then we need to know what decision to go to next.
+With a "hi" being when this variable is true, and a "lo" when it is
+false.  I will also keep an "aux" field for use in construction and
+then counting.
+
+#+begin_src lisp :exports code
+  (defstruct bdd-node v hi lo aux)
+#+end_src
+
+#+RESULTS:
+: BDD-NODE
+
+Rather than try and wire everything together using object references,
+I have grown fond of the "array of nodes" idea to patch things
+together in.  Where the "hi" and "lo" values will be indexes into this
+array to know what node is next.
+
+This has the gigantic advantage that I can traverse all of the nodes
+bottom up in a basic scan of the array.  I will use that for counting
+solutions.  Can even breadth first traverse the nodes in a basic scan
+for showing the nodes.
+
+To that end, our overall "bdd" struct will be an array of nodes with
+the first two nodes being the two nodes that correspond to True and
+False/Bottom.  The rest tied together through links.
+
+* Constructing a BDD for Sums.
+
+What, then, does construction look like?  I'm opting for a semi
+"literate" style here.  We'll see how that turns out.
+
+** Outline of function
+
+The basic outline of our function is straight forward enough.  Take in
+the numbers we are considering and our target.  Go ahead and build a
+basic array to hold our nodes, and then get ready to start building.
+Expect that we will need some extra variables, and the meat of the
+iteration will come later.
+
+That said, no reason not to go ahead and put the two base nodes of the
+structure in.  The "aux" fields are not super important on them, but
+going ahead and giving them something.
+
+#+begin_src lisp :noweb eval
+  (defvar *max-num-nodes* 1000000) ; Just a stab at how much headroom I need.
+  (defun make-sums-bdd (nums target)
+    (let* ((num-nodes *max-num-nodes*)
+           (bdd-nodes (make-array num-nodes))
+           (v_max (length nums))
+           <<extra variables>>)
+
+      (setf (elt bdd-nodes 0) (make-bdd-node :v (+ 2 v_max) :hi 0 :lo 0 :aux 0)
+            (elt bdd-nodes 1) (make-bdd-node :v (+ 1 v_max) :hi 1 :lo 1 :aux target))
+
+      <<start at v_1 and build nodes>>
+
+      bdd-nodes))
+#+end_src
+
+#+RESULTS:
+: MAKE-SUMS-BDD
+
+** Start at v_1 and build nodes.
+
+As the name of the section implies, we will be starting at v_1.  Where
+v_1 represents whether we include element 0 of our numbers.  (Yes, if
+I care about speed and plan on indexing into the numbers, I should
+make sure our input numbers is an array.  No, I'm not going to do that
+here.)
+
+Largely for aesthetics, I start the root of the bdd at the tail end.
+From there, my convoluted steps are the following:
+
+  1. Set node_i, cur-v, cur-num, and cur-aux to current values
+     according to i.  If node_i is not a bdd-node, or cur-v is
+     greater than v_max, go to step 6.
+  2. If we are at v_max, then if adding 0 to current aux gives target,
+     set lo to 1, otherwise 0.  If adding current num to aux gives
+     target, set hi to 1, otherwise 0.  Decrement i and go back to
+     step 1.  If not at v_max, Set j = i - 1 and continue to step 3.
+  3. Find or create node to connect lo to.  Walk variable j down to 0
+     looking for either existing node with v = cur-v + 1 and aux =
+     cur-aux, or creating it if node_i[j] isn't a node, yet.  Set
+     current lo to j.  Set j back to i - 1 and continue to step 4.
+  4. Find or create node to connect hi to.  If cur-aux + cur-num is <=
+     target, walk j down to zero looking for node that matches.  Set
+     current hi to j.  Otherwise, set current hi to 0.
+  5. Set i = i - 1, go to step 1.
+
+#+name: start at v_1 and build nodes
+#+begin_src lisp :noweb eval
+  (setf i (1- num-nodes)
+        (elt bdd-nodes i) (make-bdd-node :v 1 :hi -1 :lo -1 :aux 0))
+
+  (tagbody
+     s1
+     (setf node_i (elt bdd-nodes i))
+     (if (not (bdd-node-p node_i))
+         (go s6))
+     (setf cur-v    (bdd-node-v node_i)
+           cur-num  (elt nums (1- cur-v))
+           cur-aux  (bdd-node-aux node_i))
+     (if (> cur-v v_max)
+         (go s6))
+     s2
+     (when (eq cur-v v_max)
+       (if (= cur-aux target)
+           (setf (bdd-node-lo node_i) 1)
+           (setf (bdd-node-lo node_i) 0))
+       (if (= (+ cur-num cur-aux) target)
+           (setf (bdd-node-hi node_i) 1)
+           (setf (bdd-node-hi node_i) 0))
+       (setf i (1- i))
+       (go s1))
+     (setf j (1- i))
+     s3
+     (when (not (bdd-node-p (elt bdd-nodes j)))
+       (setf (elt bdd-nodes j) (make-bdd-node :v (1+ cur-v) :hi 0 :lo 0 :aux cur-aux)))
+     (when (not (eq (bdd-node-aux (elt bdd-nodes j)) cur-aux))
+       (setf j (1- j))
+       (when (= j 1)
+           (error "Effectively out of memory.  Rerun with more headroom, or rework algo."))
+       (go s3))
+     (setf (bdd-node-lo node_i) j
+           j (1- i))
+     s4
+     (when (> (+ cur-num cur-aux) target)
+       (setf (bdd-node-hi node_i) 0)
+       (go s5))
+     (when (not (bdd-node-p (elt bdd-nodes j)))
+       (setf (elt bdd-nodes j) (make-bdd-node :v (1+ cur-v) :hi -1 :lo -1 :aux (+ cur-num cur-aux))))
+     (when (not (and (eq (bdd-node-aux (elt bdd-nodes j)) (+ cur-num cur-aux))
+                     (eq (bdd-node-v (elt bdd-nodes j)) (1+ cur-v))))
+       (setf j (1- j))
+       (when (= j 1)
+           (error "Effectively out of memory.  Rerun with more headroom, or rework algo."))
+       (go s4))
+     (setf (bdd-node-hi node_i) j)
+     s5
+     (setf i (1- i))
+     (go s1)
+     <<Remove all nodes with equal hi/lo fields>>
+     end)
+#+end_src
+
+We introduced quite a few variables here, but none that are too
+complicated.  And none that need initial values.
+
+#+begin_src lisp :noweb-ref "extra variables"
+  i
+  j
+  node_i
+  cur-v
+  cur-num
+  cur-aux
+#+end_src
+
+** Remove all nodes with equal hi/lo fields.
+
+If a node has the same outcome whether it is true or false, we can
+remove it and set any reference to it to the results it was
+referencing.
+
+For this reduction, we can do it from the "bottom up" on the
+structure.  Ideally, we would also "compact" the nodes as we do this.
+
+Steps are:
+
+
+#+ATTR_HTML: :start 6
+  6. If i = num-nodes, terminate.  Otherwise, set node_i according
+     to i.  If not on a bdd-node, increment i and repeat step 6.
+  7. If hi and lo of current node are equal, then set current node in
+     bdd-nodes to 0 and set j = i + 1 and continue to step 8.
+     Otherwise, set i = i + 1 and go back to step 6.
+  8. If j = num-nodes, go back to step 6.  Otherwise, if j is a valid
+     bdd-node, check if hi = i and change it to hi of node_i.  Check
+     if lo = i and change it to lo of node_i.  Set j = j + 1 and
+     repeat step 8.
+
+
+#+name: Remove all nodes with equal hi/lo fields
+#+begin_src lisp
+  s6
+  (when (= i num-nodes)
+    (go end))
+  (setf node_i (elt bdd-nodes i))
+  (when (not (bdd-node-p node_i))
+    (setf i (1+ i))
+    (go s6))
+  s7
+  (when (= (bdd-node-hi node_i) (bdd-node-lo node_i))
+    (setf (elt bdd-nodes i) 0
+          j                 (1+ i))
+    (go s8))
+  (setf i (1+ i))
+  (go s6)
+  s8
+  (when (= j num-nodes)
+    (go s6))
+  (setf node_j (elt bdd-nodes j))
+  (setf j (1+ j))
+  (when (not (bdd-node-p node_j))
+    (go s8))
+  (when (= (bdd-node-hi node_j) i)
+    (setf (bdd-node-hi node_j) (bdd-node-hi node_i)))
+  (when (= (bdd-node-lo node_j) i)
+    (setf (bdd-node-lo node_j) (bdd-node-lo node_i)))
+  (go s8)
+#+end_src
+
+And for this section, I needed another node reference.
+
+#+begin_src lisp :noweb-ref "extra variables"
+  node_j
+#+end_src
+
+* Now, lets make something that can count solutions.
+
+Now for a function that will annotate the BDD with solution counts.
+We no longer need the aux fields, so we will use that to keep the
+counts and can walk the generated tree bottom up and then simply
+return the top value at the end.
+
+#+begin_src lisp
+  (defun bdd-count-solutions (bdd)
+    (setf (bdd-node-aux (elt bdd 0)) 0
+          (bdd-node-aux (elt bdd 1)) 1)
+    (loop for i from 2 below (length bdd)
+          for node_i = (elt bdd i)
+          if (bdd-node-p node_i)
+            do (let* ((hi-node  (elt bdd (bdd-node-hi node_i)))
+                      (lo-node  (elt bdd (bdd-node-lo node_i)))
+                      (cur-solutions (+ (* (bdd-node-aux hi-node) (expt 2 (- (bdd-node-v hi-node) (bdd-node-v node_i) 1)))
+                                        (* (bdd-node-aux lo-node) (expt 2 (- (bdd-node-v lo-node) (bdd-node-v node_i) 1))))))
+                 (setf (bdd-node-aux node_i) cur-solutions))
+          finally (return (bdd-node-aux node_i))))
+#+end_src
+
+#+RESULTS:
+: BDD-COUNT-SOLUTIONS
+
+* What if I want to see solutions?
+
+I confess I got by just looking at the nodes created for a while.  But
+good to actually get it to show the solutions to make sure it is
+correct.
+
+Basic approach is a simple depth first traversal of the tree from the
+root node.
+
+#+begin_src lisp
+  (defun show-sums-bdd-solutions (nums bdd &optional (num-solutions 20))
+    (labels ((diver (node included-nums)
+               (cond
+                 ((eq node (elt bdd 0)) nil)
+                 ((eq node (elt bdd 1))
+                  (decf num-solutions)
+                  (format t "~a~&" included-nums))
+                 (t
+                  (when (> num-solutions 0)
+                    (diver (elt bdd (bdd-node-lo node)) included-nums)
+                    (diver (elt bdd (bdd-node-hi node)) (cons (elt nums (1- (bdd-node-v node))) included-nums)))))))
+      (diver (elt bdd (1- (length bdd))) nil)))
+#+end_src
+
+#+RESULTS:
+: SHOW-SUMS-BDD-SOLUTIONS
+
+* What if I want to see the BDD?
+
+For this, I am just going to lean on graphviz.  With no effort to
+pretty print.
+
+#+begin_src lisp
+  (defun bdd-to-graphviz (bdd)
+    (format t "digraph G {~&")
+    (loop for i from (1- (length bdd)) downto 2
+          for node = (elt bdd i)
+          if (bdd-node-p node)
+            do (let ((v (bdd-node-v node))
+                     (hi-node (bdd-node-hi node))
+                     (lo-node (bdd-node-lo node)))
+                 (format t "V~a [label=\"~a\"]~&" i v)
+                 (case hi-node
+                   (1 (format t "V~a -> Hi~&" i))
+                   (0 (format t "V~a -> Lo~&" i))
+                   (otherwise (format t "V~a -> V~a ~&" i hi-node)))
+                 (case lo-node
+                   (1 (format t "V~a -> Hi [style=dotted]~&" i))
+                   (0 (format t "V~a -> Lo [style=dotted]~&" i))
+                   (otherwise (format t "V~a -> V~a [style=dotted]~&" i lo-node)))))
+    (format t "}~&"))
+#+end_src
+
+#+RESULTS:
+: BDD-TO-GRAPHVIZ
+
+* I'm also curious on how many nodes are in the BDD.
+
+More a curiousity than much else.  How many active nodes are in the BDD?
+
+#+begin_src lisp
+  (defun bdd-count-nodes (bdd)
+    (loop for node across bdd
+          if (bdd-node-p node)
+            sum 1))
+#+end_src
+
+#+RESULTS:
+: BDD-COUNT-NODES
+
+* Trying it out.
+
+** First, on a trivial list
+
+#+begin_src lisp :results output :exports both
+  (let* ((*trace-output* *standard-output*)
+         (nums '(-3 -2 -1 1 2 3))
+         (bdd (time (make-sums-bdd nums 1))))
+    (format t "~a nodes covering ~a solutions~&"
+            (bdd-count-nodes bdd)
+            (bdd-count-solutions bdd))
+    (format t "Solutions found: ~&")
+    (show-sums-bdd-solutions nums bdd 10))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Evaluation took:
+  0.003 seconds of real time
+  0.003311 seconds of total run time (0.000432 user, 0.002879 system)
+  100.00% CPU
+  8,000,016 bytes consed
+
+21 nodes covering 8 solutions
+Solutions found:
+(1)
+(2 -1)
+(3 -2)
+(2 1 -2)
+(3 1 -1 -2)
+(3 1 -3)
+(3 2 -1 -3)
+(3 2 1 -2 -3)
+#+end_example
+
+Obviously, 21 nodes to store the 8 solutions is not exactly
+beneficial.  Still, it works.  And you can walk through the below
+diagram easily enough.
+
+#+name: bdd-dot0
+#+begin_src lisp :results output :exports none
+  (let ((bdd (make-sums-bdd '(-3 -2 -1 1 2 3) 1)))
+    (bdd-to-graphviz bdd))
+#+end_src
+
+#+BEGIN_SRC dot :file bdd-dot0.png :var input=bdd-dot0 :exports results
+  $input
+#+END_SRC
+
+#+RESULTS:
+[[file:bdd-dot0.png]]
+
+** How does it do on a larger basic sequence?
+
+Where "basic" is just counting up from one.
+
+#+begin_src lisp :results output :exports both
+  (let* ((*trace-output* *standard-output*)
+         (nums (loop for i from 1 to 1000 collect i))
+         (bdd (time (make-sums-bdd nums 40))))
+    (format t "~a nodes covering ~a solutions~&"
+            (bdd-count-nodes bdd)
+            (bdd-count-solutions bdd))
+    (format t "Five example sums: ~&")
+    (show-sums-bdd-solutions nums bdd 5))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Evaluation took:
+  3.572 seconds of real time
+  7.142894 seconds of total run time (7.131024 user, 0.011870 system)
+  199.97% CPU
+  9,965,600 bytes consed
+
+1613 nodes covering 1113 solutions
+Five example sums:
+(40)
+(21 19)
+(22 18)
+(23 17)
+(24 16)
+#+end_example
+
+** Does order matter?
+
+Specifically, counting down from one?
+
+#+begin_src lisp :results output :exports both
+  (let* ((*trace-output* *standard-output*)
+         (nums (loop for i from 1000 downto 1 collect i))
+         (bdd (time (make-sums-bdd nums 40))))
+    (format t "~a nodes covering ~a solutions~&"
+            (bdd-count-nodes bdd)
+            (bdd-count-solutions bdd))
+    (format t "Five example sums: ~&")
+    (show-sums-bdd-solutions nums bdd 5))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Evaluation took:
+  0.003 seconds of real time
+  0.007830 seconds of total run time (0.007123 user, 0.000707 system)
+  266.67% CPU
+  8,131,040 bytes consed
+
+1613 nodes covering 1113 solutions
+Five example sums:
+(1 2 3 4 6 7 8 9)
+(2 3 5 6 7 8 9)
+(1 4 5 6 7 8 9)
+(1 2 3 4 5 7 8 10)
+(2 3 4 6 7 8 10)
+#+end_example
+
+Answer was yes?  It went much faster.
+
+** On random values?
+
+And what about looking for a sum in a collection of random numbers?
+
+#+begin_src lisp :results output :exports both
+  (let* ((*trace-output* *standard-output*)
+         (nums (loop repeat 1000 collect (random 1000)))
+         (bdd (time (make-sums-bdd nums 400))))
+    (format t "~a nodes covering ~a solutions~&"
+            (bdd-count-nodes bdd)
+            (bdd-count-solutions bdd))
+    (format t "Five example sums: ~&")
+    (show-sums-bdd-solutions nums bdd 5))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Evaluation took:
+  57.374 seconds of real time
+  57.306887 seconds of total run time (57.081331 user, 0.225556 system)
+  99.88% CPU
+  25,821,440 bytes consed
+
+335320 nodes covering 28256953762352 solutions
+Five example sums:
+(126 160 106 8)
+(145 126 64 65)
+(126 201 8 65)
+(126 201 8 65)
+(115 8 212 65)
+#+end_example
+
+Note that that has taken up to 5 minutes on my laptop.  Glad I wasn't
+expecting this to be an amazingly fast implementation/algorithm. :D
+
+** Does sorting speed things up?
+
+And does sorting still help?
+
+#+begin_src lisp :results output :exports both
+  (let* ((*trace-output* *standard-output*)
+         (nums (loop repeat 1000 collect (random 1000)))
+         (unsorted-bdd (time (make-sums-bdd nums 400)))
+         (sorted-bdd   (time (make-sums-bdd (sort nums #'>) 400))))
+    (format t "Unsorted was ~a nodes covering ~a solutions~&"
+            (bdd-count-nodes unsorted-bdd)
+            (bdd-count-solutions unsorted-bdd))
+    (format t "Sorted was ~a nodes covering ~a solutions"
+            (bdd-count-nodes sorted-bdd)
+            (bdd-count-solutions sorted-bdd)))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Evaluation took:
+  35.588 seconds of real time
+  35.464687 seconds of total run time (35.325000 user, 0.139687 system)
+  99.65% CPU
+  25,493,872 bytes consed
+
+Evaluation took:
+  1.739 seconds of real time
+  1.739085 seconds of total run time (1.731971 user, 0.007114 system)
+  100.00% CPU
+  11,144,960 bytes consed
+
+Unsorted was 340309 nodes covering 6228255616010 solutions
+Sorted was 59115 nodes covering 6228255616010 solutions
+#+end_example
+
+Answer appears to be yes.  Running this several times averaged under 5
+seconds for the sorted.
+
+* And the visualizations
+
+I spent more time looking at some of these than makes sense.  That
+said, just dropping a few in here.  Nothing to really say on them.
+
+#+name: bdd-dot1
+#+begin_src lisp :results output :exports code
+  (bdd-to-graphviz (make-sums-bdd '(1 2 3 4 5 6) 6))
+#+end_src
+
+Looks like:
+
+#+BEGIN_SRC dot :file bdd-dot.png :var input=bdd-dot1 :exports results
+ $input
+#+END_SRC
+
+#+RESULTS:
+[[file:bdd-dot.png]]
+
+Where as the countdown version looks like the following:
+
+#+name: bdd-dot2
+#+begin_src lisp :results output :exports code
+  (bdd-to-graphviz (make-sums-bdd '(6 5 4 3 2 1) 6))
+#+end_src
+
+#+BEGIN_SRC dot :file bdd-dot2.png :var input=bdd-dot2 :exports results
+ $input
+#+END_SRC
+
+#+RESULTS:
+[[file:bdd-dot2.png]]
+
+And for fun, a larger one looks like:
+
+#+name: bdd-dot3
+#+begin_src lisp :results output :exports code
+  (bdd-to-graphviz (make-sums-bdd (loop repeat 20 collect (random 20)) 15))
+#+end_src
+
+#+BEGIN_SRC dot :file bdd-dot3.png :var input=bdd-dot3 :exports results
+ $input
+#+END_SRC
+
+#+ATTR_HTML: :width 800px
+#+RESULTS:
+[[file:bdd-dot3.png]]
+
+With the sorted version looking like:
+
+#+name: bdd-dot4
+#+begin_src lisp :results output :exports code
+  (bdd-to-graphviz (make-sums-bdd (sort (loop repeat 20 collect (random 20)) #'>) 15))
+#+end_src
+
+#+BEGIN_SRC dot :file bdd-dot4.png :var input=bdd-dot4 :exports results
+ $input
+#+END_SRC
+
+#+ATTR_HTML: :width 800px
+#+RESULTS:
+[[file:bdd-dot4.png]]
+
+* Closing thoughts.
+
+This was as much fun as I'd hoped it would be.  At least, once I got
+it running.  I drug my feet for a long time as I was more than half
+convinced it would not, in fact, work.  At all.  Glad to see I was
+wrong.
+
+In implementation thoughts, tagbody was more fun to use than I would
+have thought it would be.  Yay for goto based programming in lisp.  I
+also found the list of steps to implement easier to reason about than
+I expected.  In particular, I have grown worse at wording some of
+these things in terms of loops or recursions, versus repeating a step.
+
+I know this would take effort to get to work for large lists.  Some
+things that could be tried include bailing early on the list once it
+is clear that none of the remaining values could hit the sum.  This
+is, if I am correct, essentially what makes the sorted attempts
+faster.  If you had that, you would probably need to "compact" the
+nodes to keep from hitting the ceiling on total nodes.  You could also
+move to pointers and let the GC deal with that, I suppose.
+
+I also should give some thoughts to how things typeset with name
+choices.  For that matter, my naming choices were a bit of a mess
+here.  Would clean up if I still had energy for this.
+
+Finally, I know of a few bugs in this code.  I would be delighted to
+have them found by others.
